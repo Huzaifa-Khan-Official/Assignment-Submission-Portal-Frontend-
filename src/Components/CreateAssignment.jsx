@@ -1,7 +1,7 @@
 export default function CreateAssignment() {
     return (
         <div>
-            <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+            <div className="rounded-lg border bg-card text-card-foreground shadow-sm md:w-2/4 md:mx-auto" data-v0-t="card">
                 <div className="flex flex-col space-y-1.5 p-6">
                     <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
                         Create New Assignment
@@ -95,7 +95,7 @@ export default function CreateAssignment() {
                             </select>
                         </div>
                         <button
-                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8"
+                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8 bg-teal-600 text-white w-min mx-auto"
                             type="submit"
                         >
                             Create Assignment
