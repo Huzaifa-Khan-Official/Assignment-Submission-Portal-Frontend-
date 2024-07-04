@@ -1,6 +1,8 @@
 import { useState } from "react";
 import AllAssignmentsListing from "./Components/AllAssignmentsListing"
 import CreateAssignment from "./Components/CreateAssignment"
+import Header from "./Components/Header";
+import Footer from "./Components/Footer"
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,9 +26,10 @@ function App() {
       <h1 className="text-3xl font-bold underline">
         Hello World!
       </h1>
-      <AllAssignmentsListing data={assignments} openModal={openModal} />
-      <CreateAssignment isModalOpen={isModalOpen} closeModal={closeModal} />
-
+      {/* <AllAssignmentsListing data={assignments} openModal={openModal} />
+      <CreateAssignment isModalOpen={isModalOpen} closeModal={closeModal} /> */}
+      <Header /><br />
+      <Footer />
     </>
   )
 }
