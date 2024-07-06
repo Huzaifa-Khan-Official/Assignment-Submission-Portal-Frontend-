@@ -1,5 +1,31 @@
+import React, { useState } from 'react';
+import { Button, Modal } from 'antd';
+import CreateCourseForm from '../Components/CreateCourseForm';
+
 export default function AdminPanel() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
-    <div>AdminPanel</div>
-  )
+    <div>
+      <Button type="primary" onClick={showModal}>
+        Create Course
+      </Button>
+      <Modal
+        title="Create Course"
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <CreateCourseForm onClose={handleCancel} />
+      </Modal>
+    </div>
+  );
 }

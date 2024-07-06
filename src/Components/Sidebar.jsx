@@ -10,6 +10,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
+import AdminPanel from "../Pages/AdminPanel";
 
 const { Header, Sider, Content } = Layout;
 
@@ -88,6 +89,10 @@ export default function Sidebar() {
               />
             )}
           </Header>
+          {/* admin content redering */}
+          <AdminPanel />
+          {/* end admin content redering */}
+
         </Layout>
       </Layout>
 
