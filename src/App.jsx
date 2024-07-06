@@ -2,6 +2,7 @@ import { useState } from "react";
 import AllAssignmentsListing from "./Components/AllAssignmentsListing"
 import CreateAssignment from "./Components/CreateAssignment"
 import Coursescreatemodel from "./Components/Coursescreatemodel/Coursescreatemodel";
+import CoursesModal from "./Components/CoursesModal/CoursesModal";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,7 +25,7 @@ function App() {
     <>
      
       <Coursescreatemodel />
-
+      <CoursesModal />
       {/* <AllAssignmentsListing data={assignments} openModal={openModal} />
       <CreateAssignment isModalOpen={isModalOpen} closeModal={closeModal} />
       */}
