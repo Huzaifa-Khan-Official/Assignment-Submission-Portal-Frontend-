@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import AdminPanel from "../Pages/AdminPanel";
+import StudentHomePage from "../Pages/Students/StudentHomePage";
 
 const { Header, Sider, Content } = Layout;
 
@@ -90,7 +91,8 @@ export default function Sidebar() {
             )}
           </Header>
           {/* admin content redering */}
-          <AdminPanel />
+          {/* <AdminPanel /> */}
+          <StudentHomePage />
           {/* end admin content redering */}
 
         </Layout>
