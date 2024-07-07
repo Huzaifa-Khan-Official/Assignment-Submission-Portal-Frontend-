@@ -12,6 +12,8 @@ import {
 import { Layout, Menu } from "antd";
 import AdminPanel from "../Pages/AdminPanel";
 import StudentHomePage from "../Pages/Students/StudentHomePage";
+import StudentAllAssignmentPage from "../Pages/Students/StudentAllAssignmentPage";
+import StudentAssignmentTodoPage from "../Pages/Students/StudentAssignmentTodoPage";
 
 const { Header, Sider, Content } = Layout;
 
@@ -92,7 +94,9 @@ export default function Sidebar() {
           </Header>
           {/* admin content redering */}
           {/* <AdminPanel /> */}
-          <StudentHomePage />
+          {/* <StudentHomePage /> */}
+          {/* <StudentAllAssignmentPage /> */}
+          <StudentAssignmentTodoPage />
           {/* end admin content redering */}
 
         </Layout>
