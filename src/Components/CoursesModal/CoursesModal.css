@@ -1,0 +1,48 @@
+/* Add this to make the modal responsive */
+.ant-modal {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Add this to make the form responsive */
+  .ant-form-vertical {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Add this to make the input fields responsive */
+  .ant-form-item {
+    margin-bottom: 10px;
+  }
+  
+  .ant-form-item label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .ant-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  /* Add this to make the upload button responsive */
+  .ant-upload {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  /* Add this to make the modal footer responsive */
+  .ant-modal-footer {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .ant-modal-footer button {
+    margin: 0 10px;
+  }
