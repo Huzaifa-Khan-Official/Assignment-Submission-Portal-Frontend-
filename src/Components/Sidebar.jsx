@@ -14,6 +14,8 @@ import AdminPanel from "../Pages/AdminPanel";
 import StudentHomePage from "../Pages/Students/StudentHomePage";
 import StudentAllAssignmentPage from "../Pages/Students/StudentAllAssignmentPage";
 import StudentAssignmentTodoPage from "../Pages/Students/StudentAssignmentTodoPage";
+import AllClassfellowsPage from "../Pages/Students/AllClassfellowsPage";
+import StudentSettingPage from "../Pages/Students/StudentSettingPage";
 
 const { Header, Sider, Content } = Layout;
 
@@ -96,7 +98,9 @@ export default function Sidebar() {
           {/* <AdminPanel /> */}
           {/* <StudentHomePage /> */}
           {/* <StudentAllAssignmentPage /> */}
-          <StudentAssignmentTodoPage />
+          {/* <StudentAssignmentTodoPage /> */}
+          {/* <AllClassfellowsPage /> */}
+          <StudentSettingPage />
           {/* end admin content redering */}
 
         </Layout>
