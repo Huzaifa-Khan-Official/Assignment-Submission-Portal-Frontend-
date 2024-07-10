@@ -16,6 +16,8 @@ import StudentAllAssignmentPage from "../Pages/Students/StudentAllAssignmentPage
 import StudentAssignmentTodoPage from "../Pages/Students/StudentAssignmentTodoPage";
 import AllClassfellowsPage from "../Pages/Students/AllClassfellowsPage";
 import StudentSettingPage from "../Pages/Students/StudentSettingPage";
+import NotificationModal from "./NotificationModal/NotificationModal";
+import StudentUpdateProfilePage from "../Pages/Students/StudentUpdateProfilePage";
 
 const { Header, Sider, Content } = Layout;
 
@@ -100,7 +102,9 @@ export default function Sidebar() {
           {/* <StudentAllAssignmentPage /> */}
           {/* <StudentAssignmentTodoPage /> */}
           {/* <AllClassfellowsPage /> */}
-          <StudentSettingPage />
+          {/* <StudentSettingPage /> */}
+          <NotificationModal />
+          <StudentUpdateProfilePage />
           {/* end admin content redering */}
 
         </Layout>
