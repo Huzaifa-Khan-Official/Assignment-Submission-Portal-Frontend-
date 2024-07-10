@@ -6,6 +6,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './Pages/Login.jsx';
 import Signup from './Pages/Signup.jsx';
 import NotFoundPage from './Pages/NotFoundPage.jsx';
+import User from './Context/Context.js';
+import { useState } from 'react';
 
 
 const router = createBrowserRouter([
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
 
 ])
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
-)
+function Main() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <User.Provider value={{ user, setUser }}>
+      <RouterProvider router={router} />
+    </User.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Main />);

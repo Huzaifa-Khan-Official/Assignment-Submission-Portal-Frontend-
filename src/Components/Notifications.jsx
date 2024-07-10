@@ -1,81 +1,20 @@
-export default function Notifications({ type }) {
+export default function Notifications({ type, text }) {
   return (
     <div>
       <div className="space-y-4 md:w-4/5 mx-5">
         {
           type == "success" ?
             <div className="flex items-center p-4 bg-green-100 rounded-md">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                className="w-6 h-6 text-green-600"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="m9 12 2 2 4-4"></path>
-              </svg>
               <div className="ml-3">
                 <p className="text-sm font-medium text-green-800">Order Confirmed</p>
                 <p className="text-sm text-green-700">Your order has been successfully processed.</p>
               </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                className="w-6 h-6 ml-auto text-green-600 cursor-pointer"
-              >
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
             </div> : type == "error" ?
               <div className="flex items-center p-4 bg-red-100 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  className="w-6 h-6 text-red-600"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="m15 9-6 6"></path>
-                  <path d="m9 9 6 6"></path>
-                </svg>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-red-800">Payment Failed</p>
-                  <p className="text-sm text-red-700">There was an issue with your payment. Please try again.</p>
+                  <p className="text-sm font-medium text-red-800">Error!</p>
+                  <p className="text-sm text-red-700">{text}</p>
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  className="w-6 h-6 ml-auto text-red-600 cursor-pointer"
-                >
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
               </div> : type == "warning" ?
                 <div className="flex items-center p-4 bg-yellow-100 rounded-md">
                   <svg
@@ -85,9 +24,9 @@ export default function Notifications({ type }) {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="w-6 h-6 text-yellow-600"
                   >
                     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
@@ -105,9 +44,9 @@ export default function Notifications({ type }) {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="w-6 h-6 ml-auto text-yellow-600 cursor-pointer"
                   >
                     <path d="M18 6 6 18"></path>
@@ -122,9 +61,9 @@ export default function Notifications({ type }) {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="w-6 h-6 text-blue-600"
                     >
                       <circle cx="12" cy="12" r="10"></circle>
@@ -142,9 +81,9 @@ export default function Notifications({ type }) {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="w-6 h-6 ml-auto text-blue-600 cursor-pointer"
                     >
                       <path d="M18 6 6 18"></path>

@@ -1,37 +1,95 @@
-import { Input } from "antd";
+import { Form, Input, Button } from "antd";
 import animateLogin from "../assets/loginPagePic.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Notifications from "../Components/Notifications";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { useContext, useEffect } from "react";
+import User from "../Context/Context";
 
 export default function Login() {
+  const { user, setUser } = useContext(User);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get("/api/users/profile")
+      .then(res => {
+        setUser(res.data)
+        navigate("/");
+      })
+      .catch(err => console.log(err.response.data.message))
+  }, []);
+
+  const onFinish = (data) => {
+    axios.post("/api/users/auth", {
+      email: data.email,
+      password: data.password
+    })
+      .then(res => {
+        toast.success("Logged in successfully", {
+          onClose: () => {
+            setUser(res.data);
+            navigate("/");
+          }
+        })
+      })
+      .catch(err => console.error(err.response))
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Please enter all fields")
+  };
+
   return (
     <div className="flex justify-between min-h-screen">
+      <ToastContainer autoClose={1000} />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
-
       </div>
       <div className="w-full md:w-1/2 bg-primary-blue flex justify-center items-center">
         <div className="w-[80%]">
           <h1 className="text-4xl text-white font-bold text-center mb-7">Login</h1>
           <div className="w-full">
-            <div className="mb-4">
-              <Input type="email" placeholder="Enter Email" className="w-full" />
-            </div>
-            <div className="mb-4">
-              <Input type="password" placeholder="Enter Password" className="w-full" />
-            </div>
-            <div className="mb-4">
-              <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
-            </div>
-            <div className="mb-8 flex justify-center mt-6">              
-              <button className="group relative h-12 w-48 overflow-hidden rounded-lg bg-white text-lg shadow">
-                <div className="absolute inset-0 w-0 bg-[#b3caff] transition-all duration-[250ms] ease-out group-hover:w-full"></div>
-                <span className="relative text-primary-blue group-hover:text-blue-800 font-bold">Login</span>
-              </button>
-            </div>
+            <Form
+              name="login"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: 'Email is required' },
+                  { type: 'email', message: 'Enter a valid email address' },
+                ]}
+              >
+                <Input placeholder="Enter Email" />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: 'Password is required' },
+                  { min: 6, message: 'Password must be at least 6 characters long' },
+                ]}
+              >
+                <Input.Password placeholder="Enter Password" />
+              </Form.Item>
+
+              <div className="mb-4">
+                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
+              </div>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" className="group relative h-12 w-48 overflow-hidden rounded-lg bg-white text-lg shadow">
+                  <div className="absolute inset-0 w-0 bg-[#b3caff] transition-all duration-[250ms] ease-out group-hover:w-full"></div>
+                  <span className="relative text-primary-blue group-hover:text-blue-800 font-bold">Login</span>
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
         </div>
       </div>
-
     </div>
   );
 }

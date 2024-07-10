@@ -96,11 +96,11 @@ export default function Sidebar() {
           </Header>
           {/* admin content redering */}
           {/* <AdminPanel /> */}
-          {/* <StudentHomePage /> */}
+          <StudentHomePage />
           {/* <StudentAllAssignmentPage /> */}
           {/* <StudentAssignmentTodoPage /> */}
           {/* <AllClassfellowsPage /> */}
-          <StudentSettingPage />
+          {/* <StudentSettingPage /> */}
           {/* end admin content redering */}
 
         </Layout>
