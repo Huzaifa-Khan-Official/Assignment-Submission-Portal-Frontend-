@@ -5,6 +5,7 @@ import StudentHomePage from "./Pages/Students/StudentHomePage"
 import User from "./Context/Context";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import api from "./api/api";
 
 function App() {
   const { user, setUser } = useContext(User);
@@ -12,7 +13,7 @@ function App() {
 
   useEffect(() => {
     if (!user) {
-      axios.get("/api/users/profile")
+      api.get("/api/users/profile")
         .then(res => setUser(res.data))
         .catch(err => {
           err.response.data.message && navigate("/login");
