@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
+import { memo } from 'react';
 
-const NotificationModal = () => {
-    const [visible, setVisible] = useState(false);
-
-    const handleNotification = () => {
-        setVisible(true);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
-
+const NotificationModal = ({ visible, handleCancel }) => {
     return (
         <div>
-            <Button type="primary" onClick={handleNotification}>
-                Show Notification
-            </Button>
             <Modal
                 width={350}
                 style={{
@@ -59,4 +47,4 @@ const NotificationModal = () => {
     );
 };
 
-export default NotificationModal;
+export default memo(NotificationModal);

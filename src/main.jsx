@@ -8,12 +8,14 @@ import Signup from './Pages/Signup.jsx';
 import NotFoundPage from './Pages/NotFoundPage.jsx';
 import User from './Context/Context.js';
 import { useState } from 'react';
+import ErrorBoundary from './Components/ErrorBoundary.jsx';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />
+    element: <App />,
+    errorElement: <ErrorBoundary />
   },
   {
     path: "/login",

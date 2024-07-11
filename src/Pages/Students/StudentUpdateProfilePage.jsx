@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { BellFilled, UserOutlined } from '@ant-design/icons'
 import { MdOutlineMail, MdOutlinePhoneEnabled } from "react-icons/md";
 import { Button, Input } from 'antd';
+import NotificationModal from '../../Components/NotificationModal/NotificationModal';
 
 export default function StudentUpdateProfilePage() {
+    const [visible, setVisible] = useState(false);
+
+    const handleNotification = useCallback(() => {
+        setVisible(true);
+    }, []);
+
+    const handleCancel = useCallback(() => {
+        setVisible(false);
+    }, []);
+
     return (
         <div>
-            <div className='flex m-5 text-2xl font-mono font-extrabold'>
+            <div className='flex m-5 text-2xl font-mono font-extrabold mx-8'>
                 <h1 className='flex-1'>Update Profile</h1>
-                <BellFilled className='flex-2 text-amber-400' />
+                <BellFilled className='flex-2 text-amber-400 hover:text-amber-500 transition delay-100 cursor-pointer' onClick={handleNotification} />
             </div>
 
             <div className='bg-white mx-7 p-7 rounded-lg shadow-lg shadow-slate-300'>
@@ -42,6 +53,7 @@ export default function StudentUpdateProfilePage() {
 
             </div>
 
+            <NotificationModal visible={visible} handleCancel={handleCancel} />
         </div>
     )
 }
