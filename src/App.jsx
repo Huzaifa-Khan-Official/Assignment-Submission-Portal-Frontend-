@@ -6,6 +6,7 @@ import User from "./Context/Context";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import api from "./api/api";
+// import 'dotenv/config'
 
 function App() {
   const { user, setUser } = useContext(User);
@@ -16,7 +17,7 @@ function App() {
       api.get("/api/users/profile")
         .then(res => setUser(res.data))
         .catch(err => {
-          err.response.data.message && navigate("/login");
+          err.response && navigate("/login");
         })
     }
   }, [user]);
