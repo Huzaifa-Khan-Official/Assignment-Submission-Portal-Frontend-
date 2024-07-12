@@ -6,7 +6,6 @@ import User from "./Context/Context";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import api from "./api/api";
-// import 'dotenv/config'
 
 function App() {
   const { user, setUser } = useContext(User);

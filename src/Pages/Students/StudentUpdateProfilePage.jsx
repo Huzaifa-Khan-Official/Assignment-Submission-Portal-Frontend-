@@ -35,7 +35,7 @@ export default function StudentUpdateProfilePage() {
                     <h1 className='text-lg font-bold uppercase'>User Inforamtion</h1>
                 </div>
 
-                <div className='flex justify-around'>
+                <div className='flex justify-around flex-col-reverse sm:flex-row'>
                     <div className='my-5 text-base'>
 
                         <label>Username</label>
@@ -48,7 +48,7 @@ export default function StudentUpdateProfilePage() {
                         <Input size="large" type='number' placeholder="number" prefix={<MdOutlinePhoneEnabled />} className='mb-5' />
 
                     </div>
-                    <div className='my-20 mx-10'>
+                    <div className='flex flex-col mt-6 sm:my-20 mx-10 items-center'>
                         {ProfileImg ? (
                             <img className='w-20 h-20 object-contain bg-stone-200 rounded-full mx-5' src={ProfileImg} alt="#" />
                         ) : (
@@ -59,9 +59,9 @@ export default function StudentUpdateProfilePage() {
                     </div>
                 </div>
 
-                <div className='mx-2'>
-                    <Button type='primary' danger>Cancel</Button>
-                    <Button type='primary' className='mx-2'>Save Changes</Button>
+                <div className='mx-2 flex flex-col-reverse items-center gap-4 sm:flex-row'>
+                    <Button type='primary' className='w-fit' danger>Cancel</Button>
+                    <Button type='primary' className='w-fit'>Save Changes</Button>
                 </div>
 
             </div>
