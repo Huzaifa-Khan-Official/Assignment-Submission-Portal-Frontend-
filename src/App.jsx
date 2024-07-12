@@ -16,7 +16,7 @@ function App() {
       api.get("/api/users/profile")
         .then(res => setUser(res.data))
         .catch(err => {
-          err.response.data.message && navigate("/login");
+          // err.response.data.message && navigate("/login");
         })
     }
   }, [user]);

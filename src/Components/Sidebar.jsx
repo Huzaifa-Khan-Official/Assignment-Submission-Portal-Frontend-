@@ -9,6 +9,7 @@ import {
   TeamOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { SiGoogleclassroom } from "react-icons/si";
 import { Layout, Menu } from "antd";
 import AdminPanel from "../Pages/AdminPanel";
 import StudentHomePage from "../Pages/Students/StudentHomePage";
@@ -19,6 +20,7 @@ import StudentSettingPage from "../Pages/Students/StudentSettingPage";
 import NotificationModal from "./NotificationModal/NotificationModal";
 import StudentUpdateProfilePage from "../Pages/Students/StudentUpdateProfilePage";
 import User from "../Context/Context";
+import { Link } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
@@ -29,7 +31,7 @@ export default function Sidebar() {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const menuItems = [
+  const adminMenuItems = [
     {
       key: '0',
       icon: <UserOutlined />,
@@ -43,24 +45,59 @@ export default function Sidebar() {
     },
     {
       key: '2',
-      icon: <SettingOutlined />,
-      label: 'Settings',
+      icon: <UserOutlined />,
+      label: (<Link to="/teachers">Teachers</Link>),
+      type: 'group',
+      children: [
+        { key: "1", label: (<Link to="/teachers/assignments">Assignments</Link>) },
+        { key: "2", label: (<Link to="/teachers/students">Students</Link>) },
+      ]
     },
     {
       key: '3',
+      icon: <TeamOutlined />,
+      label: 'Students',
+    },
+    {
+      key: '4',
+      icon: <SettingOutlined />,
+      label: 'Settings',
+    },
+  ];
+
+  const trainerMenuItems = [
+    {
+      key: '0',
       icon: <UserOutlined />,
-      label: 'Teacher',
+      label: user?.username,
+      className: "capitalize"
+    },
+    {
+      key: '1',
+      icon: <HomeOutlined />,
+      label: (<Link to="/">Home</Link>),
+    },
+    {
+      key: '2',
+      icon: <SiGoogleclassroom />,
+      label: (<Link to="/classes">Classes</Link>),
+    },
+    {
+      key: '3',
+      icon: <BookOutlined />,
+      label: (<Link to="/assignments">Assignments</Link>),
     },
     {
       key: '4',
       icon: <TeamOutlined />,
-      label: 'Student',
+      label: (<Link to="/students">Students</Link>),
     },
     {
-      key: '5',
-      icon: <BookOutlined />,
-      label: 'Courses',
+      key: '2',
+      icon: <SettingOutlined />,
+      label: (<Link to="/settings">Settings</Link>),
     },
+
   ];
 
   const handleBreakpoint = (broken) => {
@@ -87,7 +124,7 @@ export default function Sidebar() {
         >
           <img src={smitlogo} alt="logo" style={{ margin: "auto", width: "80px", height: "80px" }} />
           <hr />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]} items={menuItems} />
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]} items={user?.role == "trainer" ? trainerMenuItems : adminMenuItems} />
         </Sider>
         <Layout className="site-layout">
           <Header
@@ -115,7 +152,7 @@ export default function Sidebar() {
           {/* <AllClassfellowsPage /> */}
           {/* <StudentSettingPage /> */}
           <NotificationModal />
-          <StudentUpdateProfilePage />  
+          <StudentUpdateProfilePage />
           {/* end admin content redering */}
 
         </Layout>
