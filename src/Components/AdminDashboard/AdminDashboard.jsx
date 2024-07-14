@@ -215,76 +215,53 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <Layout>
-      <Header className="bg-white p-4">
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Title level={4} style={{ color: '#1890ff' }}>
-              Admin Dashboard
-            </Title>
-          </Col>
-        </Row>
-      </Header>
-      <Layout>
-        <Sider className="bg-green-500" width={200}>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            items={[
-              { key: '1', icon: <HomeOutlined />, label: 'Home' },
-              { key: '4', icon: <TeamOutlined />, label: 'Student' },
-              { key: '5', icon: <SettingOutlined />, label: 'Settings' },
-            ]}
-          />
-        </Sider>
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Content>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-            </Breadcrumb>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={12}>
-                <Row justify="space-between" align="middle">
-                  <Col>
-                    <Title level={3} style={{ marginBottom: '16px' }}>
-                      Courses
-                    </Title>
-                  </Col>
-                  <Col>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCourse}>
-                      Add New Course
-                    </Button>
-                  </Col>
-                </Row>
-                <Table
-                  columns={courseColumns}
-                  dataSource={courses}
-                  pagination={false}
-                />
+    <>
+      
+      <Content>
+        <Breadcrumb style={{ margin: '16px 0' }}>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+        </Breadcrumb>
+        <Row gutter={[24, 24]}>
+          <Col xs={24} sm={12}>
+            <Row justify="space-between" align="middle">
+              <Col>
+                <Title level={3} style={{ marginBottom: '16px' }}>
+                  Courses
+                </Title>
               </Col>
-              <Col xs={24} sm={12}>
-                <Row justify="space-between" align="middle">
-                  <Col>
-                    <Title level={3} style={{ marginBottom: '16px' }}>
-                      Teachers
-                    </Title>
-                  </Col>
-                  <Col>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAddTeacher}>
-                      Add New Teacher
-                    </Button>
-                  </Col>
-                </Row>
-                <Table
-                  columns={teacherColumns}
-                  dataSource={teachers}
-                  pagination={false}
-                />
+              <Col>
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAddCourse}>
+                  Add New Course
+                </Button>
               </Col>
             </Row>
-          </Content>
-        </Layout>
-      </Layout>
+            <Table
+              columns={courseColumns}
+              dataSource={courses}
+              pagination={false}
+            />
+          </Col>
+          <Col xs={24} sm={12}>
+            <Row justify="space-between" align="middle">
+              <Col>
+                <Title level={3} style={{ marginBottom: '16px' }}>
+                  Teachers
+                </Title>
+              </Col>
+              <Col>
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAddTeacher}>
+                  Add New Teacher
+                </Button>
+              </Col>
+            </Row>
+            <Table
+              columns={teacherColumns}
+              dataSource={teachers}
+              pagination={false}
+            />
+          </Col>
+        </Row>
+      </Content>
       <Modal
         title={selectedCourse ? 'Edit Course' : 'Edit Teacher'}
         visible={isEditModalVisible}
@@ -315,7 +292,7 @@ const AdminDashboard = () => {
       >
         <Form
           layout="vertical"
-          onFinish={() => {}} // No need to specify onFinish here, it will be handled by handleEditSubmit
+          onFinish={() => { }} // No need to specify onFinish here, it will be handled by handleEditSubmit
         >
           <Form.Item
             name="name"
@@ -394,7 +371,7 @@ const AdminDashboard = () => {
           <Button
             key="submit"
             type="primary"
-            onClick={() => {}} // No need to specify onClick here, it will be handled by form submission
+            onClick={() => { }} // No need to specify onClick here, it will be handled by form submission
             form="add-course-form"
             htmlType="submit"
           >
@@ -434,7 +411,7 @@ const AdminDashboard = () => {
           <Button
             key="submit"
             type="primary"
-            onClick={() => {}} // No need to specify onClick here, it will be handled by form submission
+            onClick={() => { }} // No need to specify onClick here, it will be handled by form submission
             form="add-teacher-form"
             htmlType="submit"
           >
@@ -463,7 +440,7 @@ const AdminDashboard = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </Layout>
+    </>
   );
 };
 

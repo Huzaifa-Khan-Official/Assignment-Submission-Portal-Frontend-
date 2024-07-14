@@ -6,6 +6,9 @@ import User from "./Context/Context";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import api from "./api/api";
+import PageTitle from "./Components/PageTitle";
+import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
+import AssignmentSubmitFormModal from "./Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal";
 
 function App() {
   const { user, setUser } = useContext(User);
@@ -23,8 +26,11 @@ function App() {
 
   return (
     <>
+      <PageTitle title="Home" />
       <Sidebar>
         <StudentHomePage />
+        {/* <AdminDashboard /> */}
+        {/* <AssignmentSubmitFormModal /> */}
       </Sidebar>
     </>
   )

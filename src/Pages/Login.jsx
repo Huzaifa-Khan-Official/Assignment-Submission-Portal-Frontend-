@@ -7,6 +7,7 @@
   import { useContext, useEffect } from "react";
   import User from "../Context/Context";
 import api from "../api/api";
+import PageTitle from "../Components/PageTitle";
 
   export default function Login() {
     const { user, setUser } = useContext(User);
@@ -18,7 +19,7 @@ import api from "../api/api";
           setUser(res.data)
           navigate("/");
         })
-        .catch(err => console.log(err.response.data.message))
+        .catch(err => console.log(err?.response?.data?.message))
     }, []);
 
     const onFinish = (data) => {
@@ -30,11 +31,14 @@ import api from "../api/api";
           toast.success("Logged in successfully", {
             onClose: () => {
               setUser(res.data);
-              navigate("/");
+              if(res.data.role == "admin") {
+
+              }
+              navigate("/admin/dashboard");
             }
           })
         })
-        .catch(err => toast.error(err.response.data))
+        .catch(err => toast.error(err?.response?.data))
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -44,6 +48,7 @@ import api from "../api/api";
     return (
       <div className="flex justify-between min-h-screen">
         <ToastContainer autoClose={1000} />
+        <PageTitle title="Login"/>
         <div className="md:w-1/2 flex justify-center items-center">
           <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
         </div>

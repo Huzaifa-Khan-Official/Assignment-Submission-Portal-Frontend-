@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import User from "../Context/Context";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../api/api";
+import PageTitle from "../Components/PageTitle";
 
 export default function Signup() {
   const { user, setUser } = useContext(User);
@@ -42,6 +43,7 @@ export default function Signup() {
   return (
     <div className="flex justify-between min-h-screen">
       <ToastContainer autoClose={1000} />
+      <PageTitle title="Signup" />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={signupPagePic} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
       </div>

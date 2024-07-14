@@ -42,7 +42,7 @@ export default function AssignmentSubmitFormModal() {
                                         <FiFolderPlus className='transition ease-in-out delay-150 hover:scale-125' />
                                     </div>
                                 </div>
-                                <div className='mx-7 bg-stone-200 h-24 rounded-md border-2 border-dashed rounded-md border-sky-400'>
+                                <div className='mx-7 bg-stone-200 h-24 rounded-md border-2 border-dashed border-sky-400'>
                                     <div className='my-2 flex justify-center text-4xl'>
                                         <BiSolidArrowToBottom className='transition ease-in-out delay-150 hover:scale-125 cursor-pointer' />
                                     </div>
