@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, memo } from "react";
 import smitlogo from '../assets/smitlogo.png';
 import {
   MenuFoldOutlined,
@@ -9,6 +9,7 @@ import {
   TeamOutlined,
   SettingOutlined,
   AppstoreOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { SiGoogleclassroom } from "react-icons/si";
 import { Layout, Menu } from "antd";
@@ -23,11 +24,14 @@ import StudentUpdateProfilePage from "../Pages/Students/StudentUpdateProfilePage
 import User from "../Context/Context";
 import { Link } from "react-router-dom";
 import { VscChecklist } from "react-icons/vsc";
+import api from "../api/api";
+import { toast, ToastContainer } from "react-toastify";
 
 const { Header, Sider, Content } = Layout;
 
-export default function Sidebar() {
+const Sidebar = ({ children }) => {
   const { user, setUser } = useContext(User);
+  console.log("sidebar chala");
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -149,6 +153,20 @@ export default function Sidebar() {
     }
   };
 
+  const logoutBtn = () => {
+    console.log("logout btn chala");
+    api.post("/api/users/logout")
+      .then(res => {
+        toast.success(res.data, {
+          onClose: () => {
+            setUser(null);
+            navigate("/login");
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div>
       <Layout className="h-screen">
@@ -162,12 +180,24 @@ export default function Sidebar() {
           onCollapse={(collapsed, type) => {
             console.log(collapsed, type);
           }}
+          style={{
+            overflowY: 'hidden',
+            height: '100vh',
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            zIndex: 10
+          }}
         >
           <img src={smitlogo} alt="logo" style={{ margin: "auto", width: "80px", height: "80px" }} />
           <hr />
-          <Menu theme="dark" mode="vertical" style={{height: "100%"}} defaultSelectedKeys={["1"]} items={user?.role == "trainer" ? trainerMenuItems : user?.role == "admin" ? adminMenuItems : studentMenuItems} />
+          <div className="flex w-full px-2 flex-col justify-between h-[80%]">
+            <Menu theme="dark" mode="vertical" style={{ height: "100%", width: "100%" }} defaultSelectedKeys={["1"]} items={user?.role == "trainer" ? trainerMenuItems : user?.role == "admin" ? adminMenuItems : studentMenuItems} />
+            <div className="flex items-center px-4 py-2 hover:bg-[#1677ff] rounded-md transition duration-500 cursor-pointer" onClick={logoutBtn}><LogoutOutlined className="text-white text-lg" /><button className="ml-3 text-white">Logout</button></div>
+          </div>
         </Sider>
-        <Layout className="site-layout">
+        <Layout className={`site-layout lg:ml-[200px] ${collapsed && "lg:ml-0"}`}>
           <Header
             className="site-layout-background bg-white"
             style={{
@@ -181,7 +211,7 @@ export default function Sidebar() {
               />
             ) : (
               <MenuFoldOutlined
-                className="trigger m-5"
+                className="trigger m-5 ml-[200px] lg:ml-0"
                 onClick={() => setCollapsed(!collapsed)}
               />
             )}
@@ -192,12 +222,18 @@ export default function Sidebar() {
           {/* <StudentAssignmentTodoPage /> */}
           {/* <AllClassfellowsPage /> */}
           {/* <StudentSettingPage /> */}
-          <NotificationModal />
-          <StudentUpdateProfilePage />
-          {/* end admin content redering */}
+          {/* <NotificationModal />
+          <StudentUpdateProfilePage /> */}
+          <div className="bg-[#f5f5f5] pb-10">
 
+            {children}
+            {/* end admin content redering */}
+            <ToastContainer autoClose={1000} />
+          </div>
         </Layout>
       </Layout>
     </div>
   );
 }
+
+export default memo(Sidebar);

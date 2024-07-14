@@ -7,19 +7,12 @@ import axios from "axios";
 import { useContext, useEffect } from "react";
 import User from "../Context/Context";
 import api from "../api/api";
+import PageTitle from "../Components/PageTitle";
 
 export default function Login() {
   const { user, setUser } = useContext(User);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   api.get("/api/users/profile")
-  //     .then(res => {
-  //       setUser(res.data)
-  //       navigate("/");
-  //     })
-  //     .catch(err => console.log(err.response.data.message))
-  // }, []);
   useEffect(() => {
     if (!user) {
       api.get("/api/users/profile")
@@ -29,8 +22,7 @@ export default function Login() {
         })
         .catch(err => console.log(err.response.data.message));
     }
-  }, [user, setUser, navigate]);
-
+  }, [])
 
   const onFinish = (data) => {
     api.post("/api/users/auth", {
@@ -43,11 +35,13 @@ export default function Login() {
             // console.log(res.data)
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
-            navigate("/");
+            if (res.data.role == "admin") {
+              navigate("/admin/dashboard");
+            }
           }
         })
       })
-      .catch(err => toast.error(err.response.data))
+      .catch(err => toast.error(err?.response?.data))
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -57,6 +51,7 @@ export default function Login() {
   return (
     <div className="flex justify-between min-h-screen">
       <ToastContainer autoClose={1000} />
+      <PageTitle title="Login" />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
       </div>
@@ -89,7 +84,19 @@ export default function Login() {
               >
                 <Input.Password placeholder="Enter Password" />
               </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: 'Password is required' },
+                  { min: 6, message: 'Password must be at least 6 characters long' },
+                ]}
+              >
+                <Input.Password placeholder="Enter Password" />
+              </Form.Item>
 
+              <div className="mb-4">
+                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
+              </div>
               <div className="mb-4">
                 <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
               </div>
@@ -105,5 +112,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
-}
+  )
+};

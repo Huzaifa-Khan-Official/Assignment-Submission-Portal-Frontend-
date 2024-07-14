@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BellFilled } from '@ant-design/icons'
 import { Card } from 'antd';
 const { Meta } = Card;
@@ -77,7 +77,7 @@ export default function StudentHomePage() {
                         </Card>
                     </div>
 
-                    
+
 
                 </div>
             </div>

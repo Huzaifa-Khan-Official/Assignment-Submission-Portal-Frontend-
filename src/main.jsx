@@ -9,6 +9,10 @@ import NotFoundPage from './Pages/NotFoundPage.jsx';
 import User from './Context/Context.js';
 import { useState } from 'react';
 import ErrorBoundary from './Components/ErrorBoundary.jsx';
+import Sidebar from './Components/Sidebar.jsx';
+import PageTitle from './Components/PageTitle.jsx';
+import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
+import StudentHomePage from './Pages/Students/StudentHomePage.jsx';
 
 
 const router = createBrowserRouter([
@@ -26,8 +30,19 @@ const router = createBrowserRouter([
     element: <Signup />
   },
   {
-    path: "/*",
+    path: "*",
     element: <NotFoundPage />
+  },
+  {
+    path: "/admin/dashboard",
+    element: <>
+      <PageTitle title="Admin | Dashboard" />
+      <Sidebar>
+        {/* <h1>Admin | Dashboard</h1> */}
+        {/* <AdminDashboard /> */}
+        <StudentHomePage />
+      </Sidebar>
+    </>
   }
 
 ])
