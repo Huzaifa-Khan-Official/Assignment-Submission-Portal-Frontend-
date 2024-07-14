@@ -6,6 +6,14 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import User from "../Context/Context";
+import { Form, Input, Button } from "antd";
+import animateLogin from "../assets/loginPagePic.png";
+import { Link, useNavigate } from "react-router-dom";
+import Notifications from "../Components/Notifications";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { useContext, useEffect } from "react";
+import User from "../Context/Context";
 import api from "../api/api";
 import PageTitle from "../Components/PageTitle";
 
@@ -17,10 +25,10 @@ export default function Login() {
     if (!user) {
       api.get("/api/users/profile")
         .then(res => {
-          setUser(res.data)
+          setUser(res.data);
           navigate("/");
         })
-        .catch(err => console.log(err?.response?.data?.message))
+        .catch(err => console.log(err.response.data.message));
     }
   }, [])
 
@@ -82,7 +90,19 @@ export default function Login() {
               >
                 <Input.Password placeholder="Enter Password" />
               </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: 'Password is required' },
+                  { min: 6, message: 'Password must be at least 6 characters long' },
+                ]}
+              >
+                <Input.Password placeholder="Enter Password" />
+              </Form.Item>
 
+              <div className="mb-4">
+                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
+              </div>
               <div className="mb-4">
                 <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
               </div>
@@ -98,5 +118,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
-}
+  )
+};
