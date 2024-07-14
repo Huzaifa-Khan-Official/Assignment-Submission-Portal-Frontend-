@@ -13,27 +13,16 @@ export default function Login() {
   const { user, setUser } = useContext(User);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   api.get("/api/users/profile")
-  //     .then(res => {
-  //       setUser(res.data)
-  //       navigate("/");
-  //     })
-  //     .catch(err => console.log(err.response.data.message))
-  // }, []);
   useEffect(() => {
     if (!user) {
       api.get("/api/users/profile")
         .then(res => {
-          setUser(res.data);
+          setUser(res.data)
           navigate("/");
         })
-        .catch(err => console.log(err.response.data.message));
-    }
-  }, [user, setUser, navigate]);
-
         .catch(err => console.log(err?.response?.data?.message))
-    }, []);
+    }
+  }, [])
 
   const onFinish = (data) => {
     api.post("/api/users/auth", {
@@ -44,30 +33,14 @@ export default function Login() {
         toast.success("Logged in successfully", {
           onClose: () => {
             setUser(res.data);
-            navigate("/");
+            if (res.data.role == "admin") {
+              navigate("/admin/dashboard");
+            }
           }
         })
       })
-      .catch(err => toast.error(err.response.data))
+      .catch(err => toast.error(err?.response?.data))
   };
-    const onFinish = (data) => {
-      api.post("/api/users/auth", {
-        email: data.email,
-        password: data.password
-      })
-        .then(res => {
-          toast.success("Logged in successfully", {
-            onClose: () => {
-              setUser(res.data);
-              if(res.data.role == "admin") {
-
-              }
-              navigate("/admin/dashboard");
-            }
-          })
-        })
-        .catch(err => toast.error(err?.response?.data))
-    };
 
   const onFinishFailed = (errorInfo) => {
     toast.error("Please enter all fields")
@@ -76,6 +49,7 @@ export default function Login() {
   return (
     <div className="flex justify-between min-h-screen">
       <ToastContainer autoClose={1000} />
+      <PageTitle title="Login" />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
       </div>
@@ -98,32 +72,6 @@ export default function Login() {
               >
                 <Input placeholder="Enter Email" />
               </Form.Item>
-    return (
-      <div className="flex justify-between min-h-screen">
-        <ToastContainer autoClose={1000} />
-        <PageTitle title="Login"/>
-        <div className="md:w-1/2 flex justify-center items-center">
-          <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
-        </div>
-        <div className="w-full md:w-1/2 bg-primary-blue flex justify-center items-center">
-          <div className="w-[80%]">
-            <h1 className="text-4xl text-white font-bold text-center mb-7">Login</h1>
-            <div className="w-full">
-              <Form
-                name="login"
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-              >
-                <Form.Item
-                  name="email"
-                  rules={[
-                    { required: true, message: 'Email is required' },
-                    { type: 'email', message: 'Enter a valid email address' },
-                  ]}
-                >
-                  <Input placeholder="Enter Email" />
-                </Form.Item>
 
               <Form.Item
                 name="password"
