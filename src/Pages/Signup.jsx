@@ -25,8 +25,10 @@ export default function Signup() {
       role: values.role
     })
       .then((res) => {
-        toast.success("Signup successfully", {
+        toast.success("Sign up successfully", {
           onClose: () => {
+            // console.log(res.data)
+            localStorage.setItem('token', res.data.token);
             setUser(res.data);
             navigate("/");
           }

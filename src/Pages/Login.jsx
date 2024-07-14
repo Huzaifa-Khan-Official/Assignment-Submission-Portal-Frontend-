@@ -40,6 +40,8 @@ export default function Login() {
       .then(res => {
         toast.success("Logged in successfully", {
           onClose: () => {
+            // console.log(res.data)
+            localStorage.setItem('token', res.data.token);
             setUser(res.data);
             navigate("/");
           }

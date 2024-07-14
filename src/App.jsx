@@ -11,15 +11,34 @@ function App() {
   const { user, setUser } = useContext(User);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   if (!user) {
+  //     api.get("/api/users/profile")
+  //       .then(res => setUser(res.data))
+  //       .catch(err => {
+  //         err.response && navigate("/login");
+  //       })
+  //   }
+  // }, [user]);
+
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get("/api/users/profile");
+        console.log("fetched data from db")
+        setUser(res.data);
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
+        localStorage.removeItem('token');
+        setUser(null);
+        navigate("/login");
+      }
+    };
+
     if (!user) {
-      api.get("/api/users/profile")
-        .then(res => setUser(res.data))
-        .catch(err => {
-          err.response && navigate("/login");
-        })
+      fetchProfile();
     }
-  }, [user]);
+  }, [user, setUser, navigate]);
 
   return (
     <>
