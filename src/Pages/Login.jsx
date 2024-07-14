@@ -38,6 +38,9 @@ export default function Login() {
             if (res.data.role == "admin") {
               navigate("/admin/dashboard");
             }
+            else {
+              navigate("/");
+            }
           }
         })
       })
@@ -84,7 +87,7 @@ export default function Login() {
               >
                 <Input.Password placeholder="Enter Password" />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 name="password"
                 rules={[
                   { required: true, message: 'Password is required' },
@@ -92,13 +95,13 @@ export default function Login() {
                 ]}
               >
                 <Input.Password placeholder="Enter Password" />
-              </Form.Item>
+              </Form.Item> */}
 
+              {/* <div className="mb-4">
+                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Sign up</Link></p>
+              </div> */}
               <div className="mb-4">
-                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
-              </div>
-              <div className="mb-4">
-                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Signup</Link></p>
+                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Sign up</Link></p>
               </div>
 
               <Form.Item>

@@ -106,7 +106,7 @@ export default function Signup() {
               <Form.Item>
                 <Button type="primary" htmlType="submit" className="group relative h-12 w-48 overflow-hidden rounded-lg bg-white text-lg shadow">
                   <div className="absolute inset-0 w-0 bg-[#b3caff] transition-all duration-[250ms] ease-out group-hover:w-full"></div>
-                  <span className="relative text-primary-blue group-hover:text-blue-800 font-bold">Signup</span>
+                  <span className="relative text-primary-blue group-hover:text-blue-800 font-bold">Sign up</span>
                 </Button>
               </Form.Item>
             </div>
