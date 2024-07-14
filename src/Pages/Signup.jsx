@@ -73,7 +73,9 @@ export default function Signup() {
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              rules={[{ required: true, message: 'Please input your password!' },
+              { min: 6, message: 'Password must be at least 6 characters long' }
+              ]}
             >
               <Input.Password placeholder="Enter Password" className="w-full" />
             </Form.Item>
