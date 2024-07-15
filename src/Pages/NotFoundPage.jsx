@@ -12,7 +12,7 @@ export default function NotFoundPage() {
                     </p>
                     <div className="mt-7">
 
-                        <Link to="/" className="group relative  overflow-hidden rounded-lg bg-white text-lg shadow py-3 px-9 border-2">
+                        <Link to="/login" className="group relative  overflow-hidden rounded-lg bg-white text-lg shadow py-3 px-9 border-2">
                             <div className="absolute inset-0 w-0 bg-[#b3caff] transition-all duration-[250ms] ease-out group-hover:w-full rounded-lg"></div>
                             <span className="relative text-primary-blue group-hover:text-blue-800 font-bold">Go to Homepage</span>
                         </Link>

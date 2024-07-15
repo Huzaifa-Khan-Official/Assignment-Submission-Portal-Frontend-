@@ -7,13 +7,10 @@ import Login from './Pages/Login.jsx';
 import Signup from './Pages/Signup.jsx';
 import NotFoundPage from './Pages/NotFoundPage.jsx';
 import User from './Context/Context.js';
+import LoaderContext from "./Context/LoaderContext.js";
 import { useState } from 'react';
 import ErrorBoundary from './Components/ErrorBoundary.jsx';
 import Sidebar from './Components/Sidebar.jsx';
-import PageTitle from './Components/PageTitle.jsx';
-import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
-import StudentHomePage from './Pages/Students/StudentHomePage.jsx';
-
 
 const router = createBrowserRouter([
   {
@@ -33,26 +30,45 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFoundPage />
   },
+  // Admin Routes
   {
     path: "/admin/dashboard",
     element: <>
-      <PageTitle title="Admin | Dashboard" />
-      <Sidebar>
-        {/* <h1>Admin | Dashboard</h1> */}
-        {/* <AdminDashboard /> */}
-        <StudentHomePage />
+      <Sidebar title="Admin | Dashboard">
+        <h1>Admin Dashboard</h1>
       </Sidebar>
     </>
-  }
+  },
+  // Trainer Routes
+  {
+    path: "/trainer/dashboard",
+    element: <>
+      <Sidebar title="Trainer | Dashboard">
+        <h1>Trainer Dashboard</h1>
+      </Sidebar>
+    </>
+  },
+  // Student Routes
+  {
+    path: "/student/assignments",
+    element: <>
+      <Sidebar title="Student | Assignments">
+        <h1>Student | Assignments Listing Page</h1>
+      </Sidebar>
+    </>
+  },
 
 ])
 
 function Main() {
   const [user, setUser] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   return (
     <User.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
+      <LoaderContext.Provider value={{ loader, setLoader }}>
+        <RouterProvider router={router} />
+      </LoaderContext.Provider>
     </User.Provider>
   );
 }

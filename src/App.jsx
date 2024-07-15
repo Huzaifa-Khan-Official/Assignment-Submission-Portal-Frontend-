@@ -1,28 +1,13 @@
 import { useContext, useEffect } from "react";
-import AllAssignmentsListing from "./Components/AllAssignmentsListing"
 import Sidebar from "./Components/Sidebar"
 import StudentHomePage from "./Pages/Students/StudentHomePage"
 import User from "./Context/Context";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import api from "./api/api";
-import PageTitle from "./Components/PageTitle";
-import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
-import AssignmentSubmitFormModal from "./Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal";
 
 function App() {
   const { user, setUser } = useContext(User);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     api.get("/api/users/profile")
-  //       .then(res => setUser(res.data))
-  //       .catch(err => {
-  //         err.response && navigate("/login");
-  //       })
-  //   }
-  // }, [user]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -34,7 +19,7 @@ function App() {
         console.error("Error fetching profile:", error.response?.data || error.message);
         localStorage.removeItem('token');
         setUser(null);
-        navigate("/login");
+        // navigate("/login");
       }
     };
 
@@ -45,11 +30,8 @@ function App() {
 
   return (
     <>
-      <PageTitle title="Home" />
-      <Sidebar>
+      <Sidebar title="Student | Dashboard">
         <StudentHomePage />
-        {/* <AdminDashboard /> */}
-        {/* <AssignmentSubmitFormModal /> */}
       </Sidebar>
     </>
   )

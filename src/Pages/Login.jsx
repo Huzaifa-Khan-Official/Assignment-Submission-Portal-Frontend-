@@ -6,11 +6,14 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import User from "../Context/Context";
+import LoaderContext from "../Context/LoaderContext";
 import api from "../api/api";
 import PageTitle from "../Components/PageTitle";
+import Loader from "../Components/Loader";
 
 export default function Login() {
   const { user, setUser } = useContext(User);
+  const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,23 +23,28 @@ export default function Login() {
           setUser(res.data);
           navigate("/");
         })
-        .catch(err => console.log(err.response.data.message));
+        .catch(err => {
+          console.log(err);
+        });
     }
   }, [])
 
   const onFinish = (data) => {
+    setLoader(true);
     api.post("/api/users/auth", {
       email: data.email,
       password: data.password
     })
       .then(res => {
+        setLoader(false);
         toast.success("Logged in successfully", {
           onClose: () => {
-            // console.log(res.data)
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
             if (res.data.role == "admin") {
               navigate("/admin/dashboard");
+            } else if (res.data.role == "trainer") {
+              navigate("/trainer/dashboard");
             }
             else {
               navigate("/");
@@ -44,7 +52,11 @@ export default function Login() {
           }
         })
       })
-      .catch(err => toast.error(err?.response?.data))
+      .catch(err => {
+        setLoader(false);
+        toast.error("Something went wrong! Please try again.")
+        console.log("err =>", err);
+      })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -54,6 +66,7 @@ export default function Login() {
   return (
     <div className="flex justify-between min-h-screen">
       <ToastContainer autoClose={1000} />
+      <Loader />
       <PageTitle title="Login" />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={animateLogin} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />
@@ -87,19 +100,7 @@ export default function Login() {
               >
                 <Input.Password placeholder="Enter Password" />
               </Form.Item>
-              {/* <Form.Item
-                name="password"
-                rules={[
-                  { required: true, message: 'Password is required' },
-                  { min: 6, message: 'Password must be at least 6 characters long' },
-                ]}
-              >
-                <Input.Password placeholder="Enter Password" />
-              </Form.Item> */}
 
-              {/* <div className="mb-4">
-                <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Sign up</Link></p>
-              </div> */}
               <div className="mb-4">
                 <p className="text-[#ffffff9d]">Don't have an account? <Link to="/signup" className="cursor-pointer opacity-1 text-white hover:underline">Sign up</Link></p>
               </div>

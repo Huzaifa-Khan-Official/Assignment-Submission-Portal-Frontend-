@@ -3,12 +3,15 @@ import signupPagePic from "../assets/signupPagePic.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import User from "../Context/Context";
+import LoaderContext from "../Context/LoaderContext";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../api/api";
 import PageTitle from "../Components/PageTitle";
+import Loader from "../Components/Loader";
 
 export default function Signup() {
   const { user, setUser } = useContext(User);
+  const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +21,7 @@ export default function Signup() {
   }, []);
 
   const onFinish = (values) => {
+    setLoader(true);
     values.role = "student";
     api.post("/api/users", {
       username: values.username,
@@ -26,16 +30,26 @@ export default function Signup() {
       role: values.role
     })
       .then((res) => {
+        setLoader(false);
         toast.success("Sign up successfully", {
           onClose: () => {
-            // console.log(res.data)
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
-            navigate("/");
+            if (res.data.role == "admin") {
+              navigate("/admin/dashboard");
+            } else if (res.data.role == "trainer") {
+              navigate("/trainer/dashboard");
+            }
+            else {
+              navigate("/");
+            }
           }
         })
       })
-      .catch(err => toast.error("Something went wrong, please try again!"));
+      .catch(err => {
+        setLoader(false);
+        toast.error("Something went wrong, please try again!")
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -45,6 +59,7 @@ export default function Signup() {
   return (
     <div className="flex justify-between min-h-screen">
       <ToastContainer autoClose={1000} />
+      <Loader />
       <PageTitle title="Signup" />
       <div className="md:w-1/2 flex justify-center items-center">
         <img src={signupPagePic} alt="" className="w-full hidden md:block max-h-[400px] object-cover" />

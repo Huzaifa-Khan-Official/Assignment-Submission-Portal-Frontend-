@@ -22,18 +22,44 @@ import StudentSettingPage from "../Pages/Students/StudentSettingPage";
 import NotificationModal from "./NotificationModal/NotificationModal";
 import StudentUpdateProfilePage from "../Pages/Students/StudentUpdateProfilePage";
 import User from "../Context/Context";
+import LoaderContext from "../Context/LoaderContext";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { VscChecklist } from "react-icons/vsc";
 import api from "../api/api";
 import { toast, ToastContainer } from "react-toastify";
+import Loader from "./Loader";
+import PageTitle from "./PageTitle"
 
 const { Header, Sider, Content } = Layout;
 
-const Sidebar = ({ children }) => {
+const Sidebar = ({ children, title }) => {
   const { user, setUser } = useContext(User);
-  console.log("sidebar chala");
-
+  const { loader, setLoader } = useContext(LoaderContext);
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoader(true);
+        const res = await api.get("/api/users/profile");
+        console.log("fetched data from db")
+        setUser(res.data);
+        setLoader(false);
+      } catch (error) {
+        setLoader(false);
+        console.error("Error fetching profile:", error.response?.data || error.message);
+        localStorage.removeItem('token');
+        setUser(null);
+        // navigate("/login");
+      }
+    };
+
+    if (!user) {
+      fetchProfile();
+    }
+  }, [user, setUser, navigate]);
 
   const adminMenuItems = [
     {
@@ -126,7 +152,7 @@ const Sidebar = ({ children }) => {
     {
       key: "2",
       icon: <BookOutlined />,
-      label: (<Link to="/assignments">Assignments</Link>)
+      label: (<Link to="/student/assignments">Assignments</Link>)
     },
     {
       key: "3",
@@ -154,7 +180,6 @@ const Sidebar = ({ children }) => {
   };
 
   const logoutBtn = () => {
-    console.log("logout btn chala");
     api.post("/api/users/logout")
       .then(res => {
         toast.success(res.data, {
@@ -225,10 +250,10 @@ const Sidebar = ({ children }) => {
           {/* <NotificationModal />
           <StudentUpdateProfilePage /> */}
           <div className="bg-[#f5f5f5] pb-10">
-
+            <PageTitle title={title} />
             {children}
-            {/* end admin content redering */}
             <ToastContainer autoClose={1000} />
+            <Loader />
           </div>
         </Layout>
       </Layout>
