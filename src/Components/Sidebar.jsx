@@ -184,6 +184,7 @@ const Sidebar = ({ children, title }) => {
       .then(res => {
         toast.success(res.data, {
           onClose: () => {
+            localStorage.removeItem('token');
             setUser(null);
             navigate("/login");
           }

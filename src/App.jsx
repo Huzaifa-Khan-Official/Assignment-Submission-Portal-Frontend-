@@ -31,7 +31,7 @@ function App() {
   return (
     <>
       <Sidebar title="Student | Dashboard">
-        <StudentHomePage />
+        {user?.role == "student" ? <StudentHomePage /> : null}
       </Sidebar>
     </>
   )
