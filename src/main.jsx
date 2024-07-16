@@ -11,6 +11,11 @@ import LoaderContext from "./Context/LoaderContext.js";
 import { useState } from 'react';
 import ErrorBoundary from './Components/ErrorBoundary.jsx';
 import Sidebar from './Components/Sidebar.jsx';
+import StudentAllAssignmentPage from './Pages/Students/StudentAllAssignmentPage.jsx';
+import StudentAssignmentTodoPage from './Pages/Students/StudentAssignmentTodoPage.jsx';
+import AllClassfellowsPage from './Pages/Students/AllClassfellowsPage.jsx';
+import StudentSettingPage from './Pages/Students/StudentSettingPage.jsx';
+import StudentUpdateProfilePage from './Pages/Students/StudentUpdateProfilePage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -53,7 +58,39 @@ const router = createBrowserRouter([
     path: "/student/assignments",
     element: <>
       <Sidebar title="Student | Assignments">
-        <h1>Student | Assignments Listing Page</h1>
+        <StudentAllAssignmentPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/assignments/to-do",
+    element: <>
+      <Sidebar title="Student | Assignments | TO-Do">
+        <StudentAssignmentTodoPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/classfellows",
+    element: <>
+      <Sidebar title="Student | Classfellows">
+        <AllClassfellowsPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/setting",
+    element: <>
+      <Sidebar title="Student | Setting">
+        <StudentSettingPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/profile",
+    element: <>
+      <Sidebar title="Student | Profile">
+        <StudentUpdateProfilePage />
       </Sidebar>
     </>
   },
