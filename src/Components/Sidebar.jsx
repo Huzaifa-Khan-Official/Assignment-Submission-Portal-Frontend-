@@ -52,7 +52,7 @@ const Sidebar = ({ children, title }) => {
         console.error("Error fetching profile:", error.response?.data || error.message);
         localStorage.removeItem('token');
         setUser(null);
-        // navigate("/login");
+        navigate("/login");
       }
     };
 
