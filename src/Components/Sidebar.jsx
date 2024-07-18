@@ -77,7 +77,7 @@ const Sidebar = ({ children, title }) => {
   ];
 
   const studentMenuItems = [
-    { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
+    { key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile">{user?.username}</Link>), className: "capitalize" },
     { key: '1', icon: <HomeOutlined />, label: (<Link to="/">Home</Link>), },
     { key: "2", icon: <BookOutlined />, label: (<Link to="/student/assignments">Assignments</Link>) },
     { key: "3", icon: <VscChecklist />, label: (<Link to="/assignments/todo">To-do</Link>) },
@@ -87,6 +87,7 @@ const Sidebar = ({ children, title }) => {
 
   const getMenuItemKey = () => {
     // student routes
+    if (location.pathname.includes("/student/profile")) return '0';
     if (location.pathname === "/") return '1';
     if (location.pathname.includes("/student/assignment")) return '2';
     if (location.pathname.includes("/assignments/todo")) return '3';
@@ -177,7 +178,7 @@ const Sidebar = ({ children, title }) => {
               )
             )}
           </Header> */}
-          <div className={`bg-[#f5f5f5] pb-10 ${collapsed && "ml-[80px]"}`}>
+          <div className={`bg-[#f5f5f5] pb-10 ${collapsed && "ml-[70px]"}`}>
             <PageTitle title={title} />
             {children}
             <ToastContainer autoClose={1000} />

@@ -4,6 +4,7 @@ import { FaUserLock, FaBell } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
 import { ImSearch } from "react-icons/im";
 import { Menu } from 'antd';
+import { Link } from 'react-router-dom';
 
 const items = [
     {
@@ -44,33 +45,8 @@ const items = [
         ],
     },
     {
-        key: 'sub2',
         icon: <FaUserLock />,
-        label: 'Update profile',
-        children: [
-            {
-                key: '5',
-                label: 'Option 5',
-            },
-            {
-                key: '6',
-                label: 'Option 6',
-            },
-            {
-                key: 'sub3',
-                label: 'Submenu',
-                children: [
-                    {
-                        key: '7',
-                        label: 'Option 7',
-                    },
-                    {
-                        key: '8',
-                        label: 'Option 8',
-                    },
-                ],
-            },
-        ],
+        label: (<Link to="/student/profile">Update Profile</Link>),
     },
     {
         key: 'sub5',
