@@ -141,11 +141,6 @@ export default function StudentSettingPage() {
                 mode="vertical"
                 items={items}
             />
-
-            <div className='flex mx-72'>
-                <MdOutlineLogout className='my-1 text-lg ' />
-                <h1 className='text-lg mx-2'>Logout</h1>
-            </div>
         </div>
     )
 }

@@ -63,7 +63,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/assignments/to-do",
+    path: "/assignments/todo",
     element: <>
       <Sidebar title="Student | Assignments | TO-Do">
         <StudentAssignmentTodoPage />
@@ -71,7 +71,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/classfellows",
+    path: "/classmates",
     element: <>
       <Sidebar title="Student | Classfellows">
         <AllClassfellowsPage />
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/setting",
+    path: "/settings",
     element: <>
       <Sidebar title="Student | Setting">
         <StudentSettingPage />

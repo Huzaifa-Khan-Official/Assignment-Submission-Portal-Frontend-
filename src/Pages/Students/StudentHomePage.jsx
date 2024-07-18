@@ -60,7 +60,6 @@ export default function StudentHomePage() {
         api.get("/api/classes/getClasses")
             .then(res => {
                 setClasses(res.data);
-                console.log(res.data);
             })
             .catch(err => {
                 console.log(err);
