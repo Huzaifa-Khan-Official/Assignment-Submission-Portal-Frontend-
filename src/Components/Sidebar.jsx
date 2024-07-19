@@ -69,7 +69,7 @@ const Sidebar = ({ children, title }) => {
 
   const trainerMenuItems = [
     { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
-    { key: '1', icon: <HomeOutlined />, label: (<Link to="/">Home</Link>), },
+    { key: '1', icon: <HomeOutlined />, label: (<Link to="/trainer/dashboard">Home</Link>), },
     { key: '2', icon: <SiGoogleclassroom />, label: (<Link to="/classes">Classes</Link>), },
     { key: '3', icon: <BookOutlined />, label: (<Link to="/assignments">Assignments</Link>), },
     { key: '4', icon: <TeamOutlined />, label: (<Link to="/students">Students</Link>), },
@@ -94,7 +94,7 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/classmates")) return '4';
     if (location.pathname.includes("/settings")) return '5';
 
-    if (location.pathname.includes("/teachers")) return 'sub2';
+    if (location.pathname.includes("/trainer/dashboard")) return '1';
     if (location.pathname.includes("/students")) return '4';
     // Add more checks as needed
   };
@@ -108,8 +108,10 @@ const Sidebar = ({ children, title }) => {
   };
 
   const logoutBtn = () => {
+    setLoader(true);
     api.post("/api/users/logout")
       .then(res => {
+        setLoader(false);
         toast.success(res.data, {
           onClose: () => {
             localStorage.removeItem('token');
@@ -118,7 +120,12 @@ const Sidebar = ({ children, title }) => {
           }
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        setLoader(false);
+        toast.error(err.response?.data || err.message, {
+          autoClose: false
+        });
+      });
   };
 
   return (

@@ -1,8 +1,11 @@
 import { BellFilled, CloseOutlined } from '@ant-design/icons'
-import React from 'react'
+import React, { useContext } from 'react'
 import StudentListingTable from '../../Components/StudentListingTable'
+import User from '../../Context/Context'
 
 export default function StudentAllAssignmentPage() {
+    const {user, setUser} = useContext(User);
+
     return (
         <div>
             <div className='flex m-5 text-2xl font-mono font-extrabold'>
@@ -15,7 +18,7 @@ export default function StudentAllAssignmentPage() {
                 <div className='flex m-8 '>
                     <div className='flex-1'>
                         <ul className='flex gap-10 flex-1'>
-                            <li className='text-lg font-bold'>Noman</li>
+                            <li className='text-lg font-bold uppercase'>{user.username}</li>
                             <li className='text-base text-sky-500 font-semibold'>128066</li>
                             <li className='text-base text-sky-500 font-semibold'>Batch-10</li>
                             <li className='text-base text-sky-700 font-semibold'>View Overall Report</li>

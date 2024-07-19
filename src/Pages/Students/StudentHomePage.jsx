@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { BellFilled, PlusOutlined } from '@ant-design/icons'
+import React, { useEffect, useState } from 'react';
+import { BellFilled, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Modal } from 'antd';
 import OTPInput from 'react-otp-input';
 import api from '../../api/api';
@@ -10,11 +10,14 @@ export default function StudentHomePage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [otp, setOtp] = useState('');
     const [loadings, setLoadings] = useState([]);
-    const [classes, setClasses] = useState([]);
+    const storedClasses = localStorage.getItem('classes');
+    const [classes, setClasses] = useState(storedClasses ? JSON.parse(storedClasses) : []);
 
     useEffect(() => {
-        getAllClasses();
-    }, []);
+        if (classes.length === 0) {
+            getAllClasses();
+        }
+    }, [classes]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -26,7 +29,7 @@ export default function StudentHomePage() {
 
     const handleCancel = () => {
         setIsModalVisible(false);
-    }
+    };
 
     const joinClass = (index) => {
         setLoadings((prevLoadings) => {
@@ -60,11 +63,12 @@ export default function StudentHomePage() {
         api.get("/api/classes/getClasses")
             .then(res => {
                 setClasses(res.data);
+                localStorage.setItem("classes", JSON.stringify(res.data));
             })
             .catch(err => {
                 console.log(err);
             });
-    }
+    };
 
     return (
         <div>
@@ -120,7 +124,7 @@ export default function StudentHomePage() {
                                     <img className='size-12 rounded-full' src="https://s3-alpha-sig.figma.com/img/8ada/4b5e/9db6fa638fd610ae56566f29347fa6cc?Expires=1721001600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=fWSqsY4VvzM~x0gruLGZjF0bF3Eq7DdonFd4SE2tPv1W61PIMFaxq5ppIfTyAm1362Iw9nDH~TImlshZUariPxUjLhPdgbHW5DAT8Ftd2vOw37Rgtp1pNvlSEvSCzrn27w1jh0jh0uTFR05UPPwLoo9Q76r6LCYtrwev1gXETiP5w2qyazgUoz6K~QDTRnWXLxlESFt4dDwVNMFl7k3cPs~XAYBRC1pM4HsQ8Riv0r0xBcNoLWOMI9OA6t1mWHmIZjJy~65u71jnLGNpT2NC0~qgbLnpLIOzelc9LVO33iZxX62pHpx40e86Nzur0tGyDoNUqfnR~-1gL9d1bGe2lQ__" alt="" />
                                 </div>
                                 <div className='flex'>
-                                    <Meta title={course.teacher.username} className='relative left-3' />
+                                    <Meta title={course.teacher?.username} className='relative left-3' />
                                 </div>
                             </Card>
                         </div>
