@@ -185,7 +185,7 @@ const Sidebar = ({ children, title }) => {
               )
             )}
           </Header> */}
-          <div className={`bg-[#f5f5f5] pb-10 ${collapsed && "ml-[70px]"}`}>
+          <div className={`bg-[#f5f5f5] pb-10 ${collapsed && "ml-[70px]"} overflow-hidden`}>
             <PageTitle title={title} />
             {children}
             <ToastContainer autoClose={1000} />

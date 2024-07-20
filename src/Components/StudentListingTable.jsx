@@ -1,22 +1,25 @@
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
 const columns = [
     {
         title: 'Number',
         dataIndex: 'number',
-        key: 'name',
-        render: (text) => <a>{text}</a>,
+        key: 'number',
+        render: (text) => <a className="text-blue-500 block w-max">{text}</a>,
     },
     {
         title: 'Topic',
         dataIndex: 'topic',
-        key: 'address',
+        key: 'topic',
+        render: (text) => <a className="block w-max">{text}</a>,
     },
     {
         title: 'Due date',
         dataIndex: 'date',
         key: 'date',
+        render: (text) => <a className="block w-max">{text}</a>,
     },
     {
         title: 'Status',
@@ -30,10 +33,10 @@ const columns = [
                         color = 'volcano';
                     }
                     if (tag === 'submitted') {
-                        color = 'geekblue'
+                        color = 'geekblue';
                     }
                     if (tag === 'pending') {
-                        color = 'green'
+                        color = 'green';
                     }
                     return (
                         <Tag color={color} key={tag}>
@@ -54,6 +57,7 @@ const columns = [
         ),
     },
 ];
+
 const data = [
     {
         key: '1',
@@ -84,5 +88,16 @@ const data = [
         tags: ['submitted'],
     },
 ];
-const StudentListingTable = () => <Table className='m-8' columns={columns} dataSource={data} />;
+
+const StudentListingTable = () => (
+    <div className="p-4 sm:p-8">
+        <Table
+            className="min-w-full bg-white shadow-md rounded-lg overflow-x-scroll md:overflow-x-hidden"
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+        />
+    </div>
+);
+
 export default StudentListingTable;
