@@ -16,6 +16,8 @@ import StudentAssignmentTodoPage from './Pages/Students/StudentAssignmentTodoPag
 import AllClassfellowsPage from './Pages/Students/AllClassfellowsPage.jsx';
 import StudentSettingPage from './Pages/Students/StudentSettingPage.jsx';
 import StudentUpdateProfilePage from './Pages/Students/StudentUpdateProfilePage.jsx';
+import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
+import AllTeachers from './Components/AllTeachers/AllTeachers.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,7 +42,17 @@ const router = createBrowserRouter([
     path: "/admin/dashboard",
     element: <>
       <Sidebar title="Admin | Dashboard">
-        <h1>Admin Dashboard</h1>
+        {/* <h1>Admin Dashboard</h1> */}
+        <AdminDashboard />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/teachers",
+    element: <>
+      <Sidebar title="Admin | Teachers">
+        {/* <h1>Admin Dashboard</h1> */}
+        <AllTeachers />
       </Sidebar>
     </>
   },

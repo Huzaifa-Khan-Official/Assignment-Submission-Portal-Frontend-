@@ -56,10 +56,10 @@ const Sidebar = ({ children, title }) => {
 
   const adminMenuItems = [
     { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
-    { key: '1', icon: <HomeOutlined />, label: (<Link to="/">Home</Link>), },
+    { key: '1', icon: <HomeOutlined />, label: (<Link to="/admin/dashboard">Home</Link>), },
     {
-      key: 'sub1', label: (<Link to="/teachers">Teachers</Link>), icon: <UserOutlined />, children: [
-        { key: '5', icon: <BookOutlined />, label: (<Link to="/teachers/assignments">Assignments</Link>), },
+      key: 'sub1', label: (<Link to="/admin/teachers">Teachers</Link>), icon: <UserOutlined />, children: [
+        { key: '5', icon: <BookOutlined />, label: (<Link to="/admin/assignments/:teacherID">Assignments</Link>), },
         { key: '6', icon: <TeamOutlined />, label: (<Link to="/teachers/students">Students</Link>), }
       ],
     },
@@ -96,7 +96,10 @@ const Sidebar = ({ children, title }) => {
 
     if (location.pathname.includes("/trainer/dashboard")) return '1';
     if (location.pathname.includes("/students")) return '4';
-    // Add more checks as needed
+
+    // admin routes
+    if (location.pathname.includes("/admin/dashboard")) return '1';
+    if (location.pathname.includes("/admin/teachers")) return 'sub1';
   };
 
   const handleBreakpoint = (broken) => {

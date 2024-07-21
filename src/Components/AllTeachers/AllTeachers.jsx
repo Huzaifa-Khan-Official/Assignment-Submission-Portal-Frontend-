@@ -100,11 +100,13 @@ const AllTeachers = () => {
       title: 'Teacher Name',
       dataIndex: 'name',
       key: 'name',
+      render: (text) => <a className="block w-max">{text}</a>,
     },
     {
       title: 'Designation',
       dataIndex: 'designation',
       key: 'designation',
+      render: (text) => <a className="block w-max">{text}</a>,
     },
     {
       title: 'Actions',
@@ -129,48 +131,7 @@ const AllTeachers = () => {
   ];
 
   return (
-    <Layout className='h-screen'>
-      <Sider
-        breakpoint='lg'
-        collapsedWidth='0'
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-        theme='dark'
-      >
-        <div className='flex justify-center p-4' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img
-            src={smitlogo}
-            alt='SMIT Logo'
-            style={{ width: 90, height: 90, borderRadius: '50%' }}
-          />
-        </div>
-        <Menu
-          theme='dark'
-          mode='inline'
-          defaultSelectedKeys={['3']}
-          className='mt-8'
-        >
-          <Menu.Item key='1' icon={<HomeOutlined />}>
-            Home
-          </Menu.Item>
-          <Menu.Item key='2' icon={<BookOutlined />}>
-            Courses
-          </Menu.Item>
-          <Menu.Item key='3' icon={<UserOutlined />}>
-            Teachers
-          </Menu.Item>
-          <Menu.Item key='4' icon={<TeamOutlined />}>
-            Student
-          </Menu.Item>
-          <Menu.Item key='5' icon={<SettingOutlined />}>
-            Settings
-          </Menu.Item>
-        </Menu>
-      </Sider>
+    <>
       <Layout>
         <Header className='bg-blue-500'>
           <Row justify='end' className='p-4'>
@@ -193,14 +154,14 @@ const AllTeachers = () => {
               columns={columns}
               dataSource={teachers}
               pagination={false}
-              className='w-full'
+              className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
             />
           </div>
         </Content>
       </Layout>
       <Modal
         title={isEditing? 'Edit Teacher' : 'Add Teacher'}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
@@ -242,7 +203,7 @@ const AllTeachers = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </Layout>
+    </>
   );
 };
 
