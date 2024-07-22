@@ -55,6 +55,7 @@ const AllTeachers = () => {
   };
 
   const handleAddTeacher = (values) => {
+    handleCancel();
     setLoader(true);
     api.post("/api/users/trainer", {
       username: values.username,
@@ -65,7 +66,6 @@ const AllTeachers = () => {
       .then((res) => {
         setLoader(false);
         form.resetFields();
-        handleCancel();
         toast.success('Teacher added successfully!', {
           onClose: () => {
             getAllTeachers();
@@ -74,19 +74,27 @@ const AllTeachers = () => {
       })
       .catch(err => {
         setLoader(false);
+        form.resetFields();
         toast.error(err.response?.data || err.message);
       });
   };
 
   const handleEditTeacher = (values) => {
-    const updatedTeachers = teachers.map((teacher) =>
-      teacher.id === editedTeacher.id
-        ? { ...teacher, username: values.username, email: values.email }
-        : teacher
-    );
-    setTeachers(updatedTeachers);
-    message.success('Teacher updated successfully!');
     handleCancel();
+    setLoader(true);
+    api.put(`/api/users/trainer/${editedTeacher._id}`, {
+      username: values.username,
+      email: values.email,
+    })
+      .then((res) => {
+        setLoader(false);
+        toast.success('Teacher updated successfully!');
+        getAllTeachers();
+      })
+      .catch(err => {
+        setLoader(false);
+        toast.error(err.response?.data || err.message);
+      })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -94,8 +102,17 @@ const AllTeachers = () => {
   };
 
   const handleDeleteTeacher = (id) => {
-    setTeachers(teachers.filter((teacher) => teacher.id !== id));
-    message.success('Teacher deleted successfully!');
+    setLoader(true);
+    api.delete(`/api/users/trainer/${id}`)
+      .then((res) => {
+        setLoader(false);
+        toast.success('Teacher deleted successfully!');
+        getAllTeachers();
+      })
+      .catch(err => {
+        setLoader(false);
+        toast.error(err.response?.data || err.message);
+      });
   };
 
   const getAllTeachers = () => {
@@ -105,7 +122,7 @@ const AllTeachers = () => {
         localStorage.setItem("teachers", JSON.stringify(res.data));
       })
       .catch(err => {
-        toast.error(err?.response.data);
+        toast.error(err.response?.data || err.message);
       });
   };
 
