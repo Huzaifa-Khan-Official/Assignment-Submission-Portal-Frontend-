@@ -1,45 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Layout,
-  Menu,
-  Row,
-  Col,
-  Button,
-  Input,
-  Modal,
-  Form,
-  message,
-  Table,
-} from 'antd';
-import {
-  HomeOutlined,
-  BookOutlined,
-  UserOutlined,
-  TeamOutlined,
-  SettingOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import smitlogo from './smitlogo.png';
+import React, { useContext, useEffect, useState } from 'react';
+import { Layout, Row, Col, Button, Input, Modal, Form, message, Table, } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined, } from '@ant-design/icons';
+import { VscOpenPreview } from 'react-icons/vsc';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
+import LoaderContext from '../../Context/LoaderContext';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 
 const AllTeachers = () => {
   const storedTeachers = localStorage.getItem('teachers');
   const [teachers, setTeachers] = useState(storedTeachers ? JSON.parse(storedTeachers) : []);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTeacher, setEditedTeacher] = useState(null);
+  const { loader, setLoader } = useContext(LoaderContext);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (teachers.length === 0) {
       getAllTeachers();
     }
   }, [teachers]);
+
+  useEffect(() => {
+    if (isModalVisible) {
+      if (isEditing && editedTeacher) {
+        form.setFieldsValue({
+          username: editedTeacher.username,
+          email: editedTeacher.email,
+          password: '',
+        });
+      } else {
+        form.resetFields();
+      }
+    }
+  }, [isModalVisible, isEditing, editedTeacher, form]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -53,34 +49,48 @@ const AllTeachers = () => {
     setEditedTeacher(teacher);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
+    form.resetFields();
   };
 
   const handleAddTeacher = (values) => {
-    const newTeacher = {
-      id: teachers.length + 1,
-      name: values.name,
-      designation: values.designation,
-    };
-    setTeachers([...teachers, newTeacher]);
-    message.success('Teacher added successfully!');
-    handleCancel();
+    setLoader(true);
+    api.post("/api/users/trainer", {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      role: "trainer"
+    })
+      .then((res) => {
+        setLoader(false);
+        form.resetFields();
+        handleCancel();
+        toast.success('Teacher added successfully!', {
+          onClose: () => {
+            getAllTeachers();
+          }
+        });
+      })
+      .catch(err => {
+        setLoader(false);
+        toast.error(err.response?.data || err.message);
+      });
   };
 
   const handleEditTeacher = (values) => {
     const updatedTeachers = teachers.map((teacher) =>
       teacher.id === editedTeacher.id
-        ? { ...teacher, name: values.name, designation: values.designation }
+        ? { ...teacher, username: values.username, email: values.email }
         : teacher
     );
     setTeachers(updatedTeachers);
     message.success('Teacher updated successfully!');
     handleCancel();
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Please enter all fields");
   };
 
   const handleDeleteTeacher = (id) => {
@@ -97,8 +107,8 @@ const AllTeachers = () => {
       .catch(err => {
         toast.error(err?.response.data);
       });
-
   };
+
   const columns = [
     {
       title: 'Teacher Name',
@@ -116,18 +126,26 @@ const AllTeachers = () => {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
-        <div className='flex'>
+        <div className='flex gap-4'>
+          <Button
+            type='primary'
+            icon={<VscOpenPreview />}
+            onClick={() => handleDeleteTeacher(record._id)}
+            title='View Details'
+          />
           <Button
             type='primary'
             icon={<EditOutlined />}
             onClick={() => showEditModal(record)}
-            style={{ marginRight: 8 }}
+            className='bg-[#22c55e] hover:bg-[#22994d]'
+            title='Edit Teacher'
           />
           <Button
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTeacher(record.id)}
+            onClick={() => handleDeleteTeacher(record._id)}
+            title='Delete Teacher'
           />
         </div>
       ),
@@ -158,6 +176,7 @@ const AllTeachers = () => {
               columns={columns}
               dataSource={teachers}
               pagination={false}
+              rowKey={(record) => record._id}
               className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
             />
           </div>
@@ -166,7 +185,6 @@ const AllTeachers = () => {
       <Modal
         title={isEditing ? 'Edit Teacher' : 'Add Teacher'}
         open={isModalVisible}
-        onOk={handleOk}
         onCancel={handleCancel}
         footer={[
           <Button key='back' onClick={handleCancel}>
@@ -183,28 +201,38 @@ const AllTeachers = () => {
         ]}
       >
         <Form
+          form={form}
           id='teacherForm'
           layout='vertical'
           onFinish={isEditing ? handleEditTeacher : handleAddTeacher}
-          initialValues={{
-            name: editedTeacher ? editedTeacher.name : '',
-            designation: editedTeacher ? editedTeacher.designation : '',
-          }}
+          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label='Teacher Name'
-            name='name'
+            name='username'
             rules={[{ required: true, message: 'Please enter teacher name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label='Designation'
-            name='designation'
-            rules={[{ required: true, message: 'Please enter teacher designation!' }]}
+            label='Email'
+            name='email'
+            rules={[
+              { required: true, message: 'Please enter teacher email!' },
+              { type: 'email', message: 'Please enter a valid email!' },
+            ]}
           >
             <Input />
           </Form.Item>
+          {!isEditing && (
+            <Form.Item
+              label='Password'
+              name='password'
+              rules={[{ required: true, message: 'Please enter teacher password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>
