@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   Menu,
@@ -22,31 +22,24 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import smitlogo from './smitlogo.png';
+import api from '../../api/api';
+import { toast } from 'react-toastify';
 
 const { Header, Sider, Content } = Layout;
 
 const AllTeachers = () => {
-  const [teachers, setTeachers] = useState([
-    {
-      id: 1,
-      name: 'Jamsheed khan',
-      designation: 'Frontend Developer',
-    },
-    {
-      id: 2,
-      name: 'Huzaifa Khan',
-      designation: 'Backend Developer',
-    },
-    {
-      id: 2,
-      name: 'Muhammad Noman ',
-      designation: 'Frontend Developer',
-    },
-  ]);
+  const storedTeachers = localStorage.getItem('teachers');
+  const [teachers, setTeachers] = useState(storedTeachers ? JSON.parse(storedTeachers) : []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTeacher, setEditedTeacher] = useState(null);
+
+  useEffect(() => {
+    if (teachers.length === 0) {
+      getAllTeachers();
+    }
+  }, [teachers]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -82,7 +75,7 @@ const AllTeachers = () => {
   const handleEditTeacher = (values) => {
     const updatedTeachers = teachers.map((teacher) =>
       teacher.id === editedTeacher.id
-       ? {...teacher, name: values.name, designation: values.designation }
+        ? { ...teacher, name: values.name, designation: values.designation }
         : teacher
     );
     setTeachers(updatedTeachers);
@@ -91,21 +84,32 @@ const AllTeachers = () => {
   };
 
   const handleDeleteTeacher = (id) => {
-    setTeachers(teachers.filter((teacher) => teacher.id!== id));
+    setTeachers(teachers.filter((teacher) => teacher.id !== id));
     message.success('Teacher deleted successfully!');
   };
 
+  const getAllTeachers = () => {
+    api.get("/api/users/trainers")
+      .then(res => {
+        setTeachers(res.data);
+        localStorage.setItem("teachers", JSON.stringify(res.data));
+      })
+      .catch(err => {
+        toast.error(err?.response.data);
+      });
+
+  };
   const columns = [
     {
       title: 'Teacher Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'username',
+      key: 'username',
       render: (text) => <a className="block w-max">{text}</a>,
     },
     {
-      title: 'Designation',
-      dataIndex: 'designation',
-      key: 'designation',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
       render: (text) => <a className="block w-max">{text}</a>,
     },
     {
@@ -160,7 +164,7 @@ const AllTeachers = () => {
         </Content>
       </Layout>
       <Modal
-        title={isEditing? 'Edit Teacher' : 'Add Teacher'}
+        title={isEditing ? 'Edit Teacher' : 'Add Teacher'}
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -174,17 +178,17 @@ const AllTeachers = () => {
             form='teacherForm'
             htmlType='submit'
           >
-            {isEditing? 'Update' : 'Add'}
+            {isEditing ? 'Update' : 'Add'}
           </Button>,
         ]}
       >
         <Form
           id='teacherForm'
           layout='vertical'
-          onFinish={isEditing? handleEditTeacher : handleAddTeacher}
+          onFinish={isEditing ? handleEditTeacher : handleAddTeacher}
           initialValues={{
-            name: editedTeacher? editedTeacher.name : '',
-            designation: editedTeacher? editedTeacher.designation : '',
+            name: editedTeacher ? editedTeacher.name : '',
+            designation: editedTeacher ? editedTeacher.designation : '',
           }}
         >
           <Form.Item

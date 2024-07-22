@@ -57,12 +57,13 @@ const Sidebar = ({ children, title }) => {
   const adminMenuItems = [
     { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
     { key: '1', icon: <HomeOutlined />, label: (<Link to="/admin/dashboard">Home</Link>), },
-    {
-      key: 'sub1', label: (<Link to="/admin/teachers">Teachers</Link>), icon: <UserOutlined />, children: [
-        { key: '5', icon: <BookOutlined />, label: (<Link to="/admin/assignments/:teacherID">Assignments</Link>), },
-        { key: '6', icon: <TeamOutlined />, label: (<Link to="/teachers/students">Students</Link>), }
-      ],
-    },
+    // {
+    //   key: 'sub1', label: (<Link to="/admin/teachers">Teachers</Link>), icon: (<Link to="/admin/teachers"><UserOutlined /></Link>), children: [
+    //     { key: '5', icon: <BookOutlined />, label: (<Link to="/admin/assignments/:teacherID">Assignments</Link>), },
+    //     { key: '6', icon: <TeamOutlined />, label: (<Link to="/teachers/students">Students</Link>), }
+    //   ],
+    // },
+    { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
     { key: '3', icon: <TeamOutlined />, label: 'Students', },
     { key: '4', icon: <SettingOutlined />, label: 'Settings', },
   ];
@@ -99,7 +100,8 @@ const Sidebar = ({ children, title }) => {
 
     // admin routes
     if (location.pathname.includes("/admin/dashboard")) return '1';
-    if (location.pathname.includes("/admin/teachers")) return 'sub1';
+    if (location.pathname.includes("/admin/teachers")) return '2';
+    if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
   };
 
   const handleBreakpoint = (broken) => {
