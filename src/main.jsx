@@ -20,6 +20,7 @@ import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
 import AllTeachers from './Components/AllTeachers/AllTeachers.jsx';
 import AllAssignmentsListing from './Components/AllAssignmentsListing.jsx';
 import AssignmentDetailsPage from './Pages/AssignmentDetailsPage.jsx';
+import AllStudents from './Components/AllStudents/AllStudents.jsx';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       </Sidebar>
     </>
   },
+  // admin trainer routes
   {
     path: "/admin/teachers",
     element: <>
@@ -65,6 +67,25 @@ const router = createBrowserRouter([
       </Sidebar>
     </>
   },
+  // admin student routes
+  {
+    path: "/admin/students",
+    element: <>
+      <Sidebar title="Admin | Students">
+        <AllStudents />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/settings",
+    element: <>
+      <Sidebar title="Admin | Settings">
+        <h1>Admin settings page</h1>
+        {/* <AllTeachers /> */}
+      </Sidebar>
+    </>
+  },
+
   // Trainer Routes
   {
     path: "/trainer/dashboard",

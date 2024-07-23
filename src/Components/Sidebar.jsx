@@ -64,8 +64,8 @@ const Sidebar = ({ children, title }) => {
     //   ],
     // },
     { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
-    { key: '3', icon: <TeamOutlined />, label: 'Students', },
-    { key: '4', icon: <SettingOutlined />, label: 'Settings', },
+    { key: '3', icon: <TeamOutlined />, label: (<Link to="/admin/students">Students</Link>) },
+    { key: '4', icon: <SettingOutlined />, label: (<Link to="/admin/settings">Settings</Link>), },
   ];
 
   const trainerMenuItems = [
@@ -87,6 +87,12 @@ const Sidebar = ({ children, title }) => {
   ];
 
   const getMenuItemKey = () => {
+    // admin routes
+    if (location.pathname.includes("/admin/dashboard")) return '1';
+    if (location.pathname.includes("/admin/teachers")) return '2';
+    if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
+    if (location.pathname.includes("/admin/students")) return '3';
+    if (location.pathname.includes("/admin/settings")) return '4';
     // student routes
     if (location.pathname.includes("/student/profile")) return '0';
     if (location.pathname === "/") return '1';
@@ -95,13 +101,9 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/classmates")) return '4';
     if (location.pathname.includes("/settings")) return '5';
 
+    // trainer routes
     if (location.pathname.includes("/trainer/dashboard")) return '1';
     if (location.pathname.includes("/students")) return '4';
-
-    // admin routes
-    if (location.pathname.includes("/admin/dashboard")) return '1';
-    if (location.pathname.includes("/admin/teachers")) return '2';
-    if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
   };
 
   const handleBreakpoint = (broken) => {
