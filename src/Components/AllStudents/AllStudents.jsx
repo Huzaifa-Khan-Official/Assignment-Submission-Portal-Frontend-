@@ -43,10 +43,10 @@ const AllStudents = () => {
     setEditedStudent(null);
   };
 
-  const showEditModal = (teacher) => {
+  const showEditModal = (student) => {
     setIsModalVisible(true);
     setIsEditing(true);
-    setEditedStudent(teacher);
+    setEditedStudent(student);
   };
 
   const handleCancel = () => {
@@ -144,6 +144,19 @@ const AllStudents = () => {
       title: 'No. of enrolled classes',
       dataIndex: 'classes',
       key: 'classes',
+      filters: [
+        { text: '0 classes', value: 0 },
+        { text: '1-3 classes', value: [1, 2, 3] },
+        { text: '4+ classes', value: 4 },
+      ],
+      onFilter: (value, record) => {
+        const classCount = record.classes ? record.classes.length : 0;
+        if (Array.isArray(value)) {
+          return value.includes(classCount);
+        }
+        return value === 4 ? classCount >= 4 : classCount === value;
+      },
+      sorter: (a, b) => (a.classes ? a.classes.length : 0) - (b.classes ? b.classes.length : 0),
       render: (classes) => <span className="block w-max">{classes ? classes.length : 0}</span>,
     },
     {
@@ -176,37 +189,25 @@ const AllStudents = () => {
     },
   ];
 
-  console.log("students ==>", students);
   return (
     <>
-      <Layout>
-        <Header className='bg-blue-500'>
-          <Row justify='end' className='p-4'>
-            <Col>
-              <Button
-                type='primary'
-                icon={<PlusOutlined />}
-                onClick={showModal}
-                className='bg-green-500 hover:bg-green-700'
-              >
-                Add Student
-              </Button>
-            </Col>
-          </Row>
-        </Header>
-        <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
-          <div className='p-4'>
-            <h1 className='text-2xl font-bold mb-4'>All Students</h1>
-            <Table
-              columns={columns}
-              dataSource={students}
-              pagination={false}
-              rowKey={(record) => record._id}
-              className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
-            />
-          </div>
-        </Content>
-      </Layout>
+      <Content className='bg-white'>
+        <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold'>
+          <h1 className='flex-1 text-2xl font-bold mb-4'>All Students</h1>
+          <button onClick={showModal} title='Add Student'>
+            <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
+          </button>
+        </div>
+        <div className='p-4'>
+          <Table
+            columns={columns}
+            dataSource={students}
+            pagination={false}
+            rowKey={(record) => record._id}
+            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
+          />
+        </div>
+      </Content>
       <Modal
         title={isEditing ? 'Edit Student' : 'Add Student'}
         open={isModalVisible}
@@ -218,7 +219,7 @@ const AllStudents = () => {
           <Button
             key='submit'
             type='primary'
-            form='teacherForm'
+            form='studentForm'
             htmlType='submit'
           >
             {isEditing ? 'Update' : 'Add'}
@@ -227,7 +228,7 @@ const AllStudents = () => {
       >
         <Form
           form={form}
-          id='teacherForm'
+          id='studentForm'
           layout='vertical'
           onFinish={isEditing ? handleEditStudent : handleAddStudent}
           onFinishFailed={onFinishFailed}
