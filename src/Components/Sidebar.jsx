@@ -137,7 +137,7 @@ const Sidebar = ({ children, title }) => {
 
   return (
     <div>
-      <Layout className="h-screen">
+      <Layout className="">
         <Sider
           trigger={null}
           collapsible

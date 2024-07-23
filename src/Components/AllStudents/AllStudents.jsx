@@ -13,7 +13,7 @@ const AllStudents = () => {
   const [students, setStudents] = useState(storedStudents ? JSON.parse(storedStudents) : []);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTeacher, setEditedTeacher] = useState(null);
+  const [editedStudent, setEditedStudent] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
   const [form] = Form.useForm();
 
@@ -25,28 +25,28 @@ const AllStudents = () => {
 
   useEffect(() => {
     if (isModalVisible) {
-      if (isEditing && editedTeacher) {
+      if (isEditing && editedStudent) {
         form.setFieldsValue({
-          username: editedTeacher.username,
-          email: editedTeacher.email,
+          username: editedStudent.username,
+          email: editedStudent.email,
           password: '',
         });
       } else {
         form.resetFields();
       }
     }
-  }, [isModalVisible, isEditing, editedTeacher, form]);
+  }, [isModalVisible, isEditing, editedStudent, form]);
 
   const showModal = () => {
     setIsModalVisible(true);
     setIsEditing(false);
-    setEditedTeacher(null);
+    setEditedStudent(null);
   };
 
   const showEditModal = (teacher) => {
     setIsModalVisible(true);
     setIsEditing(true);
-    setEditedTeacher(teacher);
+    setEditedStudent(teacher);
   };
 
   const handleCancel = () => {
@@ -54,19 +54,19 @@ const AllStudents = () => {
     form.resetFields();
   };
 
-  const handleAddTeacher = (values) => {
+  const handleAddStudent = (values) => {
     handleCancel();
     setLoader(true);
-    api.post("/api/users/trainer", {
+    api.post("/api/users/student", {
       username: values.username,
       email: values.email,
       password: values.password,
-      role: "trainer"
+      role: "student"
     })
       .then((res) => {
         setLoader(false);
         form.resetFields();
-        toast.success('Teacher added successfully!', {
+        toast.success('Student added successfully!', {
           onClose: () => {
             getAllStudents();
           }
@@ -79,16 +79,16 @@ const AllStudents = () => {
       });
   };
 
-  const handleEditTeacher = (values) => {
+  const handleEditStudent = (values) => {
     handleCancel();
     setLoader(true);
-    api.put(`/api/users/trainer/${editedTeacher._id}`, {
+    api.put(`/api/users/student/${editedStudent._id}`, {
       username: values.username,
       email: values.email,
     })
       .then((res) => {
         setLoader(false);
-        toast.success('Teacher updated successfully!');
+        toast.success('Student updated successfully!');
         getAllStudents();
       })
       .catch(err => {
@@ -101,12 +101,12 @@ const AllStudents = () => {
     toast.error("Please enter all fields");
   };
 
-  const handleDeleteTeacher = (id) => {
+  const handleDeleteStudent = (id) => {
     setLoader(true);
-    api.delete(`/api/users/trainer/${id}`)
+    api.delete(`/api/users/student/${id}`)
       .then((res) => {
         setLoader(false);
-        toast.success('Teacher deleted successfully!');
+        toast.success('Student deleted successfully!');
         getAllStudents();
       })
       .catch(err => {
@@ -116,8 +116,9 @@ const AllStudents = () => {
   };
 
   const getAllStudents = () => {
-    api.get("/api/users/trainers")
+    api.get("/api/users/students")
       .then(res => {
+        console.log("res ==>", res.data);
         setStudents(res.data);
         localStorage.setItem("students", JSON.stringify(res.data));
       })
@@ -140,6 +141,12 @@ const AllStudents = () => {
       render: (text) => <a className="block w-max">{text}</a>,
     },
     {
+      title: 'No. of enrolled classes',
+      dataIndex: 'classes',
+      key: 'classes',
+      render: (classes) => <span className="block w-max">{classes ? classes.length : 0}</span>,
+    },
+    {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
@@ -147,7 +154,7 @@ const AllStudents = () => {
           <Button
             type='primary'
             icon={<VscOpenPreview />}
-            onClick={() => handleDeleteTeacher(record._id)}
+            onClick={() => viewStudentDetail(record._id)}
             title='View Details'
           />
           <Button
@@ -161,7 +168,7 @@ const AllStudents = () => {
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTeacher(record._id)}
+            onClick={() => handleDeleteStudent(record._id)}
             title='Delete Student'
           />
         </div>
@@ -169,6 +176,7 @@ const AllStudents = () => {
     },
   ];
 
+  console.log("students ==>", students);
   return (
     <>
       <Layout>
@@ -221,7 +229,7 @@ const AllStudents = () => {
           form={form}
           id='teacherForm'
           layout='vertical'
-          onFinish={isEditing ? handleEditTeacher : handleAddTeacher}
+          onFinish={isEditing ? handleEditStudent : handleAddStudent}
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
