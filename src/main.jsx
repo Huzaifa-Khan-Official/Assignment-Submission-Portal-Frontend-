@@ -21,6 +21,7 @@ import AllTeachers from './Components/AllTeachers/AllTeachers.jsx';
 import AllAssignmentsListing from './Components/AllAssignmentsListing.jsx';
 import AssignmentDetailsPage from './Pages/AssignmentDetailsPage.jsx';
 import AllStudents from './Components/AllStudents/AllStudents.jsx';
+import StudentDetail from './Components/StudentDetail/StudentDetail.jsx';
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Admin | Students">
         <AllStudents />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/student/:studentId",
+    element: <>
+      <Sidebar title="Admin | Student">
+        <StudentDetail />
       </Sidebar>
     </>
   },

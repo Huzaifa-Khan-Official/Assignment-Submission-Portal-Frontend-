@@ -5,6 +5,7 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
+import { useNavigate } from 'react-router';
 
 const { Header, Content } = Layout;
 
@@ -15,6 +16,7 @@ const AllStudents = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -167,7 +169,7 @@ const AllStudents = () => {
           <Button
             type='primary'
             icon={<VscOpenPreview />}
-            onClick={() => viewStudentDetail(record._id)}
+            onClick={() => navigate(`/admin/student/${record._id}`)}
             title='View Details'
           />
           <Button
@@ -198,7 +200,7 @@ const AllStudents = () => {
             <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
           </button>
         </div>
-        <div className='p-4'>
+        <div className='p-4 pt-0'>
           <Table
             columns={columns}
             dataSource={students}

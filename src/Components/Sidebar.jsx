@@ -92,6 +92,7 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/admin/teachers")) return '2';
     if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
     if (location.pathname.includes("/admin/students")) return '3';
+    if (location.pathname.includes("/admin/student")) return '3';
     if (location.pathname.includes("/admin/settings")) return '4';
     // student routes
     if (location.pathname.includes("/student/profile")) return '0';
@@ -137,7 +138,7 @@ const Sidebar = ({ children, title }) => {
 
   return (
     <div>
-      <Layout className="">
+      <Layout className="min-h-screen">
         <Sider
           trigger={null}
           collapsible

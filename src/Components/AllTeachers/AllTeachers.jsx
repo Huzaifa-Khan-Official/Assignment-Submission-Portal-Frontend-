@@ -171,34 +171,23 @@ const AllTeachers = () => {
 
   return (
     <>
-      <Layout>
-        <Header className='bg-blue-500'>
-          <Row justify='end' className='p-4'>
-            <Col>
-              <Button
-                type='primary'
-                icon={<PlusOutlined />}
-                onClick={showModal}
-                className='bg-green-500 hover:bg-green-700'
-              >
-                Add Teacher
-              </Button>
-            </Col>
-          </Row>
-        </Header>
-        <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
-          <div className='p-4'>
-            <h1 className='text-2xl font-bold mb-4'>All Teachers</h1>
-            <Table
-              columns={columns}
-              dataSource={teachers}
-              pagination={false}
-              rowKey={(record) => record._id}
-              className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
-            />
-          </div>
-        </Content>
-      </Layout>
+      <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
+        <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold'>
+          <h1 className='flex-1 text-2xl font-bold mb-4'>All Teachers</h1>
+          <button onClick={showModal} title='Add Teacher'>
+            <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
+          </button>
+        </div>
+        <div className='p-4 pt-0'>
+          <Table
+            columns={columns}
+            dataSource={teachers}
+            pagination={false}
+            rowKey={(record) => record._id}
+            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
+          />
+        </div>
+      </Content>
       <Modal
         title={isEditing ? 'Edit Teacher' : 'Add Teacher'}
         open={isModalVisible}
