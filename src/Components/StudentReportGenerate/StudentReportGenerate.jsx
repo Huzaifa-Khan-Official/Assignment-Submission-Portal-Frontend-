@@ -29,6 +29,8 @@ import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import { ResponsiveContainer } from "recharts";
 import smitlogo from './smitlogo.png'; // Assuming you have your logo image imported correctly
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router";
 
 // Mock student data
 const studentsData = [
@@ -88,6 +90,7 @@ const { Header, Content, Sider } = Layout;
 const StudentReportGenerate = () => {
   // State to manage selected student index
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Function to calculate and set chart data
   const calculateChartData = (studentIndex) => {
@@ -143,179 +146,151 @@ const StudentReportGenerate = () => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        width={200}
-        className="site-layout-background"
-        style={{ backgroundColor: "#001529", position: "fixed", height: "100vh" }}
-      >
-        <div className="logo" style={{ height: "64px", margin: "16px" }}>
-          <img
-            src={smitlogo} // Replace with your logo image URL
-            alt="Logo"
-            style={{ width: "100%", maxHeight: "100%", objectFit: "contain" }}
-          />
-        </div>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["0"]}
-          style={{ height: "calc(100% - 48px)", borderRight: 0 }}
-          theme="dark"
-        >
-          {studentsData.map((student, index) => (
-            <Menu.Item key={index} onClick={() => handleStudentSelect(index)}>
-              {student.name}
-            </Menu.Item>
-          ))}
-        </Menu>
-      </Sider>
-      <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Header className="site-layout-background" style={{ padding: 0 }} />
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-          <div className="site-layout-background" style={{ padding: 24 }}>
-            <Title level={2}>Student Report</Title>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <Card>
-                  <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={6}>
-                      <Avatar
-                        size={64}
-                        src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
-                      />
-                    </Col>
-                    <Col xs={24} sm={18}>
-                      <Descriptions title="Student Information" column={1}>
-                        <Descriptions.Item label="Name">
-                          {studentsData[selectedStudentIndex].name}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Roll Number">
-                          {studentsData[selectedStudentIndex].rollNumber}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Batch">
-                          {studentsData[selectedStudentIndex].batch}
-                        </Descriptions.Item>
-                      </Descriptions>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Card title="Assignment Status">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={calculateChartData(selectedStudentIndex)}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        fill="#8884d8"
-                        label
-                      >
-                        {calculateChartData(selectedStudentIndex).map(
-                          (entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={
-                                index === 0
-                                  ? "#82ca9d"
-                                  : index === 1
+    <>
+      <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+        <div className="site-layout-background" style={{ padding: 24 }}>
+          <Title level={2}><ArrowLeftOutlined className='hover:bg-gray-300 p-2 rounded-full' title='Back to Previous' onClick={() => navigate(-1)} /> Student Report</Title>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Card>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={6}>
+                    <Avatar
+                      size={64}
+                      src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
+                    />
+                  </Col>
+                  <Col xs={24} sm={18}>
+                    <Descriptions title="Student Information" column={1}>
+                      <Descriptions.Item label="Name">
+                        {studentsData[selectedStudentIndex].name}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Roll Number">
+                        {studentsData[selectedStudentIndex].rollNumber}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Batch">
+                        {studentsData[selectedStudentIndex].batch}
+                      </Descriptions.Item>
+                    </Descriptions>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Card title="Assignment Status">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={calculateChartData(selectedStudentIndex)}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label
+                    >
+                      {calculateChartData(selectedStudentIndex).map(
+                        (entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={
+                              index === 0
+                                ? "#82ca9d"
+                                : index === 1
                                   ? "#ffc658"
                                   : "#ff7300"
-                              }
-                            />
-                          )
-                        )}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </Card>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Card title="Assignment Grades">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={studentsData[selectedStudentIndex].assignments}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="title" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="points" fill="#8884d8" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </Card>
-              </Col>
-              <Col xs={24}>
-                <Card title="Overall Grade">
-                  <Statistic
-                    title="Average Grade"
-                    value={`${calculateAverageGrade(selectedStudentIndex)}%`}
-                    precision={2}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Card title="Assignment Grades Over Time">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart
-                      data={studentsData[selectedStudentIndex].assignments}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="title" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="points" stroke="#82ca9d" />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </Card>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Card title="Assignment Performance Radar Chart">
-                  <ResponsiveContainer width="100%" height={300}>
-                    <RadarChart
-                      outerRadius={90}
-                      data={studentsData[selectedStudentIndex].assignments.map(
-                        (assignment) => ({
-                          subject: assignment.title,
-                          points: assignment.points,
-                        })
+                            }
+                          />
+                        )
                       )}
-                    >
-                      <PolarGrid />
-                      <PolarAngleAxis dataKey="subject" />
-                      <PolarRadiusAxis />
-                      <Radar
-                        name="Assignment"
-                        dataKey="points"
-                        stroke="#8884d8"
-                        fill="#8884d8"
-                        fillOpacity={0.6}
-                      />
-                      <Tooltip />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </Card>
-              </Col>
-              <Col xs={24}>
-                <Card title="Assignment Grades Stock Chart">
-                  <HighchartsReact
-                    highcharts={Highcharts}
-                    constructorType={"stockChart"}
-                    options={stockChartOptions}
-                  />
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Card title="Assignment Grades">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={studentsData[selectedStudentIndex].assignments}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="title" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="points" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+            </Col>
+            <Col xs={24}>
+              <Card title="Overall Grade">
+                <Statistic
+                  title="Average Grade"
+                  value={`${calculateAverageGrade(selectedStudentIndex)}%`}
+                  precision={2}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Card title="Assignment Grades Over Time">
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart
+                    data={studentsData[selectedStudentIndex].assignments}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="title" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="points" stroke="#82ca9d" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Card>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Card title="Assignment Performance Radar Chart">
+                <ResponsiveContainer width="100%" height={300}>
+                  <RadarChart
+                    outerRadius={90}
+                    data={studentsData[selectedStudentIndex].assignments.map(
+                      (assignment) => ({
+                        subject: assignment.title,
+                        points: assignment.points,
+                      })
+                    )}
+                  >
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="subject" />
+                    <PolarRadiusAxis />
+                    <Radar
+                      name="Assignment"
+                      dataKey="points"
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                      fillOpacity={0.6}
+                    />
+                    <Tooltip />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </Card>
+            </Col>
+            <Col xs={24}>
+              <Card title="Assignment Grades Stock Chart">
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  constructorType={"stockChart"}
+                  options={stockChartOptions}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </Content>
+    </>
   );
 };
 

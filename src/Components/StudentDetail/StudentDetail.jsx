@@ -60,7 +60,7 @@ function StudentDetail() {
                                     <Card key={cls._id}>
                                         <div className="flex justify-between">
                                             <h1 className='text-2xl font-bold'>{cls.name}</h1>
-                                            <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full' title='See Detial!' />
+                                            <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full' title='See Detail!' onClick={() => navigate(cls._id)} />
                                         </div>
                                         <div className="grid gap-2">
                                             <div className="flex items-center justify-between">

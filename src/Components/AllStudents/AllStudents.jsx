@@ -193,7 +193,7 @@ const AllStudents = () => {
 
   return (
     <>
-      <Content className='bg-white'>
+      <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
         <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold'>
           <h1 className='flex-1 text-2xl font-bold mb-4'>All Students</h1>
           <button onClick={showModal} title='Add Student'>
