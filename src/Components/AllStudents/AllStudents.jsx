@@ -206,7 +206,7 @@ const AllStudents = () => {
             dataSource={students}
             pagination={false}
             rowKey={(record) => record._id}
-            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
+            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll md:overflow-x-hidden'
           />
         </div>
       </Content>

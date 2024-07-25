@@ -4,7 +4,7 @@ import api from '../../api/api';
 import LoaderContext from '../../Context/LoaderContext';
 import { toast } from 'react-toastify';
 import { Card } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 function StudentDetail() {
     const { studentId } = useParams();
@@ -58,7 +58,10 @@ function StudentDetail() {
                             {
                                 student ? student.classes.map(cls => (
                                     <Card key={cls._id}>
-                                        <h1 className='text-2xl font-bold'>{cls.name}</h1>
+                                        <div className="flex justify-between">
+                                            <h1 className='text-2xl font-bold'>{cls.name}</h1>
+                                            <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full' title='See Detial!' />
+                                        </div>
                                         <div className="grid gap-2">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-muted-foreground">Professor:</span>
@@ -73,63 +76,6 @@ function StudentDetail() {
                                 )) :
                                     <Card loading={loader}></Card>
                             }
-                            {/* <Card loading={loader}>
-                                <div>
-                                    <h1 className='text-2xl font-bold'>Introduction to Computer Science</h1>
-                                </div>
-                                <div className="grid gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Professor:</span>
-                                        <span>Dr. Sarah Lee</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Meeting Times:</span>
-                                        <span>Monday, Wednesday 9:00 AM - 10:20 AM</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Room:</span>
-                                        <span>CS101</span>
-                                    </div>
-                                </div>
-                            </Card> */}
-                            {/* <Card>
-                                <div>
-                                    <h1>Calculus I</h1>
-                                </div>
-                                <div className="grid gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Professor:</span>
-                                        <span>Dr. Michael Chen</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Meeting Times:</span>
-                                        <span>Tuesday, Thursday 11:00 AM - 12:20 PM</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Room:</span>
-                                        <span>MA201</span>
-                                    </div>
-                                </div>
-                            </Card>
-                            <Card>
-                                <div>
-                                    <h1>Introduction to Psychology</h1>
-                                </div>
-                                <div className="grid gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Professor:</span>
-                                        <span>Dr. Emily Wilson</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Meeting Times:</span>
-                                        <span>Monday, Wednesday 1:00 PM - 2:20 PM</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Room:</span>
-                                        <span>PSY101</span>
-                                    </div>
-                                </div>
-                            </Card> */}
                         </div>
                     </div>
                 </div>
