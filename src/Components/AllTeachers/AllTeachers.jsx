@@ -5,6 +5,7 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
+import { error } from 'highcharts';
 
 const { Header, Content } = Layout;
 
@@ -15,13 +16,12 @@ const AllTeachers = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTeacher, setEditedTeacher] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
+  const [initialized, setInitialized] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (teachers.length === 0) {
-      getAllTeachers();
-    }
-  }, [teachers]);
+    getAllTeachers();
+  }, []);
 
   useEffect(() => {
     if (isModalVisible) {
@@ -116,13 +116,19 @@ const AllTeachers = () => {
   };
 
   const getAllTeachers = () => {
+    setLoader(true);
     api.get("/api/users/trainers")
       .then(res => {
-        setTeachers(res.data);
-        localStorage.setItem("teachers", JSON.stringify(res.data));
+        if (res.data) {
+          setTeachers(res.data);
+          setLoader(false);
+          localStorage.setItem("teachers", JSON.stringify(res.data));
+        }
       })
       .catch(err => {
-        toast.error(err.response?.data || err.message);
+        console.log("error ==>", err);
+        setLoader(false);
+        // toast.error(err.response?.data || err.message);
       });
   };
 
@@ -147,7 +153,7 @@ const AllTeachers = () => {
           <Button
             type='primary'
             icon={<VscOpenPreview />}
-            onClick={() => handleDeleteTeacher(record._id)}
+            onClick={() => viewTrainerDetail(record._id)}
             title='View Details'
           />
           <Button

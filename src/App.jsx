@@ -7,10 +7,11 @@ import api from "./api/api";
 
 function App() {
   const { user, setUser } = useContext(User);
+  const navigate = useNavigate();
   return (
     <>
       <Sidebar title="Student | Dashboard">
-        {user?.role == "student" ? <StudentHomePage /> : null}
+        {user?.role == "student" ? <StudentHomePage /> : user?.role == "trainer" ? navigate("/trainer/dashboard") : user?.role == "admin" ? navigate("/admin/dashboard") : null}
       </Sidebar>
     </>
   )

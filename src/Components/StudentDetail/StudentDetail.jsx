@@ -56,25 +56,26 @@ function StudentDetail() {
                         <h2 className="text-lg font-semibold">Enrolled Classes</h2>
                         <div className="grid gap-6">
                             {
-                                student ? student.classes.map(cls => (
-                                    <Card key={cls._id}>
-                                        <div className="flex justify-between">
-                                            <h1 className='text-2xl font-bold'>{cls.name}</h1>
-                                            <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full' title='See Detail!' onClick={() => navigate(cls._id)} />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-muted-foreground">Professor:</span>
-                                                <span>{cls.teacher?.username}</span>
+                                loader ? <Card loading={loader}></Card> :
+                                    student?.classes.length > 0 ? student.classes.map(cls => (
+                                        <Card key={cls._id}>
+                                            <div className="flex justify-between">
+                                                <h1 className='text-2xl font-bold'>{cls.name}</h1>
+                                                <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full' title='See Detail!' onClick={() => navigate(cls._id)} />
                                             </div>
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-muted-foreground">Email:</span>
-                                                <span>{cls.teacher?.email}</span>
+                                            <div className="grid gap-2">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-muted-foreground">Professor:</span>
+                                                    <span>{cls.teacher?.username}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-muted-foreground">Email:</span>
+                                                    <span>{cls.teacher?.email}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Card>
-                                )) :
-                                    <Card loading={loader}></Card>
+                                        </Card>
+                                    )) :
+                                        (<h1>Student is not enrolled in any class!</h1>)
                             }
                         </div>
                     </div>

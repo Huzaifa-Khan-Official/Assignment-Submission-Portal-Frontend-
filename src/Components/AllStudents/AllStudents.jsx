@@ -118,13 +118,16 @@ const AllStudents = () => {
   };
 
   const getAllStudents = () => {
+    setLoader(true);
     api.get("/api/users/students")
       .then(res => {
         console.log("res ==>", res.data);
         setStudents(res.data);
+        setLoader(false);
         localStorage.setItem("students", JSON.stringify(res.data));
       })
       .catch(err => {
+        setLoader(false);
         toast.error(err.response?.data || err.message);
       });
   };
