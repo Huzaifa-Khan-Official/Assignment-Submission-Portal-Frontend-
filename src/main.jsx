@@ -23,6 +23,7 @@ import AssignmentDetailsPage from './Pages/AssignmentDetailsPage.jsx';
 import AllStudents from './Components/AllStudents/AllStudents.jsx';
 import StudentDetail from './Components/StudentDetail/StudentDetail.jsx';
 import StudentReportGenerate from './Components/StudentReportGenerate/StudentReportGenerate.jsx';
+import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -111,7 +112,8 @@ const router = createBrowserRouter([
     path: "/trainer/dashboard",
     element: <>
       <Sidebar title="Trainer | Dashboard">
-        <h1>Trainer Dashboard</h1>
+        {/* <h1>Trainer Dashboard</h1> */}
+        <TrainerDashboard />
       </Sidebar>
     </>
   },
