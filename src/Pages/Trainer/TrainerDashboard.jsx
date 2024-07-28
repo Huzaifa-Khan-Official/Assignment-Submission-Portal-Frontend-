@@ -9,8 +9,9 @@ const { Meta } = Card;
 
 export default function TrainerDashboard() {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const storedClasses = localStorage.getItem('classes');
-    const [classes, setClasses] = useState(storedClasses ? JSON.parse(storedClasses) : []);
+    // const storedClasses = localStorage.getItem('classes');
+    // const [classes, setClasses] = useState(storedClasses ? JSON.parse(storedClasses) : []);
+    const [classes, setClasses] = useState([]);
 
     useEffect(() => {
         if (classes.length === 0) {
@@ -19,7 +20,7 @@ export default function TrainerDashboard() {
     }, [classes]);
 
     const getAllClasses = () => {
-        api.get("/api/classes/")
+        api.get("/api/classes")
             .then(res => {
                 console.log(res.data);
                 // setClasses(res.data);

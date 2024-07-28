@@ -1,8 +1,9 @@
 import React, { memo, useState } from 'react';
-import { Modal, Form, Input, Button, Upload, message } from 'antd';
+import { Modal, Form, Input, Button, Upload, message, DatePicker } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import api from '../../api/api';
 
 const getBase64 = (img, callback) => {
   console.log("img ==>", img);
@@ -68,9 +69,26 @@ const ClassModal = ({ isModalVisible, closeModal }) => {
     form
       .validateFields()
       .then(values => {
-        console.log('Success:', values);
+        // console.log(values.classImage);
+        values.classImage = values.classImage.file;
+
+        api.post('/api/classes/create', values)
+          .then(res => {
+            console.log(res);
+            message.success('Class created successfully!');
+          })
+          .catch(err => {
+            console.log(err);
+            message.error('Failed to create class.');
+          });
+        // // values.classImage = values.classImage.file.originFileObj
+        // api.post("/api/classes/create", {values})
+        //   .then(res => console.log(res))
+        //   .catch(err => console.log(err));
+        // console.log('Success:', values);
         closeModal();
         form.resetFields();
+        setImageUrl();
         // You can submit the form data here.
       })
       .catch(info => {
@@ -81,57 +99,57 @@ const ClassModal = ({ isModalVisible, closeModal }) => {
 
   return (
     <Modal
-      title="Create Course"
+      title="Create Class"
       open={isModalVisible}
       onCancel={handleCancel}
       onOk={handleOk}
       footer={[
-        <Button key="back" onClick={handleCancel} className="md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto">
+        <Button key="back" onClick={handleCancel}>
           Cancel
         </Button>,
-        <Button key="submit" type="primary" onClick={handleOk} className="md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto">
+        <Button key="submit" type="primary" onClick={handleOk}>
           Create
         </Button>,
       ]}
-      className="md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto p-4"
     >
-      <Form form={form} layout="vertical" name="create-course-form" className="md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto">
+      <Form form={form} layout="vertical" name="create-course-form">
         <Form.Item
-          label="Course Name"
-          name="courseName"
+          label="Class Name:"
+          name="name"
           rules={[{ required: true, message: 'Please enter course name!' }]}
         >
-          <Input className="w-full p-2 pl-10 text-sm text-gray-700" />
+          <Input className="w-full p-2 text-sm text-gray-700" />
         </Form.Item>
         <Form.Item
-          label="Course Duration"
-          name="courseDuration"
-          rules={[{ required: true, message: 'Please enter course duration!' }]}
+          label="Class Description:"
+          name="description"
+          rules={[{ required: true, message: 'Please enter class description!' }]}
         >
-          <Input type="number" className="w-full p-2 pl-10 text-sm text-gray-700" />
+          <Input className="w-full p-2 text-sm text-gray-700" />
         </Form.Item>
-        <Upload
-          name="avatar"
-          listType="picture-circle"
-          className="avatar-uploader"
-          showUploadList={false}
-          beforeUpload={beforeUpload}
-          onChange={handleChange}
-        >
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt="avatar"
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-              }}
-            />
-          ) : (
-            uploadButton
-          )}
-        </Upload>
+        <Form.Item label="Class Image" name="classImage">
+          <Upload
+            listType="picture-circle"
+            className="avatar-uploader"
+            showUploadList={false}
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+          >
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="avatar"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '50%',
+                }}
+              />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
+        </Form.Item>
       </Form>
     </Modal>
   );
