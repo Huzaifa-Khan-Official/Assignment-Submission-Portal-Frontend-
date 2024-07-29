@@ -1,30 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BellFilled, PlusOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
 import api from '../../api/api';
 import userIcon from "../../assets/userIcon.png";
 import ClassPic from "../../assets/ClassPic.jpeg";
 import ClassModal from '../../Components/ClassModal/ClassModal';
+import LoaderContext from '../../Context/LoaderContext';
+import { toast } from 'react-toastify';
 const { Meta } = Card;
 
 export default function TrainerDashboard() {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const { loader, setLoader } = useContext(LoaderContext);
     const [classes, setClasses] = useState([]);
 
     useEffect(() => {
+        setLoader(true);
         if (classes.length === 0) {
             getAllClasses();
+            setLoader(false);
         }
     }, []);
 
     const getAllClasses = () => {
+        setLoader(true);
         api.get("/api/classes")
             .then(res => {
-                console.log(res.data);
                 setClasses(res.data);
+                setLoader(false);
             })
             .catch(err => {
-                console.log(err);
+                setLoader(false);
+                toast.error("Something went wrong!");
             });
     };
 
@@ -47,7 +54,7 @@ export default function TrainerDashboard() {
                 <BellFilled className='flex-2 ml-4 text-amber-400' />
             </div>
             <div className='mx-6'>
-                <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Courses</h1>
+                <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Classes</h1>
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[20px] justify-items-center'>
                     {classes.length === 0 ? (
                         <div className='text-2xl'>You haven't created any class yet!</div>

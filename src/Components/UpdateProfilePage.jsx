@@ -2,16 +2,14 @@ import React, { useCallback, useContext, useState } from 'react'
 import { BellFilled, UserOutlined } from '@ant-design/icons'
 import { MdOutlineMail, MdOutlinePhoneEnabled } from "react-icons/md";
 import { Button, Input } from 'antd';
-import NotificationModal from '../../Components/NotificationModal/NotificationModal';
-import User from '../../Context/Context';
-import userIcon from "../../assets/userIcon.png";
+import userIcon from "../assets/userIcon.png";
+import User from '../Context/Context';
 
-export default function StudentUpdateProfilePage() {
+export default function UpdateProfilePage() {
     const { user, setUser } = useContext(User);
     const [visible, setVisible] = useState(false);
     let [ProfileImg, setProfileImg] = useState("");
-    let [ImgFiles, setImgFiles] = useState([]);
-
+    const [imageUrl, setImageUrl] = useState();
 
     const handleNotification = useCallback(() => {
         setVisible(true);
@@ -23,7 +21,6 @@ export default function StudentUpdateProfilePage() {
 
     const ProfileImgIcon = (e) => {
         setProfileImg(URL.createObjectURL(e.target.files[0]));
-        setImgFiles(e.target.files[0])
     }
 
     return (
@@ -59,13 +56,11 @@ export default function StudentUpdateProfilePage() {
                 </div>
 
                 <div className='mx-2 flex flex-col-reverse items-center gap-4 sm:flex-row'>
-                    <Button type='primary' className='w-fit' danger>Cancel</Button>
                     <Button type='primary' className='w-fit'>Save Changes</Button>
                 </div>
 
             </div>
 
-            <NotificationModal visible={visible} handleCancel={handleCancel} />
         </div>
     )
 }

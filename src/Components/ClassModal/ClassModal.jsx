@@ -9,12 +9,6 @@ import User from '../../Context/Context';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
 
-const getBase64 = (img, callback) => {
-  console.log("img ==>", img);
-  // const reader = new FileReader();
-  // reader.addEventListener('load', () => callback(reader.result));
-  // reader.readAsDataURL(img);
-};
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {

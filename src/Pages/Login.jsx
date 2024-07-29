@@ -1,7 +1,6 @@
 import { Form, Input, Button } from "antd";
 import animateLogin from "../assets/loginPagePic.png";
 import { Link, useNavigate } from "react-router-dom";
-import Notifications from "../Components/Notifications";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useContext, useEffect } from "react";

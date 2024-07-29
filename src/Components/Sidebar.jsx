@@ -57,24 +57,18 @@ const Sidebar = ({ children, title }) => {
   const adminMenuItems = [
     { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
     { key: '1', icon: <HomeOutlined />, label: (<Link to="/admin/dashboard">Home</Link>), },
-    // {
-    //   key: 'sub1', label: (<Link to="/admin/teachers">Teachers</Link>), icon: (<Link to="/admin/teachers"><UserOutlined /></Link>), children: [
-    //     { key: '5', icon: <BookOutlined />, label: (<Link to="/admin/assignments/:teacherID">Assignments</Link>), },
-    //     { key: '6', icon: <TeamOutlined />, label: (<Link to="/teachers/students">Students</Link>), }
-    //   ],
-    // },
     { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
     { key: '3', icon: <TeamOutlined />, label: (<Link to="/admin/students">Students</Link>) },
     { key: '4', icon: <SettingOutlined />, label: (<Link to="/admin/settings">Settings</Link>), },
   ];
 
   const trainerMenuItems = [
-    { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
+    { key: '0', icon: <UserOutlined />, label: (<Link to="/trainer/profile">{user?.username}</Link>), className: "capitalize" },
     { key: '1', icon: <HomeOutlined />, label: (<Link to="/trainer/dashboard">Home</Link>), },
     { key: '2', icon: <SiGoogleclassroom />, label: (<Link to="/classes">Classes</Link>), },
     { key: '3', icon: <BookOutlined />, label: (<Link to="/assignments">Assignments</Link>), },
     { key: '4', icon: <TeamOutlined />, label: (<Link to="/students">Students</Link>), },
-    { key: '5', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
+    { key: '5', icon: <SettingOutlined />, label: (<Link to="/trainer/settings">Settings</Link>), },
   ];
 
   const studentMenuItems = [
@@ -103,7 +97,9 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/settings")) return '5';
 
     // trainer routes
+    if (location.pathname.includes("/trainer/profile")) return '0';
     if (location.pathname.includes("/trainer/dashboard")) return '1';
+    if (location.pathname.includes("/trainer/settings")) return '5';
     if (location.pathname.includes("/students")) return '4';
   };
 

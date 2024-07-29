@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import CreateCourseForm from '../Components/CreateCourseForm';
+import CreateCourseForm from '../../Components/CreateCourseFormorm';
 
 export default function AdminPanel() {
   const [isModalVisible, setIsModalVisible] = useState(false);

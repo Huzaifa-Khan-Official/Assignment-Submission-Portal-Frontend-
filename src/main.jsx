@@ -15,15 +15,15 @@ import StudentAllAssignmentPage from './Pages/Students/StudentAllAssignmentPage.
 import StudentAssignmentTodoPage from './Pages/Students/StudentAssignmentTodoPage.jsx';
 import AllClassfellowsPage from './Pages/Students/AllClassfellowsPage.jsx';
 import StudentSettingPage from './Pages/Students/StudentSettingPage.jsx';
-import StudentUpdateProfilePage from './Pages/Students/StudentUpdateProfilePage.jsx';
 import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
 import AllTeachers from './Components/AllTeachers/AllTeachers.jsx';
 import AllAssignmentsListing from './Components/AllAssignmentsListing.jsx';
-import AssignmentDetailsPage from './Pages/AssignmentDetailsPage.jsx';
 import AllStudents from './Components/AllStudents/AllStudents.jsx';
 import StudentDetail from './Components/StudentDetail/StudentDetail.jsx';
 import StudentReportGenerate from './Components/StudentReportGenerate/StudentReportGenerate.jsx';
 import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
+import UpdateProfilePage from './Components/UpdateProfilePage.jsx';
+import TrainerSettingPage from './Pages/Trainer/TrainerSettingPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -112,8 +112,23 @@ const router = createBrowserRouter([
     path: "/trainer/dashboard",
     element: <>
       <Sidebar title="Trainer | Dashboard">
-        {/* <h1>Trainer Dashboard</h1> */}
         <TrainerDashboard />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/trainer/profile",
+    element: <>
+      <Sidebar title="Trainer | Profile">
+        <UpdateProfilePage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/trainer/settings",
+    element: <>
+      <Sidebar title="Trainer | Profile">
+        <TrainerSettingPage />
       </Sidebar>
     </>
   },
@@ -154,7 +169,7 @@ const router = createBrowserRouter([
     path: "/student/profile",
     element: <>
       <Sidebar title="Student | Profile">
-        <StudentUpdateProfilePage />
+        <UpdateProfilePage />
       </Sidebar>
     </>
   },
