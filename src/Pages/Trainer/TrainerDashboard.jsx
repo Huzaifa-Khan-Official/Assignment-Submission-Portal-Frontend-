@@ -9,22 +9,19 @@ const { Meta } = Card;
 
 export default function TrainerDashboard() {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    // const storedClasses = localStorage.getItem('classes');
-    // const [classes, setClasses] = useState(storedClasses ? JSON.parse(storedClasses) : []);
     const [classes, setClasses] = useState([]);
 
     useEffect(() => {
         if (classes.length === 0) {
             getAllClasses();
         }
-    }, [classes]);
+    }, []);
 
     const getAllClasses = () => {
         api.get("/api/classes")
             .then(res => {
                 console.log(res.data);
-                // setClasses(res.data);
-                // localStorage.setItem("classes", JSON.stringify(res.data));
+                setClasses(res.data);
             })
             .catch(err => {
                 console.log(err);
@@ -41,7 +38,7 @@ export default function TrainerDashboard() {
 
     return (
         <div>
-            <ClassModal isModalVisible={isModalVisible} closeModal={closeModal} />
+            <ClassModal isModalVisible={isModalVisible} closeModal={closeModal} getAllClasses={getAllClasses} />
             <div className='flex m-5 text-2xl font-mono font-extrabold'>
                 <h1 className='flex-1'>Trainer Dashboard</h1>
                 <button onClick={showModal}>
@@ -54,18 +51,18 @@ export default function TrainerDashboard() {
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[20px] justify-items-center'>
                     {classes.length === 0 ? (
                         <div className='text-2xl'>You haven't created any class yet!</div>
-                    ) : classes.map((course, index) => (
+                    ) : classes.map((eachClass, index) => (
                         <div key={index}>
                             <Card
                                 hoverable
-                                cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />}
+                                cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={eachClass.classImage} />}
                             >
                                 <div className='flex relative bottom-12'>
-                                    <h1 className='flex-1 relative top-8 right-3 font-semibold'>{course.name}</h1>
+                                    <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
                                     <img className='size-12 rounded-full' src={userIcon} alt="" />
                                 </div>
                                 <div className='flex'>
-                                    <Meta title={course.teacher?.username} className='relative left-3' />
+                                    <Meta title={eachClass.teacher?.username} className='relative left-3' />
                                 </div>
                             </Card>
                         </div>

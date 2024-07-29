@@ -1,9 +1,13 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { Modal, Form, Input, Button, Upload, message, DatePicker } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import api from '../../api/api';
+import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
+import User from '../../Context/Context';
+import { toast } from 'react-toastify';
+import LoaderContext from '../../Context/LoaderContext';
 
 const getBase64 = (img, callback) => {
   console.log("img ==>", img);
@@ -23,8 +27,10 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 
-const ClassModal = ({ isModalVisible, closeModal }) => {
+const ClassModal = ({ isModalVisible, closeModal, getAllClasses }) => {
+  const { user, setUser } = useContext(User);
   const [form] = Form.useForm();
+  const { loader, setLoader } = useContext(LoaderContext);
 
   const [imageUrl, setImageUrl] = useState();
   const [loading, setLoading] = useState(false);
@@ -68,31 +74,28 @@ const ClassModal = ({ isModalVisible, closeModal }) => {
   const handleOk = () => {
     form
       .validateFields()
-      .then(values => {
-        // console.log(values.classImage);
-        values.classImage = values.classImage.file;
+      .then(async (values) => {
+        closeModal();
+        setLoader(true);
+        form.resetFields();
+        setImageUrl();
+        const file = values.classImage.file.originFileObj;
+        const fileURL = await uploadFileToFirebase(file, `classes/${user._id}/${file.name}`);
+        values.classImage = fileURL;
 
         api.post('/api/classes/create', values)
           .then(res => {
-            console.log(res);
-            message.success('Class created successfully!');
+            getAllClasses();
+            setLoader(false);
+            toast.success('Class created successfully!');
           })
           .catch(err => {
-            console.log(err);
-            message.error('Failed to create class.');
+            throw new Error('Failed to create class.');
           });
-        // // values.classImage = values.classImage.file.originFileObj
-        // api.post("/api/classes/create", {values})
-        //   .then(res => console.log(res))
-        //   .catch(err => console.log(err));
-        // console.log('Success:', values);
-        closeModal();
-        form.resetFields();
-        setImageUrl();
-        // You can submit the form data here.
       })
       .catch(info => {
-        console.log('Failed:', info);
+        setLoader(false);
+        toast.error(info?.message);
       });
   };
 
