@@ -66,7 +66,12 @@ export default function TrainerDashboard() {
                             >
                                 <div className='flex relative bottom-12'>
                                     <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
-                                    <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                    {eachClass.teacher?.profileImg ? (
+                                        <img className='w-12 h-12 rounded-full' src={eachClass.teacher?.profileImg} alt="" />
+                                    ) : (
+                                        <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                    )
+                                    }
                                 </div>
                                 <div className='flex'>
                                     <Meta title={eachClass.teacher?.username} className='relative left-3' />

@@ -48,9 +48,6 @@ const router = createBrowserRouter([
     path: "/admin/dashboard",
     element: <>
       <Sidebar title="Admin | Dashboard">
-        {/* <AllTeachers />
-        <AllStudents /> */}
-
         <AdminDashboard />
       </Sidebar>
     </>
