@@ -12,14 +12,11 @@ export default function StudentHomePage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [otp, setOtp] = useState('');
     const [loadings, setLoadings] = useState([]);
-    const storedClasses = localStorage.getItem('classes');
-    const [classes, setClasses] = useState(storedClasses ? JSON.parse(storedClasses) : []);
+    const [classes, setClasses] = useState([]);
 
     useEffect(() => {
-        if (classes.length === 0) {
-            getAllClasses();
-        }
-    }, [classes]);
+        getAllClasses();
+    }, []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -119,11 +116,21 @@ export default function StudentHomePage() {
                         <div key={index}>
                             <Card
                                 hoverable
-                                cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />}
+                                cover={
+                                    course.classImage ?
+                                        <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={course.classImage} /> :
+                                        <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
+                                }
                             >
                                 <div className='flex relative bottom-12'>
                                     <h1 className='flex-1 relative top-8 right-3 font-semibold'>{course.name}</h1>
-                                    <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                    {
+                                        course.teacher?.profileImg ? (
+                                            <img className='w-12 h-12 rounded-full' src={course.teacher?.profileImg} alt="" />
+                                        ) : (
+                                            <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                        )
+                                    }
                                 </div>
                                 <div className='flex'>
                                     <Meta title={course.teacher?.username} className='relative left-3' />
