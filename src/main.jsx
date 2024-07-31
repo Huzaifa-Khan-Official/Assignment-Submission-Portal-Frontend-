@@ -179,6 +179,14 @@ const router = createBrowserRouter([
       </Sidebar>
     </>
   },
+  {
+    path: "/student/report",
+    element: <>
+      <Sidebar title="Student | Report">
+        <StudentReportGenerate />
+      </Sidebar>
+    </>
+  },
 
 ])
 
