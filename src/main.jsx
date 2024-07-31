@@ -15,7 +15,15 @@ import StudentAllAssignmentPage from './Pages/Students/StudentAllAssignmentPage.
 import StudentAssignmentTodoPage from './Pages/Students/StudentAssignmentTodoPage.jsx';
 import AllClassfellowsPage from './Pages/Students/AllClassfellowsPage.jsx';
 import StudentSettingPage from './Pages/Students/StudentSettingPage.jsx';
-import StudentUpdateProfilePage from './Pages/Students/StudentUpdateProfilePage.jsx';
+import AdminDashboard from './Components/AdminDashboard/AdminDashboard.jsx';
+import AllTeachers from './Components/AllTeachers/AllTeachers.jsx';
+import AllAssignmentsListing from './Components/AllAssignmentsListing.jsx';
+import AllStudents from './Components/AllStudents/AllStudents.jsx';
+import StudentDetail from './Components/StudentDetail/StudentDetail.jsx';
+import StudentReportGenerate from './Components/StudentReportGenerate/StudentReportGenerate.jsx';
+import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
+import UpdateProfilePage from './Components/UpdateProfilePage.jsx';
+import TrainerSettingPage from './Pages/Trainer/TrainerSettingPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,16 +48,84 @@ const router = createBrowserRouter([
     path: "/admin/dashboard",
     element: <>
       <Sidebar title="Admin | Dashboard">
-        <h1>Admin Dashboard</h1>
+        <AdminDashboard />
       </Sidebar>
     </>
   },
+  // admin trainer routes
+  {
+    path: "/admin/teachers",
+    element: <>
+      <Sidebar title="Admin | Teachers">
+        <AllTeachers />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/assignments/:teacherID",
+    element: <>
+      <Sidebar title="Admin | Teachers">
+        <h1>All Assignements Listing page</h1>
+      </Sidebar>
+    </>
+  },
+  // admin student routes
+  {
+    path: "/admin/students",
+    element: <>
+      <Sidebar title="Admin | Students">
+        <AllStudents />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/student/:studentId",
+    element: <>
+      <Sidebar title="Admin | Student">
+        <StudentDetail />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/student/:studentId/:classId",
+    element: <>
+      <Sidebar title="Admin | Student Report">
+        <StudentReportGenerate />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/settings",
+    element: <>
+      <Sidebar title="Admin | Settings">
+        <h1>Admin settings page</h1>
+        {/* <AllTeachers /> */}
+      </Sidebar>
+    </>
+  },
+
   // Trainer Routes
   {
     path: "/trainer/dashboard",
     element: <>
       <Sidebar title="Trainer | Dashboard">
-        <h1>Trainer Dashboard</h1>
+        <TrainerDashboard />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/trainer/profile",
+    element: <>
+      <Sidebar title="Trainer | Profile">
+        <UpdateProfilePage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/trainer/settings",
+    element: <>
+      <Sidebar title="Trainer | Profile">
+        <TrainerSettingPage />
       </Sidebar>
     </>
   },
@@ -63,7 +139,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/assignments/to-do",
+    path: "/assignments/todo",
     element: <>
       <Sidebar title="Student | Assignments | TO-Do">
         <StudentAssignmentTodoPage />
@@ -71,7 +147,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/classfellows",
+    path: "/classmates",
     element: <>
       <Sidebar title="Student | Classfellows">
         <AllClassfellowsPage />
@@ -79,7 +155,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/setting",
+    path: "/settings",
     element: <>
       <Sidebar title="Student | Setting">
         <StudentSettingPage />
@@ -90,7 +166,7 @@ const router = createBrowserRouter([
     path: "/student/profile",
     element: <>
       <Sidebar title="Student | Profile">
-        <StudentUpdateProfilePage />
+        <UpdateProfilePage />
       </Sidebar>
     </>
   },

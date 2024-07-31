@@ -46,7 +46,7 @@ const items = [
     },
     {
         icon: <FaUserLock />,
-        label: (<Link to="/student/profile">Update Profile</Link>),
+        label: (<Link to="/trainer/profile">Update Profile</Link>),
     },
     {
         key: 'sub5',
@@ -95,12 +95,9 @@ const items = [
         ],
     },
 ];
-const onClick = (e) => {
-    console.log('click', e);
-};
 
 
-export default function StudentSettingPage() {
+export default function TrainerSettingPage() {
     return (
         <div>
             <div className='flex m-5 text-2xl font-mono font-extrabold'>
@@ -109,7 +106,6 @@ export default function StudentSettingPage() {
             </div>
 
             <Menu
-                onClick={onClick}
                 style={{
                     width: 356,
                 }}

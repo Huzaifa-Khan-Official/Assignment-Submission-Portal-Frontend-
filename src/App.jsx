@@ -10,6 +10,7 @@ import CreateAssignment from "./Components/CreateAssignment";
 
 function App() {
   const { user, setUser } = useContext(User);
+  const navigate = useNavigate();
   const { loader, setLoader } = useContext(LoaderContext);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function App() {
   return (
     <>
       <Sidebar title="Student | Dashboard">
-        {user?.role == "student" ? <StudentHomePage /> : null}
+        {user?.role == "student" ? <StudentHomePage /> : user?.role == "trainer" ? navigate("/trainer/dashboard") : user?.role == "admin" ? navigate("/admin/dashboard") : null}
       </Sidebar>
       <Loader />
     </>

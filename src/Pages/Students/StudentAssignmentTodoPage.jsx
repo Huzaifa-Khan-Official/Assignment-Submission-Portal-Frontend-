@@ -108,7 +108,7 @@ export default function StudentAssignmentTodoPage() {
                 <h1 className='flex-2'>Batch-10</h1>
             </div>
 
-            <div>
+            <div className='w-full'>
                 <Table
                     className='mx-12'
                     columns={columns}

@@ -5,48 +5,50 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
-import { error } from 'highcharts';
+import { useNavigate } from 'react-router';
 
 const { Header, Content } = Layout;
 
-const AllTeachers = () => {
-  const storedTeachers = localStorage.getItem('teachers');
-  const [teachers, setTeachers] = useState(storedTeachers ? JSON.parse(storedTeachers) : []);
+const AllStudents = () => {
+  const storedStudents = localStorage.getItem('students');
+  const [students, setStudents] = useState(storedStudents ? JSON.parse(storedStudents) : []);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTeacher, setEditedTeacher] = useState(null);
+  const [editedStudent, setEditedStudent] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
-  const [initialized, setInitialized] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   useEffect(() => {
-    getAllTeachers();
-  }, []);
+    if (students.length === 0) {
+      getAllStudents();
+    }
+  }, [students]);
 
   useEffect(() => {
     if (isModalVisible) {
-      if (isEditing && editedTeacher) {
+      if (isEditing && editedStudent) {
         form.setFieldsValue({
-          username: editedTeacher.username,
-          email: editedTeacher.email,
+          username: editedStudent.username,
+          email: editedStudent.email,
           password: '',
         });
       } else {
         form.resetFields();
       }
     }
-  }, [isModalVisible, isEditing, editedTeacher, form]);
+  }, [isModalVisible, isEditing, editedStudent, form]);
 
   const showModal = () => {
     setIsModalVisible(true);
     setIsEditing(false);
-    setEditedTeacher(null);
+    setEditedStudent(null);
   };
 
-  const showEditModal = (teacher) => {
+  const showEditModal = (student) => {
     setIsModalVisible(true);
     setIsEditing(true);
-    setEditedTeacher(teacher);
+    setEditedStudent(student);
   };
 
   const handleCancel = () => {
@@ -54,21 +56,21 @@ const AllTeachers = () => {
     form.resetFields();
   };
 
-  const handleAddTeacher = (values) => {
+  const handleAddStudent = (values) => {
     handleCancel();
     setLoader(true);
-    api.post("/api/users/trainer", {
+    api.post("/api/users/student", {
       username: values.username,
       email: values.email,
       password: values.password,
-      role: "trainer"
+      role: "student"
     })
       .then((res) => {
         setLoader(false);
         form.resetFields();
-        toast.success('Teacher added successfully!', {
+        toast.success('Student added successfully!', {
           onClose: () => {
-            getAllTeachers();
+            getAllStudents();
           }
         });
       })
@@ -79,17 +81,17 @@ const AllTeachers = () => {
       });
   };
 
-  const handleEditTeacher = (values) => {
+  const handleEditStudent = (values) => {
     handleCancel();
     setLoader(true);
-    api.put(`/api/users/trainer/${editedTeacher._id}`, {
+    api.put(`/api/users/student/${editedStudent._id}`, {
       username: values.username,
       email: values.email,
     })
       .then((res) => {
         setLoader(false);
-        toast.success('Teacher updated successfully!');
-        getAllTeachers();
+        toast.success('Student updated successfully!');
+        getAllStudents();
       })
       .catch(err => {
         setLoader(false);
@@ -101,13 +103,13 @@ const AllTeachers = () => {
     toast.error("Please enter all fields");
   };
 
-  const handleDeleteTeacher = (id) => {
+  const handleDeleteStudent = (id) => {
     setLoader(true);
-    api.delete(`/api/users/trainer/${id}`)
+    api.delete(`/api/users/student/${id}`)
       .then((res) => {
         setLoader(false);
-        toast.success('Teacher deleted successfully!');
-        getAllTeachers();
+        toast.success('Student deleted successfully!');
+        getAllStudents();
       })
       .catch(err => {
         setLoader(false);
@@ -115,26 +117,24 @@ const AllTeachers = () => {
       });
   };
 
-  const getAllTeachers = () => {
+  const getAllStudents = () => {
     setLoader(true);
-    api.get("/api/users/trainers")
+    api.get("/api/users/students")
       .then(res => {
-        if (res.data) {
-          setTeachers(res.data);
-          setLoader(false);
-          localStorage.setItem("teachers", JSON.stringify(res.data));
-        }
+        console.log("res ==>", res.data);
+        setStudents(res.data);
+        setLoader(false);
+        localStorage.setItem("students", JSON.stringify(res.data));
       })
       .catch(err => {
-        console.log("error ==>", err);
         setLoader(false);
-        // toast.error(err.response?.data || err.message);
+        toast.error(err.response?.data || err.message);
       });
   };
 
   const columns = [
     {
-      title: 'Teacher Name',
+      title: 'Student Name',
       dataIndex: 'username',
       key: 'username',
       render: (text) => <a className="block w-max">{text}</a>,
@@ -146,6 +146,25 @@ const AllTeachers = () => {
       render: (text) => <a className="block w-max">{text}</a>,
     },
     {
+      title: 'No. of enrolled classes',
+      dataIndex: 'classes',
+      key: 'classes',
+      filters: [
+        { text: '0 classes', value: 0 },
+        { text: '1-3 classes', value: [1, 2, 3] },
+        { text: '4+ classes', value: 4 },
+      ],
+      onFilter: (value, record) => {
+        const classCount = record.classes ? record.classes.length : 0;
+        if (Array.isArray(value)) {
+          return value.includes(classCount);
+        }
+        return value === 4 ? classCount >= 4 : classCount === value;
+      },
+      sorter: (a, b) => (a.classes ? a.classes.length : 0) - (b.classes ? b.classes.length : 0),
+      render: (classes) => <span className="block w-max">{classes ? classes.length : 0}</span>,
+    },
+    {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
@@ -153,7 +172,7 @@ const AllTeachers = () => {
           <Button
             type='primary'
             icon={<VscOpenPreview />}
-            onClick={() => viewTrainerDetail(record._id)}
+            onClick={() => navigate(`/admin/student/${record._id}`)}
             title='View Details'
           />
           <Button
@@ -161,14 +180,14 @@ const AllTeachers = () => {
             icon={<EditOutlined />}
             onClick={() => showEditModal(record)}
             className='bg-[#22c55e] hover:bg-[#22994d]'
-            title='Edit Teacher'
+            title='Edit Student'
           />
           <Button
             type='primary'
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDeleteTeacher(record._id)}
-            title='Delete Teacher'
+            onClick={() => handleDeleteStudent(record._id)}
+            title='Delete Student'
           />
         </div>
       ),
@@ -179,23 +198,23 @@ const AllTeachers = () => {
     <>
       <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
         <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold'>
-          <h1 className='flex-1 text-2xl font-bold mb-4'>All Teachers</h1>
-          <button onClick={showModal} title='Add Teacher'>
+          <h1 className='flex-1 text-2xl font-bold mb-4'>All Students</h1>
+          <button onClick={showModal} title='Add Student'>
             <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
           </button>
         </div>
         <div className='p-4 pt-0'>
           <Table
             columns={columns}
-            dataSource={teachers}
+            dataSource={students}
             pagination={false}
             rowKey={(record) => record._id}
-            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
+            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll md:overflow-x-hidden'
           />
         </div>
       </Content>
       <Modal
-        title={isEditing ? 'Edit Teacher' : 'Add Teacher'}
+        title={isEditing ? 'Edit Student' : 'Add Student'}
         open={isModalVisible}
         onCancel={handleCancel}
         footer={[
@@ -205,7 +224,7 @@ const AllTeachers = () => {
           <Button
             key='submit'
             type='primary'
-            form='teacherForm'
+            form='studentForm'
             htmlType='submit'
           >
             {isEditing ? 'Update' : 'Add'}
@@ -214,15 +233,15 @@ const AllTeachers = () => {
       >
         <Form
           form={form}
-          id='teacherForm'
+          id='studentForm'
           layout='vertical'
-          onFinish={isEditing ? handleEditTeacher : handleAddTeacher}
+          onFinish={isEditing ? handleEditStudent : handleAddStudent}
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label='Teacher Name'
+            label='Student Name'
             name='username'
-            rules={[{ required: true, message: 'Please enter teacher name!' }]}
+            rules={[{ required: true, message: 'Please enter Student name!' }]}
           >
             <Input />
           </Form.Item>
@@ -230,7 +249,7 @@ const AllTeachers = () => {
             label='Email'
             name='email'
             rules={[
-              { required: true, message: 'Please enter teacher email!' },
+              { required: true, message: 'Please enter student email!' },
               { type: 'email', message: 'Please enter a valid email!' },
             ]}
           >
@@ -240,7 +259,7 @@ const AllTeachers = () => {
             <Form.Item
               label='Password'
               name='password'
-              rules={[{ required: true, message: 'Please enter teacher password!' }]}
+              rules={[{ required: true, message: 'Please enter student password!' }]}
             >
               <Input.Password />
             </Form.Item>
@@ -251,4 +270,4 @@ const AllTeachers = () => {
   );
 };
 
-export default AllTeachers;
+export default AllStudents;
