@@ -24,6 +24,7 @@ import StudentReportGenerate from './Components/StudentReportGenerate/StudentRep
 import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
 import UpdateProfilePage from './Components/UpdateProfilePage.jsx';
 import TrainerSettingPage from './Pages/Trainer/TrainerSettingPage.jsx';
+import ClassDetailPage from './Pages/Students/ClassDetailPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -135,6 +136,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Student | Assignments">
         <StudentAllAssignmentPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/class/:classId",
+    element: <>
+      <Sidebar title="Student | Assignments">
+        <ClassDetailPage />
       </Sidebar>
     </>
   },

@@ -9,24 +9,12 @@ import LoaderContext from "../Context/LoaderContext";
 import api from "../api/api";
 import PageTitle from "../Components/PageTitle";
 import Loader from "../Components/Loader";
+import useFetchProfile from "../utils/useFetchProfile";
 
 export default function Login() {
-  const { user, setUser } = useContext(User);
+  const { user, setUser } = useFetchProfile();
   const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      api.get("/api/users/profile")
-        .then(res => {
-          setUser(res.data);
-          navigate("/");
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }, [])
 
   const onFinish = (data) => {
     setLoader(true);

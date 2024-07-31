@@ -1,8 +1,27 @@
 import { BellFilled } from '@ant-design/icons'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import ClassFellowsListing from '../../Components/ClassFellowsListing'
+import api from '../../api/api'
+import User from '../../Context/Context'
+import useFetchProfile from '../../utils/useFetchProfile'
 
 export default function AllClassfellowsPage() {
+    const { user } = useFetchProfile();
+
+    useEffect(() => {
+        getAllClassfellows();
+    }, [user]);
+
+    const getAllClassfellows = () => {
+        console.log(user?._id);
+        api.get(`/api/classes/classmates/${user?._id}`)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
     return (
         <div>
             <div className='flex m-5 text-2xl font-mono font-extrabold'>

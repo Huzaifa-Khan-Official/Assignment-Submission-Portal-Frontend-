@@ -8,15 +8,21 @@ import LoaderContext from '../Context/LoaderContext';
 import api from '../api/api';
 import { toast } from 'react-toastify';
 import uploadFileToFirebase from '../utils/uploadFileToFirebase';
+import useFetchProfile from '../utils/useFetchProfile';
 
 export default function UpdateProfilePage() {
-    const { user, setUser } = useContext(User);
+    const { user, setUser } = useFetchProfile();
     const [visible, setVisible] = useState(false);
     const { loader, setLoader } = useContext(LoaderContext);
     const [form] = Form.useForm();
     const [profileImg, setProfileImg] = useState(user?.profileImg || userIcon);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (user?.profileImg) {
+            setProfileImg(user.profileImg);
+        }
+    }, [user]);
 
     const handleNotification = useCallback(() => {
         setVisible(true);
@@ -53,7 +59,7 @@ export default function UpdateProfilePage() {
     const onFinish = async (values) => {
         setLoader(true);
         try {
-            if (values.profileImg.file.originFileObj) {
+            if (values.profileImg?.file.originFileObj) {
                 const file = values.profileImg?.file.originFileObj;
                 const fileURL = await uploadFileToFirebase(file, `users/trainer/${user._id}/${file.name}`);
                 values.profileImg = fileURL;
@@ -62,15 +68,15 @@ export default function UpdateProfilePage() {
             const res = await api.put("/api/users/profile", {
                 username: values.username,
                 email: values.email,
-                profileImg: values.profileImg
-            })
+                profileImg: values?.profileImg
+            });
             setUser(res.data);
             setLoader(false);
             toast.success('Profile updated successfully!');
         } catch (error) {
             console.log("error ==>", error);
             setLoader(false);
-            toast.error(error);
+            toast.error(error.message || 'Error updating profile');
         }
     };
 
@@ -107,15 +113,7 @@ export default function UpdateProfilePage() {
                         </div>
 
                         <div className='flex flex-col items-center'>
-                            {
-                                profileImg ? (
-                                    <img className='w-24 h-24 object-contain rounded-full mx-5' src={profileImg} alt="Profile" />
-                                ) : user ? (
-                                    <img className='w-24 h-24 object-contain bg-stone-200 rounded-full mx-5' src={user.profileImg} alt="Profile" />
-                                ) : (
-                                    <img className='w-24 h-24 object-contain rounded-full mx-5' src={userIcon} alt="Profile" />
-                                )
-                            }
+                            <img className='w-24 h-24 object-contain rounded-full mx-5' src={profileImg || userIcon} alt="Profile" />
                             <Form.Item name="profileImg">
                                 <Upload
                                     className="avatar-uploader"

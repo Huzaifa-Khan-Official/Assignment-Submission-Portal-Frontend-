@@ -6,6 +6,7 @@ import api from '../../api/api';
 import { toast } from 'react-toastify';
 import userIcon from "../../assets/userIcon.png";
 import ClassPic from "../../assets/ClassPic.jpeg";
+import { useNavigate } from 'react-router';
 const { Meta } = Card;
 
 export default function StudentHomePage() {
@@ -13,6 +14,7 @@ export default function StudentHomePage() {
     const [otp, setOtp] = useState('');
     const [loadings, setLoadings] = useState([]);
     const [classes, setClasses] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getAllClasses();
@@ -108,7 +110,7 @@ export default function StudentHomePage() {
                 <BellFilled className='flex-2 ml-4 text-amber-400' />
             </div>
             <div className='mx-6'>
-                <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Courses</h1>
+                <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Classes</h1>
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[20px] justify-items-center'>
                     {classes.length === 0 ? (
                         <div className='text-2xl'>You haven't enrolled in any class yet!</div>
@@ -121,6 +123,7 @@ export default function StudentHomePage() {
                                         <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={course.classImage} /> :
                                         <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
                                 }
+                                onClick={() => navigate(`student/class/${course._id}`)}
                             >
                                 <div className='flex relative bottom-12'>
                                     <h1 className='flex-1 relative top-8 right-3 font-semibold'>{course.name}</h1>

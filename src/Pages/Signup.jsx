@@ -8,17 +8,19 @@ import { toast, ToastContainer } from "react-toastify";
 import api from "../api/api";
 import PageTitle from "../Components/PageTitle";
 import Loader from "../Components/Loader";
+import useFetchProfile from "../utils/useFetchProfile";
 
 export default function Signup() {
-  const { user, setUser } = useContext(User);
+  const { user } = useFetchProfile();
   const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
 
+  console.log("user: ", user);
   useEffect(() => {
     if (user) {
       navigate("/");
     }
-  }, []);
+  }, [user]);
 
   const onFinish = (values) => {
     setLoader(true);

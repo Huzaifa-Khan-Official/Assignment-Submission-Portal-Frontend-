@@ -2,10 +2,10 @@ import { BellFilled, CloseOutlined } from '@ant-design/icons'
 import React, { useContext } from 'react'
 import StudentListingTable from '../../Components/StudentListingTable'
 import User from '../../Context/Context'
+import useFetchProfile from '../../utils/useFetchProfile';
 
 export default function StudentAllAssignmentPage() {
-    const { user, setUser } = useContext(User);
-
+    const { user } = useFetchProfile();
     return (
         <div>
             <div className='flex m-5 text-2xl font-mono font-extrabold'>

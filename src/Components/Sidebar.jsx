@@ -11,37 +11,18 @@ import api from "../api/api";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "./Loader";
 import PageTitle from "./PageTitle";
+import useFetchProfile from "../utils/useFetchProfile";
 
 const { Header, Sider, Content } = Layout;
 
 const Sidebar = ({ children, title }) => {
-  const { user, setUser } = useContext(User);
+  const { user, setUser } = useFetchProfile();
   const { loader, setLoader } = useContext(LoaderContext);
   const [collapsed, setCollapsed] = useState(false);
   const [isLgOrHigher, setIsLgOrHigher] = useState(window.innerWidth >= 1024);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoader(true);
-        const res = await api.get("/api/users/profile");
-        setUser(res.data);
-        setLoader(false);
-      } catch (error) {
-        setLoader(false);
-        console.error("Error fetching profile:", error.response?.data || error.message);
-        localStorage.removeItem('token');
-        setUser(null);
-        navigate("/login");
-      }
-    };
-
-    if (!user) {
-      fetchProfile();
-    }
-  }, [user, setUser, navigate]);
 
   useEffect(() => {
     const handleResize = () => {

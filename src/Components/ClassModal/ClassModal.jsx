@@ -8,6 +8,7 @@ import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
 import User from '../../Context/Context';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
+import useFetchProfile from '../../utils/useFetchProfile';
 
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -22,7 +23,7 @@ const beforeUpload = (file) => {
 };
 
 const ClassModal = ({ isModalVisible, closeModal, getAllClasses }) => {
-  const { user, setUser } = useContext(User);
+  const { user } = useFetchProfile();
   const [form] = Form.useForm();
   const { loader, setLoader } = useContext(LoaderContext);
 
