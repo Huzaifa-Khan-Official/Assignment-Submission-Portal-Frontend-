@@ -10,14 +10,14 @@ const columns = [
         dataIndex: 'serialNo',
         key: 'serialNo',
         width: 100,
-        render: (number) => <a>{number}</a>,
+        render: (number) => <a className='block w-max'>{number}</a>,
     },
     {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         render: (text, record) => (
-            <div>
+            <div className='block w-max px-2'>
                 <div>{text}</div>
                 <div style={{ marginTop: '10px', fontSize: '12px', color: 'gray' }}>{record.rollNum}</div>
             </div>
@@ -27,7 +27,7 @@ const columns = [
         title: 'Grade',
         dataIndex: 'grade',
         key: 'grade',
-        render: (text) => <a>{text}</a>,
+        render: (text) => <a className='block w-max'>{text}</a>,
     },
     {
         title: 'Status',
@@ -59,7 +59,7 @@ const columns = [
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        render: (link) => <Link to={'/student/report'}>{link}</Link>,
+        render: (link) => <Link to={'/student/report'} className='block w-max px-2'>{link}</Link>,
     },
     // Add more columns as needed
 ];
@@ -121,7 +121,13 @@ export default function AllStudentGradePage() {
                         <Input size="large" placeholder="Search" prefix={<IoSearchSharp />} className='rounded-3xl w-96' />
                     </div>
                 </div>
-                <Table size='middle' dataSource={dataSource} columns={columns} />
+                <Table
+                    size='middle'
+                    dataSource={dataSource}
+                    columns={columns}
+                    // className='overflow-x-auto'
+                    className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto md:overflow-x-hidden'
+                />
             </div>
 
         </div>

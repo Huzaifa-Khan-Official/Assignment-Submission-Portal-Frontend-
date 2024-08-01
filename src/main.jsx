@@ -25,6 +25,7 @@ import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
 import UpdateProfilePage from './Components/UpdateProfilePage.jsx';
 import TrainerSettingPage from './Pages/Trainer/TrainerSettingPage.jsx';
 import ClassDetailPage from './Pages/Students/ClassDetailPage.jsx';
+import AllStudentGradePage from "./Pages/Trainer/AllStudentGradePage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -111,6 +112,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Trainer | Dashboard">
         <TrainerDashboard />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/trainer/:classId/:assignmentId", // all students grade report of a selected assignment of a selected class
+    element: <>
+      <Sidebar title="Trainer | Dashboard">
+        <AllStudentGradePage />
       </Sidebar>
     </>
   },

@@ -124,6 +124,7 @@ export default function StudentHomePage() {
                                         <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
                                 }
                                 onClick={() => navigate(`student/class/${course._id}`)}
+                                className='hover:-translate-y-1 duration-200 transition'
                             >
                                 <div className='flex relative bottom-12'>
                                     <h1 className='flex-1 relative top-8 right-3 font-semibold'>{course.name}</h1>
