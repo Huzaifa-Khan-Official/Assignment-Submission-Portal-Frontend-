@@ -3,7 +3,9 @@ import { useNavigate, useParams } from 'react-router';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { LiaClipboardListSolid } from 'react-icons/lia';
-import { Card } from 'antd';
+import { Button, Card } from 'antd';
+import { FaPlus } from 'react-icons/fa';
+import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 
 
 const { Meta } = Card;
@@ -11,12 +13,21 @@ const { Meta } = Card;
 function StudentAssignmentDetailPage() {
     const { classId, assignmentId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [detail, setDetail] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
         getClassDetail();
     }, [])
+
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
 
     const getClassDetail = () => {
@@ -59,16 +70,16 @@ function StudentAssignmentDetailPage() {
                                 <h2 className='text-xl font-bold mb-3'>File:</h2>
                                 <Card
                                     hoverable
-                                    // style={{
-                                    //     width: 650,
-                                    // }}
                                     cover={
-                                        <img className='h-28' alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
+                                        <img className='!max-w-[100px] w-full !rounded-lg' alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
 
                                     }
-                                    className='flex w-max'
+                                    className='flex flex-col w-full sm:flex-row items-center'
                                 >
-                                    <Meta title="Europe Street beat" description="www.instagram.com" />
+                                    <Meta
+                                        title="Dummy-text.pdf" // filename
+                                        // description="www.instagram.com"
+                                    />
                                 </Card>
                             </div>
                         </div>
@@ -77,8 +88,13 @@ function StudentAssignmentDetailPage() {
 
                 <section className="bg-white p-4 rounded-lg shadow h-max">
                     <h2 className="text-xl mb-4">Your Work</h2>
+                    {/* if assignment is not submitted */}
+                    <div>
+                        <Button className='w-full text-blue-600' onClick={showModal}><FaPlus /> Add or create</Button>
+                    </div>
                 </section>
             </div>
+            <AssignmentSubmitFormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleCancel={handleCancel} showModal={showModal} />
         </div>
     )
 }
