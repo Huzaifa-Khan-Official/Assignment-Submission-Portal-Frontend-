@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
@@ -7,7 +7,6 @@ import { Button, Card } from 'antd';
 import { FaPlus } from 'react-icons/fa';
 import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 
-
 const { Meta } = Card;
 
 function StudentAssignmentDetailPage() {
@@ -15,20 +14,22 @@ function StudentAssignmentDetailPage() {
     const { loader, setLoader } = useContext(LoaderContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [detail, setDetail] = useState();
+    const [submittedFile, setSubmittedFiles] = useState(
+        "https://firebasestorage.googleapis.com/v0/b/assignment-submission-po-57db6.appspot.com/o/users%2Fstudent%2F669173ef4b520b1c8fbc0f8d%2Fassignments%2FAssignment%20submission%20portal%20pages.pdf?alt=media&token=c8dd5216-81b8-48e1-94bb-46cb034a5b26"
+    );
     const navigate = useNavigate();
 
     useEffect(() => {
         getClassDetail();
-    }, [])
-
+    }, []);
 
     const showModal = () => {
         setIsModalOpen(true);
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
 
     const getClassDetail = () => {
         setLoader(true);
@@ -41,7 +42,31 @@ function StudentAssignmentDetailPage() {
                 toast.error(err.response.data);
                 setLoader(false);
             });
-    }
+    };
+
+    const handleUnSubmit = () => {
+        // api intergarion of unsubmit assignment
+
+        setLoader(true);
+        setSubmittedFiles("");
+        setLoader(false);
+    };
+
+    const handleSubmit = () => {
+        setIsModalOpen(false);
+    };
+
+    const isImage = (url) => {
+        return url.includes(".png" || ".jpeg" || ".jpg" || ".gif");
+    };
+
+    const isPDF = (url) => {
+        return url.includes(".pdf");
+    };
+
+    const isLink = (url) => {
+        return !isImage(url) && !isPDF(url);
+    };
 
     return (
         <div className='p-4 ps-5'>
@@ -72,13 +97,11 @@ function StudentAssignmentDetailPage() {
                                     hoverable
                                     cover={
                                         <img className='!max-w-[100px] w-full !rounded-lg' alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-
                                     }
                                     className='flex flex-col w-full sm:flex-row items-center'
                                 >
                                     <Meta
                                         title="Dummy-text.pdf" // filename
-                                    // description="www.instagram.com"
                                     />
                                 </Card>
                             </div>
@@ -88,30 +111,42 @@ function StudentAssignmentDetailPage() {
 
                 <section className="bg-white p-4 rounded-lg shadow h-max">
                     <h2 className="text-xl mb-4">Your Work</h2>
-                    <div className='mb-4 flex flex-col gap-3'>
-                        {/* submitted file name */}
-                        <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold'>
-                            Dummy-text.pdf
-                        </p>
-                        {/* submitted file link */}
-                        <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold'>
-                            https://dummyjson.com
-                        </p>
-                    </div>
+                    {
+                        !submittedFile ? (
+                            // if no assignments are submitted
+                            <div>
+                                <Button className='w-full text-blue-600' onClick={showModal}><FaPlus /> Add or create</Button>
+                            </div>
+                        ) : (
+                            <>
+                                {isLink(submittedFile) && (
+                                    <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all'>
+                                        {submittedFile}
+                                    </p>
+                                )}
+                                {isImage(submittedFile) && (
+                                    <img src={submittedFile} className='w-full h-full object-contain' alt="" />
+                                )}
+                                {isPDF(submittedFile) && (
+                                    <iframe
+                                        src={submittedFile}
+                                        className='w-full h-64 border rounded-md'
+                                        title="PDF Preview"
+                                    />
+                                )}
 
-                    {/* if assignment is not submitted */}
-                    {/* <div>
-                        <Button className='w-full text-blue-600' onClick={showModal}><FaPlus /> Add or create</Button>
-                    </div> */}
-                    {/* if assignment is submitted */}
-                    <div>
-                        <Button className='w-full text-blue-600' onClick={showModal}>Unsubmit</Button>
-                    </div>
+                                {/* if assignments are submitted */}
+                                <div className='mt-3'>
+                                    <Button className='w-full text-blue-600' onClick={handleUnSubmit}>Unsubmit</Button>
+                                </div>
+                            </>
+                        )
+                    }
                 </section>
             </div>
-            <AssignmentSubmitFormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleCancel={handleCancel} showModal={showModal} />
+            <AssignmentSubmitFormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleCancel={handleCancel} showModal={showModal} handleSubmit={handleSubmit} />
         </div>
-    )
+    );
 }
 
-export default StudentAssignmentDetailPage
+export default StudentAssignmentDetailPage;

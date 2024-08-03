@@ -1,36 +1,82 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { Button, Input, Modal } from 'antd';
 import { useDropzone } from 'react-dropzone';
-import { LuFilePlus } from "react-icons/lu";
-import { FiFolderPlus } from "react-icons/fi";
 import { BiSolidArrowToBottom } from "react-icons/bi";
+import { toast } from 'react-toastify';
+import useFetchProfile from '../../utils/useFetchProfile';
+import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
+import LoaderContext from '../../Context/LoaderContext';
 
-const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, handleCancel }) => {
+const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, handleCancel, handleSubmit }) => {
+    const { user, setUser } = useFetchProfile();
     const [file, setFile] = useState(null);
+    const [description, setDescription] = useState('');
+    const [fileLink, setFileLink] = useState('');
+    const { loader, setLoader } = useContext(LoaderContext);
 
     const onDrop = (acceptedFiles) => {
-        console.log(acceptedFiles[0]);
         setFile(acceptedFiles[0]);
     };
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-    const handleOk = () => {
+    const handleOk = async () => {
+        setLoader(true);
         setIsModalOpen(false);
+        if (!file && !fileLink) {
+            toast.error("Please select a file or insert link!");
+        } else {
+            const assignmentData = {
+                student: user._id,
+                description,
+                date: new Date(),
+                fileLink
+            };
+            if (file) {
+                // store the file in firebase storage
+                const uploadedFileLink = await uploadFileToFirebase(file, `users/student/${user._id}/assignments/${file.name}`);
+                assignmentData.fileLink = uploadedFileLink;
+
+                console.log(assignmentData);
+                // api integration for AssignmentData
+            } else {
+                assignmentData.fileLink = fileLink;
+
+                console.log(assignmentData);
+                // api integration for AssignmentData
+            }
+
+            setLoader(false);
+            setFile(null);
+            setFileLink("");
+            setDescription("");
+        }
     };
 
     return (
-        <Modal footer={null} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal footer={null} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} className='!z-[9]'>
             <div>
                 <div>
                     <div className='my-5 text-base'>
                         <div>
                             <label>Assignment Description:</label>
-                            <Input.TextArea size="large" placeholder="Write a description about your assignment" className='my-2' />
+                            <Input.TextArea
+                                size="large"
+                                placeholder="Write a description about your assignment"
+                                className='my-2'
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
                         </div>
                         <div>
                             <label>File Link:</label>
-                            <Input size="large" placeholder="Paste the file link here" className='my-2' />
+                            <Input
+                                size="large"
+                                placeholder="Paste the file link here"
+                                className='my-2'
+                                value={fileLink}
+                                onChange={(e) => setFileLink(e.target.value)}
+                            />
                         </div>
                         <label>File Submission:</label>
                         <div className='my-2 bg-stone-100 h-60 rounded-lg border-2 flex  justify-center items-center'>
