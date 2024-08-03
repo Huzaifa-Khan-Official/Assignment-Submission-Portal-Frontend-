@@ -78,7 +78,7 @@ function StudentAssignmentDetailPage() {
                                 >
                                     <Meta
                                         title="Dummy-text.pdf" // filename
-                                        // description="www.instagram.com"
+                                    // description="www.instagram.com"
                                     />
                                 </Card>
                             </div>
@@ -88,9 +88,24 @@ function StudentAssignmentDetailPage() {
 
                 <section className="bg-white p-4 rounded-lg shadow h-max">
                     <h2 className="text-xl mb-4">Your Work</h2>
+                    <div className='mb-4 flex flex-col gap-3'>
+                        {/* submitted file name */}
+                        <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold'>
+                            Dummy-text.pdf
+                        </p>
+                        {/* submitted file link */}
+                        <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold'>
+                            https://dummyjson.com
+                        </p>
+                    </div>
+
                     {/* if assignment is not submitted */}
-                    <div>
+                    {/* <div>
                         <Button className='w-full text-blue-600' onClick={showModal}><FaPlus /> Add or create</Button>
+                    </div> */}
+                    {/* if assignment is submitted */}
+                    <div>
+                        <Button className='w-full text-blue-600' onClick={showModal}>Unsubmit</Button>
                     </div>
                 </section>
             </div>
