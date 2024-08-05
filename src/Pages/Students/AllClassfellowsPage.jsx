@@ -11,7 +11,8 @@ import { toast } from 'react-toastify'
 export default function AllClassfellowsPage() {
     const { user } = useFetchProfile();
     const { loader, setLoader } = useContext(LoaderContext);
-    const [trainerData, setTrainerData] = useState(null);
+    const [trainerData, setTrainerData] = useState([]);
+    const [studentsData, setStudentsData] = useState([]);
     const { classId } = useParams();
 
     useEffect(() => {
@@ -22,8 +23,8 @@ export default function AllClassfellowsPage() {
         setLoader(true);
         api.get(`/api/classes/classmates/${classId}`)
             .then(res => {
-                setTrainerData(res.data.teacher);
-                console.log(res.data);
+                setTrainerData([...trainerData, res.data.teacher]);
+                setStudentsData([...studentsData, ...res.data.students]);
                 setLoader(false);
             })
             .catch(err => {
@@ -53,7 +54,7 @@ export default function AllClassfellowsPage() {
             </div>
 
             <div className='mb-4'>
-                <ClassFellowsListing />
+                <ClassFellowsListing data={studentsData}/>
             </div>
         </div>
     )

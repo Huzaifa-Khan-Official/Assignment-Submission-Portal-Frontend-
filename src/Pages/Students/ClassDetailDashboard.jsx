@@ -46,7 +46,7 @@ function ClassDetailDashboard() {
     };
 
     return (
-        <div className='p-4 ps-5'>
+        <div className='p-4 ps-6'>
             <header className="bg-teal-600 text-white p-4 rounded-lg mb-4">
                 <h1 className="text-2xl">{detail?.name}</h1>
                 <p className="text-md">{detail?.description}</p>
