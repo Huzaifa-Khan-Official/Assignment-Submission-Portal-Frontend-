@@ -4,7 +4,7 @@ import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { LiaClipboardListSolid } from 'react-icons/lia';
 import { Button, Card } from 'antd';
-import { FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 
 const { Meta } = Card;
@@ -71,8 +71,14 @@ function StudentAssignmentDetailPage() {
     return (
         <div className='p-4 ps-5'>
             <header className="bg-teal-600 text-white p-4 rounded-lg mb-4">
-                <h1 className="text-2xl">{detail?.name}</h1>
-                <p className="text-md">{detail?.description}</p>
+
+                <h1 className="text-2xl flex items-center gap-3">
+                    <button className='border-2  p-2 text-xl rounded-full hover:border-blue-700 transition duration-200' onClick={() => navigate(-1)}>
+                        <FaArrowLeft/>
+                    </button>
+                    {detail?.name}
+                </h1>
+                <p className="text-md ml-12">{detail?.description}</p>
             </header>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-2'>

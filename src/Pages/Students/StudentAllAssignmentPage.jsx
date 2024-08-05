@@ -3,9 +3,14 @@ import React, { useContext } from 'react'
 import StudentListingTable from '../../Components/StudentListingTable'
 import User from '../../Context/Context'
 import useFetchProfile from '../../utils/useFetchProfile';
+import { useNavigate, useParams } from 'react-router';
 
 export default function StudentAllAssignmentPage() {
     const { user } = useFetchProfile();
+    const { classId } = useParams();
+    const navigate = useNavigate();
+    console.log(classId);
+
     return (
         <div>
             <div className='m-2 p-1 rounded-md'>
@@ -16,8 +21,8 @@ export default function StudentAllAssignmentPage() {
                             <li className='text-lg font-bold uppercase'>{user?.username}</li>
                             <li className='text-base text-sky-500 font-semibold'>128066</li>
                             <li className='text-base text-sky-500 font-semibold'>Batch-10</li>
-                            <li className='text-base text-sky-700 font-semibold'>
-                                <button>
+                            <li className='text-base text-sky-700 font-semibold '>
+                                <button className='hover:underline' onClick={() => navigate(`/student/${classId}/report`)}>
                                     View Overall Report
                                 </button>
                             </li>

@@ -168,22 +168,6 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/assignments/todo",
-    element: <>
-      <Sidebar title="Student | Assignments | TO-Do">
-        <StudentAssignmentTodoPage />
-      </Sidebar>
-    </>
-  },
-  {
-    path: "/classmates",
-    element: <>
-      <Sidebar title="Student | Classfellows">
-        <AllClassfellowsPage />
-      </Sidebar>
-    </>
-  },
-  {
     path: "/settings",
     element: <>
       <Sidebar title="Student | Setting">
@@ -200,7 +184,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/report",
+    path: "/student/:classId/report",
     element: <>
       <Sidebar title="Student | Report">
         <StudentReportGenerate />

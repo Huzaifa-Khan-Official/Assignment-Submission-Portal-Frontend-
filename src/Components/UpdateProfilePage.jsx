@@ -17,6 +17,7 @@ export default function UpdateProfilePage() {
     const [form] = Form.useForm();
     const [profileImg, setProfileImg] = useState(user?.profileImg || userIcon);
     const [loading, setLoading] = useState(false);
+    const [fileList, setFileList] = useState([]);
 
     useEffect(() => {
         if (user?.profileImg) {
@@ -26,10 +27,6 @@ export default function UpdateProfilePage() {
 
     const handleNotification = useCallback(() => {
         setVisible(true);
-    }, []);
-
-    const handleCancel = useCallback(() => {
-        setVisible(false);
     }, []);
 
     const beforeUpload = (file) => {
@@ -45,6 +42,22 @@ export default function UpdateProfilePage() {
     };
 
     const handleChange = (info) => {
+        let fileList = [...info.fileList];
+
+        // Limit the number of uploaded files
+        fileList = fileList.slice(-1);
+
+        // Read from response and show file link
+        fileList = fileList.map(file => {
+            if (file.response) {
+                // Component will show file.url as link
+                file.url = file.response.url;
+            }
+            return file;
+        });
+
+        setFileList(fileList);
+
         if (info.file.status === 'uploading') {
             setLoading(true);
             return;
@@ -59,10 +72,12 @@ export default function UpdateProfilePage() {
     const onFinish = async (values) => {
         setLoader(true);
         try {
-            if (values.profileImg?.file.originFileObj) {
-                const file = values.profileImg?.file.originFileObj;
+            if (fileList.length > 0 && fileList[0].originFileObj) {
+                const file = fileList[0].originFileObj;
                 const fileURL = await uploadFileToFirebase(file, `users/trainer/${user._id}/${file.name}`);
                 values.profileImg = fileURL;
+            } else {
+                values.profileImg = profileImg;
             }
 
             const res = await api.put("/api/users/profile", {
@@ -113,12 +128,13 @@ export default function UpdateProfilePage() {
                         </div>
 
                         <div className='flex flex-col items-center'>
-                            <img className='w-24 h-24 object-contain rounded-full mx-5' src={profileImg || userIcon} alt="Profile" />
+                            <img className='!w-28 h-28 object-cover rounded-[50%] mx-5' src={profileImg || userIcon} alt="Profile" />
                             <Form.Item name="profileImg">
                                 <Upload
                                     className="avatar-uploader"
                                     beforeUpload={beforeUpload}
                                     onChange={handleChange}
+                                    fileList={fileList}
                                     showUploadList={false}
                                 >
                                     <Button className='my-3' type='primary' ghost>

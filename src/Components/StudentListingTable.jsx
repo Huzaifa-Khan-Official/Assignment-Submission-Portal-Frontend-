@@ -1,6 +1,8 @@
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { MdOutlinePreview } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const columns = [
     {
@@ -48,12 +50,12 @@ const columns = [
         ),
     },
     {
-        title: 'Action',
-        key: 'action',
+        title: 'Preview',
+        key: 'Preview',
         render: (_, record) => (
-            <Space size="middle">
-                <a><PlusOutlined /></a>
-            </Space>
+            <Link to={`${record.key}`}>
+                < MdOutlinePreview className='text-xl' />
+            </Link>
         ),
     },
 ];
