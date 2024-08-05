@@ -1,25 +1,34 @@
 import { BellFilled } from '@ant-design/icons'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ClassFellowsListing from '../../Components/ClassFellowsListing'
 import api from '../../api/api'
 import User from '../../Context/Context'
 import useFetchProfile from '../../utils/useFetchProfile'
+import { useParams } from 'react-router'
+import LoaderContext from '../../Context/LoaderContext'
+import { toast } from 'react-toastify'
 
 export default function AllClassfellowsPage() {
     const { user } = useFetchProfile();
+    const { loader, setLoader } = useContext(LoaderContext);
+    const [trainerData, setTrainerData] = useState(null);
+    const { classId } = useParams();
 
     useEffect(() => {
         getAllClassfellows();
     }, [user]);
 
     const getAllClassfellows = () => {
-        console.log(user?._id);
-        api.get(`/api/classes/classmates/${user?._id}`)
+        setLoader(true);
+        api.get(`/api/classes/classmates/${classId}`)
             .then(res => {
-                console.log(res);
+                setTrainerData(res.data.teacher);
+                console.log(res.data);
+                setLoader(false);
             })
             .catch(err => {
-                console.log(err);
+                setLoader(false);
+                toast.error(err?.response.data.error);
             });
     }
     return (
@@ -31,7 +40,9 @@ export default function AllClassfellowsPage() {
             </div>
 
             <div className='mb-4'>
-                <ClassFellowsListing />
+                {
+                    trainerData && <ClassFellowsListing data={trainerData} />
+                }
             </div>
 
             <div className='flex text-2xl font-extrabold mb-4'>

@@ -1,7 +1,8 @@
 import { UserOutlined } from '@ant-design/icons'
 import React, { memo } from 'react'
 
-function ClassFellowsListing() {
+function ClassFellowsListing({ data }) {
+    console.log("data ==>", data);
     return (
         <div>
             <div className="bg-white rounded-lg border bg-card text-card-foreground shadow-lg w-full max-w-3xl" data-v0-t="card">
