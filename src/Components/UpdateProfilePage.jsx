@@ -33,12 +33,15 @@ export default function UpdateProfilePage() {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
             message.error('You can only upload JPG/PNG file!');
+            return Upload.LIST_IGNORE; // Prevent the upload
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
             message.error('Image must smaller than 2MB!');
+            return Upload.LIST_IGNORE; // Prevent the upload
         }
         return isJpgOrPng && isLt2M;
+        // return false; // Prevent automatic upload
     };
 
     const handleChange = (info) => {
@@ -136,6 +139,7 @@ export default function UpdateProfilePage() {
                                     onChange={handleChange}
                                     fileList={fileList}
                                     showUploadList={false}
+                                    action=""
                                 >
                                     <Button className='my-3' type='primary' ghost>
                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}

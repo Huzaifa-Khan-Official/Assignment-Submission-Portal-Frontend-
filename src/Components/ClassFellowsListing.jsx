@@ -10,7 +10,7 @@ function ClassFellowsListing({ data }) {
                         data &&
                         data.map((data, i) => {
                             return (
-                                <div className="flex items-start gap-4 border-b pb-3">
+                                <div className="flex items-start gap-4 border-b pb-3" key={i}>
                                     <span className="relative flex shrink-0 overflow-hidden rounded-full border-2 border-primary w-12 h-12 items-center justify-center">
                                         {
                                             data.profileImg ? <img src={data.profileImg} alt="" className='w-full h-full'/> : <UserOutlined />

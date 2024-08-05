@@ -7,12 +7,14 @@ import ClassPic from "../../assets/ClassPic.jpeg";
 import ClassModal from '../../Components/ClassModal/ClassModal';
 import LoaderContext from '../../Context/LoaderContext';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 const { Meta } = Card;
 
 export default function TrainerDashboard() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { loader, setLoader } = useContext(LoaderContext);
     const [classes, setClasses] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoader(true);
@@ -63,6 +65,7 @@ export default function TrainerDashboard() {
                             <Card
                                 hoverable
                                 cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={eachClass.classImage} />}
+                                onClick={() => navigate(`/trainer/class/${eachClass._id}`)}
                             >
                                 <div className='flex relative bottom-12'>
                                     <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
