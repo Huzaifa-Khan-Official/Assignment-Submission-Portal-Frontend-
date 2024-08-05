@@ -24,15 +24,24 @@ export default function AllClassfellowsPage() {
     }
     return (
         <div>
-            <div className='flex m-5 text-2xl font-mono font-extrabold'>
-                <div className="flex-1 p-6">
-                    <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Classmates</h3>
-                    <p className="text-sm text-muted-foreground">Get to know your fellow students!</p>
+            <div className='flex text-2xl font-extrabold mb-4'>
+                <div className="flex-1">
+                    <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight mb-1">Teacher</h3>
                 </div>
-                <BellFilled className='flex-2 text-amber-400' />
             </div>
 
-            <div className='ps-6 pe-3'>
+            <div className='mb-4'>
+                <ClassFellowsListing />
+            </div>
+
+            <div className='flex text-2xl font-extrabold mb-4'>
+                <div className="flex-1">
+                    <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight mb-1">Classmates</h3>
+                    <p className="text-sm text-muted-foreground font-normal">Get to know your fellow students!</p>
+                </div>
+            </div>
+
+            <div className='mb-4'>
                 <ClassFellowsListing />
             </div>
         </div>

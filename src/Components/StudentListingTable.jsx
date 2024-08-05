@@ -90,9 +90,9 @@ const data = [
 ];
 
 const StudentListingTable = () => (
-    <div className="p-4 sm:p-8">
+    <div className="pt-4 shadow-lg">
         <Table
-            className="min-w-full bg-white shadow-md rounded-lg overflow-x-scroll md:overflow-x-hidden"
+            className="min-w-full bg-white shadow-lg rounded-lg overflow-x-scroll md:overflow-x-hidden"
             columns={columns}
             dataSource={data}
             pagination={false}

@@ -29,22 +29,22 @@ const ClassDetailPage = () => {
     }
 
     const announcements = [
-        // {
-        //     name: 'Shahmeer Hanif',
-        //     date: 'Mar 4',
-        //     content: 'https://drive.google.com/drive/folders/1zTv6xmBOCbkx2JRm8BV-hFXBzdkfPfMU',
-        //     files: []
-        // },
-        // {
-        //     name: 'Shahmeer Hanif',
-        //     date: 'Mar 3',
-        //     content: 'ShahmeerHanif/55/CPP',
-        //     files: [
-        //         { name: 'Binary File', type: 'binary' },
-        //         { name: 'Unknown File', type: 'unknown' },
-        //         // More files...
-        //     ]
-        // }
+        {
+            name: 'Shahmeer Hanif',
+            date: 'Mar 4',
+            content: 'https://drive.google.com/drive/folders/1zTv6xmBOCbkx2JRm8BV-hFXBzdkfPfMU',
+            files: []
+        },
+        {
+            name: 'Shahmeer Hanif',
+            date: 'Mar 3',
+            content: 'ShahmeerHanif/55/CPP',
+            files: [
+                { name: 'Binary File', type: 'binary' },
+                { name: 'Unknown File', type: 'unknown' },
+                // More files...
+            ]
+        }
         // Add more announcements here...
     ];
 
@@ -58,12 +58,7 @@ const ClassDetailPage = () => {
     ];
 
     return (
-        <div className="max-w-4xl p-4 ps-5">
-            <header className="bg-teal-600 text-white p-4 rounded-lg mb-4">
-                <h1 className="text-2xl">{detail?.name}</h1>
-                <p className="text-md">{detail?.description}</p>
-            </header>
-
+        <div>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-2'>
                 <section className="">
                     <div className="bg-gray-100 rounded-lg ps-2">
@@ -89,7 +84,7 @@ const ClassDetailPage = () => {
                                     <p className="text-gray-600">{announcement.date}</p>
                                 </div>
                             </div>
-                            <p className="text-blue-500 mb-2">{announcement.content}</p>
+                            <p className="text-blue-500 mb-2 hover:cursor-pointer">{announcement.content}</p>
                             <div className="flex flex-wrap">
                                 {announcement.files.map((file, idx) => (
                                     <div key={idx} className="bg-gray-200 p-2 rounded-lg m-1">
