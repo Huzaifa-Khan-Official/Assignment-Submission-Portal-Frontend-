@@ -127,7 +127,7 @@ export default function StudentHomePage() {
                                 className='hover:-translate-y-1 duration-200 transition'
                             >
                                 <div className='flex relative bottom-12'>
-                                    <h1 className='flex-1 relative top-8 right-3 font-semibold'>{course.name}</h1>
+                                    <h1 className='flex-1 relative top-8 right-0 text-2xl font-semibold'>{course.name}</h1>
                                     {
                                         course.teacher?.profileImg ? (
                                             <img className='w-12 h-12 rounded-full' src={course.teacher?.profileImg} alt="" />
