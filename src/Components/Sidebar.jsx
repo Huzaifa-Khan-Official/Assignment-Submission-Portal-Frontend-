@@ -75,6 +75,7 @@ const Sidebar = ({ children, title }) => {
     // trainer routes
     if (location.pathname.includes("/trainer/profile")) return '0';
     if (location.pathname.includes("/trainer/dashboard")) return '1';
+    if (location.pathname.includes("/trainer/class")) return '1';
     if (location.pathname.includes("/trainer/settings")) return '5';
     if (location.pathname.includes("/students")) return '4';
   };

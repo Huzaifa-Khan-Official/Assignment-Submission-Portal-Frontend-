@@ -15,17 +15,21 @@ const ClassDetailPage = () => {
     }, [])
 
 
-    const getClassDetail = () => {
+    const getClassDetail = async () => {
         setLoader(true);
-        api.get(`/api/classes/student/class/${classId}`)
-            .then(res => {
-                setDetail(res.data);
-                setLoader(false);
+        try {
+            const res = await api.get(`/api/classes/trainer/class/${classId}`);
+            setDetail(res.data);
+            setLoader(false);
+
+        } catch (error) {
+            toast.error(error.response.data, {
+                onClose: () => {
+                    navigate("/trainer/dashboard");
+                }
             })
-            .catch(err => {
-                toast.error(err.response.data);
-                setLoader(false);
-            });
+            setLoader(false);
+        }
     }
 
     const announcements = [
@@ -62,8 +66,14 @@ const ClassDetailPage = () => {
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-2'>
                 <section className="">
                     <div className="bg-gray-100 rounded-lg ps-2">
-                        <h2 className="text-xl mb-4">Upcoming</h2>
-                        <div className='bg-white p-4 rounded-lg shadow mb-4'>
+                        <h2 className="text-xl mb-3">Class code</h2>
+                        <div className='bg-white p-4 rounded-lg shadow mb-3'>
+                            <p>{detail?.join_code}</p>
+                        </div>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg ps-2">
+                        <h2 className="text-xl mb-3">Upcoming</h2>
+                        <div className='bg-white p-4 rounded-lg shadow mb-3'>
                             <p>Woohoo, no work due soon!</p>
                         </div>
                     </div>
