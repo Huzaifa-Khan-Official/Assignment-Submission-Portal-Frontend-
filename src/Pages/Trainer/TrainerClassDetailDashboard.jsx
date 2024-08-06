@@ -6,6 +6,7 @@ import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import ClassDetailPage from './ClassDetailPage';
+import AllAssignmentsListing from '../../Components/AllAssignmentsListing';
 
 function TrainerClassDetailDashboard() {
   const [selectedComponent, setSelectedComponent] = useState('Stream');
@@ -40,10 +41,9 @@ function TrainerClassDetailDashboard() {
     switch (selectedComponent) {
       case 'Stream':
         return <ClassDetailPage />;
-        // return ("ClassDetailPage");
       case 'Classwork':
         // return <StudentAllAssignmentPage />;
-        return ("StudentAllAssignmentPage");
+        return <AllAssignmentsListing />;
       case 'People':
         // return <AllClassfellowsPage />;
         return ("AllClassfellowsPage");
