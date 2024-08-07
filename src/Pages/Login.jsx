@@ -41,7 +41,7 @@ export default function Login() {
       })
       .catch(err => {
         setLoader(false);
-        toast.error("Something went wrong! Please try again.")
+        toast.error(err.response.data ||"Something went wrong! Please try again.")
         console.log("err =>", err);
       })
   };

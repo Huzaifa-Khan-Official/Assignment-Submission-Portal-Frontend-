@@ -25,6 +25,10 @@ import TrainerDashboard from './Pages/Trainer/TrainerDashboard.jsx';
 import UpdateProfilePage from './Components/UpdateProfilePage.jsx';
 import TrainerSettingPage from './Pages/Trainer/TrainerSettingPage.jsx';
 import ClassDetailPage from './Pages/Students/ClassDetailPage.jsx';
+import AllStudentGradePage from "./Pages/Trainer/AllStudentGradePage.jsx";
+import StudentAssignmentDetailPage from './Pages/Students/StudentAssignmentDetailPage.jsx';
+import ClassDetailDashboard from './Pages/Students/ClassDetailDashboard.jsx';
+import TrainerClassDetailDashboard from './Pages/Trainer/TrainerClassDetailDashboard.jsx';
 import AssignmentSubmissions from './Components/AssignmentSubmissions.jsx';
 
 const router = createBrowserRouter([
@@ -116,6 +120,22 @@ const router = createBrowserRouter([
     </>
   },
   {
+    path: "/trainer/class/:classId",
+    element: <>
+      <Sidebar title="Trainer | Class Detail">
+        <TrainerClassDetailDashboard />
+      </Sidebar>
+    </>
+  },
+  // {
+  //   path: "/trainer/:classId/:assignmentId", // all students grade report of a selected assignment of a selected class
+  //   element: <>
+  //     <Sidebar title="Trainer | Dashboard">
+  //       <AllStudentGradePage />
+  //     </Sidebar>
+  //   </>
+  // },
+  {
     path: "/trainer/:classId",
     element: <>
       <Sidebar title="Trainer | Assignments">
@@ -149,34 +169,18 @@ const router = createBrowserRouter([
   },
   // Student Routes
   {
-    path: "/student/assignments",
-    element: <>
-      <Sidebar title="Student | Assignments">
-        <StudentAllAssignmentPage />
-      </Sidebar>
-    </>
-  },
-  {
     path: "/student/class/:classId",
     element: <>
-      <Sidebar title="Student | Assignments">
-        <ClassDetailPage />
+      <Sidebar title="Student | Class Detail">
+        <ClassDetailDashboard />
       </Sidebar>
     </>
   },
   {
-    path: "/assignments/todo",
+    path: "/student/class/:classId/:assignmentId",
     element: <>
-      <Sidebar title="Student | Assignments | TO-Do">
-        <StudentAssignmentTodoPage />
-      </Sidebar>
-    </>
-  },
-  {
-    path: "/classmates",
-    element: <>
-      <Sidebar title="Student | Classfellows">
-        <AllClassfellowsPage />
+      <Sidebar title="Student | Assignment">
+        <StudentAssignmentDetailPage />
       </Sidebar>
     </>
   },
@@ -193,6 +197,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Student | Profile">
         <UpdateProfilePage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/student/:classId/report",
+    element: <>
+      <Sidebar title="Student | Report">
+        <StudentReportGenerate />
       </Sidebar>
     </>
   },
