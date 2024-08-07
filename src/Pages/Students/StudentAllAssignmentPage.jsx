@@ -1,8 +1,10 @@
 import { BellFilled, CloseOutlined } from '@ant-design/icons'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import StudentListingTable from '../../Components/StudentListingTable'
 import User from '../../Context/Context'
 import useFetchProfile from '../../utils/useFetchProfile';
+import SubmitAssignment from '../../Components/SubmitAssignment';
+import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 
 export default function StudentAllAssignmentPage() {
     const { user } = useFetchProfile();
@@ -18,9 +20,9 @@ export default function StudentAllAssignmentPage() {
                     <div className='flex-1'>
                         <ul className='flex gap-10 flex-1'>
                             <li className='text-lg font-bold uppercase'>{user?.username}</li>
-                            <li className='text-base text-sky-500 font-semibold'>128066</li>
-                            <li className='text-base text-sky-500 font-semibold'>Batch-10</li>
-                            <li className='text-base text-sky-700 font-semibold'>View Overall Report</li>
+                            <li className='text-base text-sky-500 font-semibold'>Roll No. {user?._id.slice(0, 6)}</li>
+                            {/* <li className='text-base text-sky-500 font-semibold'>class</li> */}
+                            {/* <li className='text-base text-sky-700 font-semibold'>View Overall Report</li> */}
                         </ul>
                     </div>
                 </div>
@@ -29,6 +31,8 @@ export default function StudentAllAssignmentPage() {
                     <StudentListingTable />
                 </div>
             </div>
+            {/* <SubmitAssignment />
+            <AssignmentSubmitFormModal /> */}
         </div>
 
     )

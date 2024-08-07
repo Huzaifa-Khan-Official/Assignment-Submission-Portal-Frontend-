@@ -7,6 +7,7 @@ import ClassPic from "../../assets/ClassPic.jpeg";
 import ClassModal from '../../Components/ClassModal/ClassModal';
 import LoaderContext from '../../Context/LoaderContext';
 import { toast } from 'react-toastify';
+import { NavLink } from "react-router-dom";
 const { Meta } = Card;
 
 export default function TrainerDashboard() {
@@ -60,23 +61,25 @@ export default function TrainerDashboard() {
                         <div className='text-2xl'>You haven't created any class yet!</div>
                     ) : classes.map((eachClass, index) => (
                         <div key={index}>
-                            <Card
-                                hoverable
-                                cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={eachClass.classImage} />}
-                            >
-                                <div className='flex relative bottom-12'>
-                                    <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
-                                    {eachClass.teacher?.profileImg ? (
-                                        <img className='w-12 h-12 rounded-full' src={eachClass.teacher?.profileImg} alt="" />
-                                    ) : (
-                                        <img className='size-12 rounded-full' src={userIcon} alt="" />
-                                    )
-                                    }
-                                </div>
-                                <div className='flex'>
-                                    <Meta title={eachClass.teacher?.username} className='relative left-3' />
-                                </div>
-                            </Card>
+                            <NavLink to={`/trainer/${eachClass._id}`}>
+                                <Card
+                                    hoverable
+                                    cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={eachClass.classImage} />}
+                                >
+                                    <div className='flex relative bottom-12'>
+                                        <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
+                                        {eachClass.teacher?.profileImg ? (
+                                            <img className='w-12 h-12 rounded-full' src={eachClass.teacher?.profileImg} alt="" />
+                                        ) : (
+                                            <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                        )
+                                        }
+                                    </div>
+                                    <div className='flex'>
+                                        <Meta title={eachClass.teacher?.username} className='relative left-3' />
+                                    </div>
+                                </Card>
+                            </NavLink>
                         </div>
                     ))}
                 </div>

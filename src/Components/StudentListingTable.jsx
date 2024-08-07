@@ -1,103 +1,234 @@
-import React from 'react';
-import { Space, Table, Tag } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Table, Tag, Tooltip, Button, message, Upload, Modal, Progress } from 'antd';
+import { FileOutlined, CheckCircleOutlined, ClockCircleOutlined, WarningOutlined, UploadOutlined } from '@ant-design/icons';
+import api from '../api/api';
+import useFetchProfile from '../utils/useFetchProfile';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import app from '../config/firebaseConfig.js';
 
-const columns = [
-    {
-        title: 'Number',
-        dataIndex: 'number',
-        key: 'number',
-        render: (text) => <a className="text-blue-500 block w-max">{text}</a>,
-    },
-    {
-        title: 'Topic',
-        dataIndex: 'topic',
-        key: 'topic',
-        render: (text) => <a className="block w-max">{text}</a>,
-    },
-    {
-        title: 'Due date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (text) => <a className="block w-max">{text}</a>,
-    },
-    {
-        title: 'Status',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'expired') {
-                        color = 'volcano';
-                    }
-                    if (tag === 'submitted') {
-                        color = 'geekblue';
-                    }
-                    if (tag === 'pending') {
-                        color = 'green';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-                <a><PlusOutlined /></a>
-            </Space>
-        ),
-    },
-];
+const storage = getStorage(app);
 
-const data = [
-    {
-        key: '1',
-        number: 'Assignment 1',
-        date: '10-05-24',
-        topic: 'Html , Css',
-        tags: ['submitted'],
-    },
-    {
-        key: '2',
-        number: 'Assignment 2',
-        date: '12-05-24',
-        topic: 'JavaScript , React JS',
-        tags: ['expired'],
-    },
-    {
-        key: '3',
-        number: 'Assignment 3',
-        date: '14-05-24',
-        topic: 'Express JS , MongoDB',
-        tags: ['pending'],
-    },
-    {
-        key: '4',
-        number: 'Assignment 4',
-        date: '16-05-24',
-        topic: 'Node JS',
-        tags: ['submitted'],
-    },
-];
+const StudentListingTable = () => {
+    const [assignments, setAssignments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitModalVisible, setSubmitModalVisible] = useState(false);
+    const [currentAssignment, setCurrentAssignment] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const { user } = useFetchProfile();
+    const classDetail = JSON.parse(localStorage.getItem('classes'))[0];
+    const classId = classDetail._id;
 
-const StudentListingTable = () => (
-    <div className="p-4 sm:p-8">
-        <Table
-            className="min-w-full bg-white shadow-md rounded-lg overflow-x-scroll md:overflow-x-hidden"
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-        />
-    </div>
-);
+    useEffect(() => {
+        fetchAssignments();
+    }, [classId, user]);
+
+    const fetchAssignments = async () => {
+        try {
+            setLoading(true);
+            const response = await api.get(`/api/assignments/student/class/${classId}`);
+            const formattedData = response.data?.map((assignment, index) => ({
+                key: assignment._id,
+                number: `Assignment ${index + 1}`,
+                title: assignment.title,
+                description: assignment.description,
+                dueDate: new Date(assignment.dueDate).toLocaleDateString(),
+                status: getAssignmentStatus(assignment, user?._id),
+                totalMarks: assignment.total_marks,
+                fileLink: assignment.fileLink,
+                submitted: assignment.submissions.some(sub => sub.student.toString() === user._id.toString()),
+            }));
+            setAssignments(formattedData);
+        } catch (error) {
+            console.error('Error fetching assignments:', error);
+            // message.error('Failed to fetch assignments');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getAssignmentStatus = (assignment, userId) => {
+        const now = new Date();
+        const dueDate = new Date(assignment.dueDate);
+        if (assignment.submissions.some(sub => sub.student.toString() === userId.toString())) return 'submitted';
+        if (now > dueDate) return 'expired';
+        return 'pending';
+    };
+
+    const handleSubmit = (assignment) => {
+        setCurrentAssignment(assignment);
+        setSubmitModalVisible(true);
+    };
+
+    const uploadFileToFirebase = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileName = `assignments/${currentAssignment.key}/${user._id}_${file.name}`;
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    reject(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        resolve(downloadURL);
+                    });
+                }
+            );
+        });
+    };
+
+    const handleSubmitOk = async (file) => {
+        if (!file) {
+            message.error('Please select a file to submit');
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            const fileLink = await uploadFileToFirebase(file);
+
+            await api.post(`/api/assignments/${currentAssignment.key}/submit`, {
+                fileLink: fileLink
+            });
+
+            message.success('Assignment submitted successfully');
+            setSubmitModalVisible(false);
+            fetchAssignments(); // Refresh the assignments list
+        } catch (error) {
+            console.error('Error submitting assignment:', error);
+            message.error('Failed to submit assignment');
+        } finally {
+            setSubmitting(false);
+            setUploadProgress(0);
+        }
+    };
+
+    const columns = [
+        {
+            title: 'Number',
+            dataIndex: 'number',
+            key: 'number',
+            render: (text) => <span className="font-medium">{text}</span>,
+        },
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text, record) => (
+                <Tooltip title={record.description}>
+                    <span className="cursor-help">{text}</span>
+                </Tooltip>
+            ),
+        },
+        {
+            title: 'Due Date',
+            dataIndex: 'dueDate',
+            key: 'dueDate',
+            render: (text) => <span>{text}</span>,
+        },
+        {
+            title: 'Status',
+            key: 'status',
+            dataIndex: 'status',
+            render: (status) => {
+                let color = 'green';
+                let icon = <CheckCircleOutlined />;
+                if (status === 'expired') {
+                    color = 'red';
+                    icon = <WarningOutlined />;
+                } else if (status === 'pending') {
+                    color = 'orange';
+                    icon = <ClockCircleOutlined />;
+                }
+                return (
+                    <Tag color={color} icon={icon}>
+                        {status.toUpperCase()}
+                    </Tag>
+                );
+            },
+        },
+        {
+            title: 'Total Marks',
+            dataIndex: 'totalMarks',
+            key: 'totalMarks',
+            render: (marks) => <span>{marks} points</span>,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <div className="space-x-2">
+                    <Tooltip title="View Assignment">
+                        <Button
+                            type="primary"
+                            icon={<FileOutlined />}
+                            onClick={() => window.open(record.fileLink, '_blank')}
+                        >
+                            View
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title={record.submitted ? "Already Submitted" : record.status === 'expired' ? "Submission Closed" : "Submit Assignment"}>
+                        <Button
+                            type="default"
+                            icon={<UploadOutlined />}
+                            onClick={() => handleSubmit(record)}
+                            disabled={record.submitted || record.status === 'expired'}
+                        >
+                            Submit
+                        </Button>
+                    </Tooltip>
+                </div>
+            ),
+        },
+    ];
+
+    return (
+        <div className="p-4 sm:p-8">
+            <h2 className="text-2xl font-bold mb-4">Class Assignments</h2>
+            <Table
+                className="shadow-lg rounded-lg overflow-hidden"
+                columns={columns}
+                dataSource={assignments}
+                loading={loading}
+                pagination={{
+                    pageSize: 5,
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                }}
+            />
+            <Modal
+                title="Submit Assignment"
+                visible={submitModalVisible}
+                onCancel={() => {
+                    setSubmitModalVisible(false);
+                    setUploadProgress(0);
+                }}
+                footer={null}
+            >
+                <Upload
+                    beforeUpload={(file) => {
+                        handleSubmitOk(file);
+                        return false;
+                    }}
+                    disabled={submitting}
+                >
+                    <Button icon={<UploadOutlined />} loading={submitting} disabled={submitting}>
+                        {submitting ? 'Uploading...' : 'Select File to Submit'}
+                    </Button>
+                </Upload>
+                {uploadProgress > 0 && (
+                    <Progress percent={Math.round(uploadProgress)} status="active" />
+                )}
+            </Modal>
+        </div>
+    );
+};
 
 export default StudentListingTable;
