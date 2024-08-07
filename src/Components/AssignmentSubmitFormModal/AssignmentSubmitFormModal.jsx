@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import useFetchProfile from '../../utils/useFetchProfile';
 import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
 import LoaderContext from '../../Context/LoaderContext';
+import api from '../../api/api';
 
 const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, handleCancel, handleSubmit }) => {
     const { user, setUser } = useFetchProfile();
@@ -36,7 +37,7 @@ const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, han
                 // store the file in firebase storage
                 const uploadedFileLink = await uploadFileToFirebase(file, `users/student/${user._id}/assignments/${file.name}`);
                 assignmentData.fileLink = uploadedFileLink;
-
+                handleSubmit(uploadedFileLink);
                 console.log(assignmentData);
                 // api integration for AssignmentData
             } else {

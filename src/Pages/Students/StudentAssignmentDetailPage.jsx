@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { LiaClipboardListSolid } from 'react-icons/lia';
-import { Button, Card } from 'antd';
-import { FaArrowLeft, FaPlus } from 'react-icons/fa';
+import { Button, Card, Tag, Spin, Alert, Progress } from 'antd';
+import { FaArrowLeft, FaPlus, FaDownload } from 'react-icons/fa';
 import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
+import useFetchProfile from '../../utils/useFetchProfile';
 
 const { Meta } = Card;
 
@@ -13,144 +14,203 @@ function StudentAssignmentDetailPage() {
     const { classId, assignmentId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [detail, setDetail] = useState();
-    const [submittedFile, setSubmittedFiles] = useState(
-        "https://firebasestorage.googleapis.com/v0/b/assignment-submission-po-57db6.appspot.com/o/users%2Fstudent%2F669173ef4b520b1c8fbc0f8d%2Fassignments%2FAssignment%20submission%20portal%20pages.pdf?alt=media&token=c8dd5216-81b8-48e1-94bb-46cb034a5b26"
-    );
+    const [report, setReport] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getClassDetail();
-    }, []);
+        fetchAssignmentReport();
+    }, [assignmentId]);
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const getClassDetail = () => {
+    const fetchAssignmentReport = async () => {
         setLoader(true);
-        api.get(`/api/classes/student/class/${classId}`)
-            .then(res => {
-                setDetail(res.data);
-                setLoader(false);
-            })
-            .catch(err => {
-                toast.error(err.response.data);
-                setLoader(false);
-            });
+        setError(null);
+        try {
+            const userId = localStorage.getItem('userId');
+            const studentId = localStorage.getItem('userId'); // Ensure this is set during login
+            const response = await api.get(`/api/assignments/${assignmentId}/report/${userId}`);
+            setReport(response.data);
+        } catch (err) {
+            if (err.response.status == 404) {
+                setReport(null);
+                return;
+            }
+            console.error('Error fetching assignment report:', err);
+            setError('Failed to load assignment details. Please try again later.');
+        } finally {
+            setLoader(false);
+        }
     };
 
-    const handleUnSubmit = () => {
-        // api intergarion of unsubmit assignment
+    const showModal = () => setIsModalOpen(true);
+    const handleCancel = () => setIsModalOpen(false);
 
+    const handleSubmit = async (fileLink) => {
         setLoader(true);
-        setSubmittedFiles("");
-        setLoader(false);
+        try {
+            await api.post(`/api/assignments/${assignmentId}/submit`, { fileLink });
+            fetchAssignmentReport(); // Refresh the report after submission
+        } catch (err) {
+            console.error('Error submitting assignment:', err);
+            setError('Failed to submit assignment. Please try again.');
+        } finally {
+            setLoader(false);
+            setIsModalOpen(false);
+        }
     };
 
-    const handleSubmit = () => {
-        setIsModalOpen(false);
+    const handleUnSubmit = async () => {
+        setLoader(true);
+        try {
+            await api.post(`/api/assignments/${assignmentId}/unsubmit`);
+            fetchAssignmentReport(); // Refresh the report after unsubmitting
+        } catch (err) {
+            console.error('Error unsubmitting assignment:', err);
+            setError('Failed to unsubmit assignment. Please try again.');
+        } finally {
+            setLoader(false);
+        }
     };
 
-    const isImage = (url) => {
-        return url.includes(".png" || ".jpeg" || ".jpg" || ".gif");
+    const renderFilePreview = (fileLink) => {
+        if (!fileLink) return null;
+        if (fileLink.match(/\.(jpeg|jpg|gif|png)$/i)) {
+            return <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" />;
+        } else if (fileLink.match(/\.pdf$/i)) {
+            return <iframe src={fileLink} className="w-full h-64 border rounded-md" title="PDF Preview" />;
+        } else {
+            return (
+                <>
+                    <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" />
+                    <a className="bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all text-gray-500" href={fileLink}>
+                        fileLink
+                    </a>
+                </>
+            );
+        }
     };
 
-    const isPDF = (url) => {
-        return url.includes(".pdf");
-    };
+    if (loader) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                {/* <Spin size="large" /> */}
+            </div>
+        );
+    }
 
-    const isLink = (url) => {
-        return !isImage(url) && !isPDF(url);
-    };
+    if (error) {
+        return (
+            <div className="p-4">
+                <Alert message="Error" description={error} type="error" showIcon />
+            </div>
+        );
+    }
+
+    if (!report) {
+        return (
+            <div className="p-4">
+                <Alert message="Assignment not found" description="The requested assignment could not be found." type="warning" showIcon />
+            </div>
+        );
+    }
 
     return (
         <div className='p-4 ps-5'>
             <header className="bg-teal-600 text-white p-4 rounded-lg mb-4">
-
                 <h1 className="text-2xl flex items-center gap-3">
-                    <button className='border-2  p-2 text-xl rounded-full hover:border-blue-700 transition duration-200' onClick={() => navigate(-1)}>
-                        <FaArrowLeft/>
+                    <button className='border-2 p-2 text-xl rounded-full hover:border-blue-700 transition duration-200' onClick={() => navigate(-1)}>
+                        <FaArrowLeft />
                     </button>
-                    {detail?.name}
+                    {report.assignmentTitle}
                 </h1>
-                <p className="text-md ml-12">{detail?.description}</p>
+                <p className="text-md ml-12">{report.description}</p>
             </header>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-2'>
                 <section className='col-span-2'>
-                    <div className="bg-gray-100 rounded-lg ps-2">
+                    <div className="bg-gray-100 rounded-lg p-4">
                         <div className='mb-4'>
-                            <h2 className="text-3xl flex gap-3 items-center"><LiaClipboardListSolid /> Assignment 3</h2>
+                            <h2 className="text-3xl flex gap-3 items-center">
+                                <LiaClipboardListSolid /> {report.assignmentTitle}
+                            </h2>
                             <h3 className='ms-10 mt-2 text-gray-700'>
-                                Zain Khan • Feb 27
+                                Due: {new Date(report.dueDate).toLocaleDateString()}
                             </h3>
                         </div>
-                        <div>
-                            <h4 className='text-right pe-3 font-bold'>Due Mar 3</h4>
-                        </div>
                         <div className='bg-white p-4 rounded-lg shadow mb-4 mt-3'>
-                            <div>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum quod modi, deserunt, qui voluptate minus reprehenderit ad molestias non quis iusto reiciendis. Quae ullam inventore expedita? Earum aperiam natus velit.</p>
-                            </div>
+                            <p>{report.description}</p>
                             <div className='border-t-2 mt-4 pt-4'>
-                                <h2 className='text-xl font-bold mb-3'>File:</h2>
-                                <Card
-                                    hoverable
-                                    cover={
-                                        <img className='!max-w-[100px] w-full !rounded-lg' alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-                                    }
-                                    className='flex flex-col w-full sm:flex-row items-center'
-                                >
-                                    <Meta
-                                        title="Dummy-text.pdf" // filename
-                                    />
-                                </Card>
+                                <h2 className='text-xl font-bold mb-3'>Assignment File:</h2>
+                                {report.assignmentFile ? (
+                                    <Button
+                                        type="primary"
+                                        icon={<FaDownload />}
+                                        href={report.assignmentFile}
+                                        target="_blank"
+                                    >
+                                        Download Assignment
+                                    </Button>
+                                ) : (
+                                    <p>No file attached to this assignment.</p>
+                                )}
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section className="bg-white p-4 rounded-lg shadow h-max">
-                    <h2 className="text-xl mb-4">Your Work</h2>
-                    {
-                        !submittedFile ? (
-                            // if no assignments are submitted
-                            <div>
-                                <Button className='w-full text-blue-600' onClick={showModal}><FaPlus /> Add or create</Button>
+                    <h2 className="text-xl mb-4">Your Submission</h2>
+                    {report.submissionDate ? (
+                        <>
+                            <div className="mb-4">
+                                <p>Submitted on: {new Date(report.submissionDate).toLocaleString()}</p>
+                                <p>Status: <Tag color={report.marks !== undefined ? "green" : "orange"}>
+                                    {report.marks !== undefined ? "Evaluated" : "Submitted"}
+                                </Tag></p>
+                                <p>Total Marks: {report.totalMarks}</p>
+                                {report.marks !== undefined && (
+                                    <>
+                                        <p>Obtained Marks: {report.marks}</p>
+                                        <Progress
+                                            percent={Math.round((report.marks / report.totalMarks) * 100)}
+                                            status="active"
+                                        />
+                                    </>
+                                )}
                             </div>
-                        ) : (
-                            <>
-                                {isLink(submittedFile) && (
-                                    <p className='bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all'>
-                                        {submittedFile}
-                                    </p>
-                                )}
-                                {isImage(submittedFile) && (
-                                    <img src={submittedFile} className='w-full h-full object-contain' alt="" />
-                                )}
-                                {isPDF(submittedFile) && (
-                                    <iframe
-                                        src={submittedFile}
-                                        className='w-full h-64 border rounded-md'
-                                        title="PDF Preview"
-                                    />
-                                )}
-
-                                {/* if assignments are submitted */}
-                                <div className='mt-3'>
-                                    <Button className='w-full text-blue-600' onClick={handleUnSubmit}>Unsubmit</Button>
+                            {renderFilePreview(report.submittedFileLink
+                            )}
+                            {report.rating && (
+                                <div className="mt-4">
+                                    <h3 className="font-bold mb-2">Rating:</h3>
+                                    <p>{report.rating}</p>
                                 </div>
-                            </>
-                        )
-                    }
+                            )}
+                            {report.remark && (
+                                <div className="mt-4">
+                                    <h3 className="font-bold mb-2">Remark:</h3>
+                                    <p>{report.remark}</p>
+                                </div>
+                            )}
+                            <div className='mt-3'>
+                                <Button className='w-full text-blue-600' onClick={handleUnSubmit}>Unsubmit</Button>
+                            </div>
+                        </>
+                    ) : (
+                        <div>
+                            <Button className='w-full text-blue-600' onClick={showModal}>
+                                <FaPlus /> Add or create
+                            </Button>
+                        </div>
+                    )}
                 </section>
             </div>
-            <AssignmentSubmitFormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleCancel={handleCancel} showModal={showModal} handleSubmit={handleSubmit} />
+            <AssignmentSubmitFormModal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                handleCancel={handleCancel}
+                handleSubmit={handleSubmit}
+            />
         </div>
     );
 }

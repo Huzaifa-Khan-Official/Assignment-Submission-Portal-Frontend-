@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Tooltip, Button, message, Upload, Modal, Progress } from 'antd';
 import { FileOutlined, CheckCircleOutlined, ClockCircleOutlined, WarningOutlined, UploadOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import useFetchProfile from '../utils/useFetchProfile';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -9,6 +10,7 @@ import app from '../config/firebaseConfig.js';
 const storage = getStorage(app);
 
 const StudentListingTable = () => {
+    const navigate = useNavigate();
     const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -109,7 +111,10 @@ const StudentListingTable = () => {
             setUploadProgress(0);
         }
     };
-
+    const handleRowClick = (record) => {
+        // console.log(record.key)
+        navigate(`/student/class/${classId}/${record.key}`);
+    };
     const columns = [
         {
             title: 'Number',
@@ -169,7 +174,10 @@ const StudentListingTable = () => {
                         <Button
                             type="primary"
                             icon={<FileOutlined />}
-                            onClick={() => window.open(record.fileLink, '_blank')}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(record.fileLink, '_blank');
+                            }}
                         >
                             View
                         </Button>
@@ -178,7 +186,10 @@ const StudentListingTable = () => {
                         <Button
                             type="default"
                             icon={<UploadOutlined />}
-                            onClick={() => handleSubmit(record)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleSubmit(record);
+                            }}
                             disabled={record.submitted || record.status === 'expired'}
                         >
                             Submit
@@ -188,6 +199,7 @@ const StudentListingTable = () => {
             ),
         },
     ];
+
 
     return (
         <div className="p-4 sm:p-8">
@@ -202,6 +214,9 @@ const StudentListingTable = () => {
                     showSizeChanger: true,
                     showQuickJumper: true,
                 }}
+                onRow={(record) => ({
+                    onClick: () => handleRowClick(record),
+                })}
             />
             <Modal
                 title="Submit Assignment"

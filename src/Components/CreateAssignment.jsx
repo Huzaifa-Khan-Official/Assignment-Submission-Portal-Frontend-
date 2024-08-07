@@ -16,8 +16,8 @@ export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, as
                 title: assignmentToEdit.title,
                 description: assignmentToEdit.description,
                 totalMarks: assignmentToEdit.total_marks,
-                dueDate: assignmentToEdit.dueDate.split('T')[0], // Adjusting date format
-                fileLink: assignmentToEdit.fileLink,
+                dueDate: assignmentToEdit.dueDate?.split('T')[0],
+                fileLink: assignmentToEdit.fileLink || '',
             });
         } else {
             setFormData({
@@ -55,11 +55,10 @@ export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, as
         e.preventDefault();
         if (validateForm()) {
             try {
-                await onSubmit(formData, assignmentToEdit ? assignmentToEdit._id : null);
-                setFormData({ title: '', description: '', totalMarks: '', dueDate: '', fileLink: '' });
+                await onSubmit(formData, assignmentToEdit?._id);
                 closeModal();
             } catch (error) {
-                setError(error.message || 'An error occurred while creating the assignment');
+                setError(error.message || 'An error occurred while creating/updating the assignment');
             }
         }
     };
