@@ -115,7 +115,7 @@ export default function AssignmentSubmissions() {
 
             <Modal
                 title="Evaluate Submission"
-                visible={evaluationModal}
+                open={evaluationModal}
                 onCancel={() => setEvaluationModal(false)}
                 footer={null}
             >

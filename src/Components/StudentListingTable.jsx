@@ -116,16 +116,26 @@ const StudentListingTable = () => {
         navigate(`/student/class/${classId}/${record.key}`);
     };
     const columns = [
-        {
-            title: 'Number',
-            dataIndex: 'number',
-            key: 'number',
-            render: (text) => <span className="font-medium">{text}</span>,
-        },
+        // {
+        //     title: 'Number',
+        //     dataIndex: 'number',
+        //     key: 'number',
+        //     render: (text) => <span className="font-medium">{text}</span>,
+        // },
         {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
+            render: (text, record) => (
+                <Tooltip title={record.description}>
+                    <span className="cursor-help">{text}</span>
+                </Tooltip>
+            ),
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
             render: (text, record) => (
                 <Tooltip title={record.description}>
                     <span className="cursor-help">{text}</span>
@@ -178,6 +188,7 @@ const StudentListingTable = () => {
                                 e.stopPropagation();
                                 window.open(record.fileLink, '_blank');
                             }}
+                            disabled={!record.fileLink}
                         >
                             View
                         </Button>
@@ -220,7 +231,7 @@ const StudentListingTable = () => {
             />
             <Modal
                 title="Submit Assignment"
-                visible={submitModalVisible}
+                open={submitModalVisible}
                 onCancel={() => {
                     setSubmitModalVisible(false);
                     setUploadProgress(0);

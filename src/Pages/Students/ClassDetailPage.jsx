@@ -87,11 +87,13 @@
 // export default ClassDetailPage;
 import React, { useEffect, useState } from 'react';
 import api from '../../api/api';
+import { useParams } from 'react-router';
 
 const ClassDetailPage = () => {
     const [classDetails, setClassDetails] = useState(null);
     const [error, setError] = useState('');
-    const classId = window.location.pathname.split('/').pop(); // Extract classId from URL
+    // const classId = window.location.pathname.split('/').pop(); // Extract classId from URL
+    const { classId } = useParams(); // Extract classId from URL
 
     useEffect(() => {
         const fetchClassDetails = async () => {
