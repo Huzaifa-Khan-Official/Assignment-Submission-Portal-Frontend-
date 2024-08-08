@@ -120,7 +120,6 @@ const AllStudents = () => {
     setLoader(true);
     api.get("/api/users/students")
       .then(res => {
-        console.log("res ==>", res.data);
         setStudents(res.data);
         setLoader(false);
       })

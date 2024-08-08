@@ -10,7 +10,6 @@ import { error } from 'highcharts';
 const { Header, Content } = Layout;
 
 const AllTeachers = () => {
-  // const storedTeachers = localStorage.getItem('teachers');
   const [teachers, setTeachers] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -122,7 +121,6 @@ const AllTeachers = () => {
         if (res.data) {
           setTeachers(res.data);
           setLoader(false);
-          // localStorage.setItem("teachers", JSON.stringify(res.data));
         }
       })
       .catch(err => {

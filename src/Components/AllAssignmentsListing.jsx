@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useParams } from 'react-router-dom';
 import api from '../api/api';
 import useFetchProfile from '../utils/useFetchProfile';
 import CreateAssignment from './CreateAssignment';
@@ -7,7 +7,6 @@ import { NavLink } from "react-router-dom";
 import LoaderContext from '../Context/LoaderContext';
 
 export default function AllAssignmentsListing() {
-    const location = useLocation();
     const [assignments, setAssignments] = useState([]);
     const [error, setError] = useState('');
     const { user } = useFetchProfile();
@@ -16,7 +15,7 @@ export default function AllAssignmentsListing() {
     const [loading, setLoading] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
     const { setLoader } = useContext(LoaderContext);
-    const classId = location.pathname.slice(15);
+    const { classId } = useParams();
 
     const fetchAssignments = async () => {
         try {
@@ -121,7 +120,7 @@ export default function AllAssignmentsListing() {
                                                     <td className="p-4 align-middle border-r-2">{assignment.total_marks}</td>
                                                     <td className="p-4 align-middle border-r-2 text-right flex items-center">
                                                         <Link
-                                                            to={`/trainer/${classId}/${assignment._id}`}
+                                                            to={`/trainer/class/${classId}/${assignment._id}`}
                                                             className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-blue-500 hover:bg-blue-600 text-white mr-2"
                                                         >
                                                             View Submissions

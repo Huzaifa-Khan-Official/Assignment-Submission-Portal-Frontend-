@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Modal, Form, Input, Select, Button, message, InputNumber } from 'antd';
 import api from '../api/api';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const { Option } = Select;
 
@@ -12,6 +13,7 @@ export default function AssignmentSubmissions() {
     const [loading, setLoading] = useState(true);
     const [evaluationModal, setEvaluationModal] = useState(false);
     const [currentSubmission, setCurrentSubmission] = useState(null);
+    const navigate = useNavigate();
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -66,7 +68,12 @@ export default function AssignmentSubmissions() {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Assignment Submissions</h1>
+            <h1 className="text-2xl flex gap-2 font-bold mb-4">
+                <div className='p-2 hover:bg-gray-300 bg-gray-200 rounded-full' title='Back to previous page' onClick={() => navigate(-1)}>
+                    <FaArrowLeft />
+                </div>
+                Assignment Submissions
+            </h1>
             {submissions.length === 0 ? (
                 <p>No submissions yet.</p>
             ) : (

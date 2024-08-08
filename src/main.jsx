@@ -136,7 +136,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/trainer/:classId/:assignmentId",
+    path: "/trainer/class/:classId/:assignmentId",
     element: <>
       <Sidebar title="Trainer | Submissions">
         <AssignmentSubmissions />
