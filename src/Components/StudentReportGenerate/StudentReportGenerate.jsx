@@ -354,7 +354,19 @@ const StudentReportGenerate = () => {
   }, [studentId, classId]);
 
   if (loading) {
-    // return <Spin size="large" />;
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "57%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 9999,
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
   }
 
   if (error) {
@@ -399,7 +411,7 @@ const StudentReportGenerate = () => {
           </Col>
         </Row>
         <Alert
-          message="No Submissions yet"
+          message="No Submissions"
           description="No student report data available."
           type="info"
           showIcon
@@ -422,7 +434,29 @@ const StudentReportGenerate = () => {
   const calculateAverageGrade = () => {
     const totalMarks = studentData.reduce((total, a) => total + (a.marks || 0), 0);
     const totalPossibleMarks = studentData.reduce((total, a) => total + a.totalMarks, 0);
-    return ((totalMarks / totalPossibleMarks) * 100 || 0).toFixed(2);
+    const average = ((totalMarks / totalPossibleMarks) * 100 || 0).toFixed(2);
+
+    if (average >= 90) {
+      return "A+";
+    } else if (average >= 85) {
+      return "A";
+    } else if (average >= 80) {
+      return "A-";
+    } else if (average >= 75) {
+      return "B+";
+    } else if (average >= 70) {
+      return "B";
+    } else if (average >= 65) {
+      return "B-";
+    } else if (average >= 60) {
+      return "C+";
+    } else if (average >= 55) {
+      return "C";
+    } else if (average >= 50) {
+      return "C-";
+    } else {
+      return "F";
+    }
   };
 
   const rollNumber = studentId.substring(0, 6);
@@ -443,7 +477,7 @@ const StudentReportGenerate = () => {
               <Col xs={24} sm={6}>
                 <Avatar
                   size={96}
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  src={studentInfo?.profileImg ? studentInfo.profileImg : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}
                 />
               </Col>
               <Col xs={24} sm={18}>
@@ -501,9 +535,8 @@ const StudentReportGenerate = () => {
             <Col xs={24}>
               <Card title="Overall Grade">
                 <Statistic
-                  title="Average Grade"
-                  value={`${calculateAverageGrade()}%`}
-                  precision={2}
+                  title="Grade"
+                  value={calculateAverageGrade()}
                 />
               </Card>
             </Col>
