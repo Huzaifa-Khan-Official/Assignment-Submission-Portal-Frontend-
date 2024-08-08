@@ -127,14 +127,6 @@ const router = createBrowserRouter([
       </Sidebar>
     </>
   },
-  // {
-  //   path: "/trainer/:classId/:assignmentId", // all students grade report of a selected assignment of a selected class
-  //   element: <>
-  //     <Sidebar title="Trainer | Dashboard">
-  //       <AllStudentGradePage />
-  //     </Sidebar>
-  //   </>
-  // },
   {
     path: "/trainer/:classId",
     element: <>

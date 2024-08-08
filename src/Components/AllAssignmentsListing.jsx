@@ -114,8 +114,8 @@ export default function AllAssignmentsListing() {
                                             assignments.map((assignment) => (
                                                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted" key={assignment._id}>
                                                     <td className="p-4 align-middle border-r-2">
-                                                        <div className="font-medium">{assignment.title}</div>
-                                                        <div className="text-sm text-muted-foreground">{assignment.description}</div>
+                                                        <p className="font-medium w-32">{assignment.title}</p>
+                                                        <p className="text-sm text-muted-foreground">{assignment.description}</p>
                                                     </td>
                                                     <td className="p-4 align-middle border-r-2">{new Date(assignment.dueDate).toLocaleDateString()}</td>
                                                     <td className="p-4 align-middle border-r-2">{assignment.total_marks}</td>

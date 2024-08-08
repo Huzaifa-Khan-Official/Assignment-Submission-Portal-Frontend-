@@ -46,9 +46,6 @@ const Sidebar = ({ children, title }) => {
   const trainerMenuItems = [
     { key: '0', icon: <UserOutlined />, label: (<Link to="/trainer/profile">{user?.username}</Link>), className: "capitalize" },
     { key: '1', icon: <HomeOutlined />, label: (<Link to="/trainer/dashboard">Home</Link>), },
-    { key: '2', icon: <SiGoogleclassroom />, label: (<Link to="/classes">Classes</Link>), },
-    { key: '3', icon: <BookOutlined />, label: (<Link to="/assignments">Assignments</Link>), },
-    { key: '4', icon: <TeamOutlined />, label: (<Link to="/students">Students</Link>), },
     { key: '5', icon: <SettingOutlined />, label: (<Link to="/trainer/settings">Settings</Link>), },
   ];
 
