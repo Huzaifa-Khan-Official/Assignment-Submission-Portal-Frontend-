@@ -10,8 +10,7 @@ import { useNavigate } from 'react-router';
 const { Header, Content } = Layout;
 
 const AllStudents = () => {
-  const storedStudents = localStorage.getItem('students');
-  const [students, setStudents] = useState(storedStudents ? JSON.parse(storedStudents) : []);
+  const [students, setStudents] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
@@ -124,7 +123,6 @@ const AllStudents = () => {
         console.log("res ==>", res.data);
         setStudents(res.data);
         setLoader(false);
-        localStorage.setItem("students", JSON.stringify(res.data));
       })
       .catch(err => {
         setLoader(false);

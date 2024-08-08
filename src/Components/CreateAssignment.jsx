@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import LoaderContext from '../Context/LoaderContext';
 
 export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, assignmentToEdit }) {
     const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, as
         fileLink: '',
     });
     const [error, setError] = useState('');
+    const { setLoader } = useContext(LoaderContext);
 
     useEffect(() => {
         if (assignmentToEdit) {
@@ -52,12 +54,23 @@ export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, as
     };
 
     const handleSubmit = async (e) => {
+        setLoader(true);
         e.preventDefault();
         if (validateForm()) {
             try {
                 await onSubmit(formData, assignmentToEdit?._id);
                 closeModal();
+                setFormData({
+                    title: '',
+                    description: '',
+                    totalMarks: '',
+                    dueDate: '',
+                    fileLink: '',
+                });
+                setLoader(false);
+
             } catch (error) {
+                setLoader(false);
                 setError(error.message || 'An error occurred while creating/updating the assignment');
             }
         }
