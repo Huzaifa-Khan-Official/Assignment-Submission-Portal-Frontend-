@@ -19,12 +19,16 @@ export default function AllAssignmentsListing() {
 
     const fetchAssignments = async () => {
         try {
+            setLoader(true)
             const response = await api.get(`/api/assignments/class/${classId}`);
             setAssignments(response.data);
             setError('');
         } catch (error) {
             console.error('Error fetching assignments:', error);
             setError('Failed to fetch assignments. Please try again later.');
+        }
+        finally {
+            setLoader(false);
         }
     };
 

@@ -9,6 +9,7 @@ const ClassDetailPage = () => {
     const { loader, setLoader } = useContext(LoaderContext);
     const [detail, setDetail] = useState();
     const navigate = useNavigate();
+    const [assignments, setAssignments] = useState([])
 
     useEffect(() => {
         getClassDetail();
@@ -19,6 +20,8 @@ const ClassDetailPage = () => {
         setLoader(true);
         try {
             const res = await api.get(`/api/classes/trainer/class/${classId}`);
+            const response = await api.get(`/api/assignments/class/${classId}`)
+            setAssignments(response.data)
             setDetail(res.data);
             setLoader(false);
 
@@ -52,14 +55,14 @@ const ClassDetailPage = () => {
         // Add more announcements here...
     ];
 
-    const assignments = [
-        { name: 'Assignment 3', date: 'Feb 27' },
-        { name: 'Course Books/Materials', date: 'Feb 27' },
-        { name: 'Assignment 2', date: 'Feb 12' },
-        { name: 'Course Outline', date: 'Feb 6' },
-        { name: 'Assignment 01', date: 'Feb 5' }
-        // Add more assignments here...
-    ];
+    // const assignments = [
+    //     { name: 'Assignment 3', date: 'Feb 27' },
+    //     { name: 'Course Books/Materials', date: 'Feb 27' },
+    //     { name: 'Assignment 2', date: 'Feb 12' },
+    //     { name: 'Course Outline', date: 'Feb 6' },
+    //     { name: 'Assignment 01', date: 'Feb 5' }
+    //     // Add more assignments here...
+    // ];
 
     return (
         <div>
@@ -107,17 +110,21 @@ const ClassDetailPage = () => {
 
                     <section>
                         <h2 className="text-xl mb-4 ms-1">Assignments</h2>
-                        {assignments.map((assignment, index) => (
-                            <div key={index} className="bg-white p-4 rounded-lg shadow mb-4 hover:shadow-md hover:-translate-y-1 hover:cursor-pointer" onClick={() => navigate(`${index}`)}>
-                                <h3 className="text-lg font-bold">{assignment.name}</h3>
-                                <p className="text-gray-600">{assignment.date}</p>
+                        {assignments.length > 0 ? assignments.map((assignment, index) => (
+                            <div key={index} className="bg-white p-4 rounded-lg shadow mb-4 hover:shadow-md hover:-translate-y-1 hover:cursor-pointer" onClick={() => navigate(`/trainer/class/${classId}/${assignment._id}`)}>
+                                <h3 className="text-lg font-bold">{assignment.title}</h3>
+                                <p className="text-gray-600">Due date: {new Date(assignment.dueDate).toLocaleDateString()}</p>
                             </div>
-                        ))}
+                        )) : (
+                            <div>
+                                <p>No assignments</p>
+                            </div>
+                        )}
                     </section>
                 </section>
 
             </div>
-        </div>
+        </div >
     );
 };
 
