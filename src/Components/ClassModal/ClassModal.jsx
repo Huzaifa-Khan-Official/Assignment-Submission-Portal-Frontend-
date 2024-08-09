@@ -99,12 +99,14 @@ const ClassModal = ({ isModalVisible, closeModal, getAllClasses }) => {
       onCancel={handleCancel}
       onOk={handleOk}
       footer={[
-        <Button key="back" onClick={handleCancel}>
-          Cancel
-        </Button>,
-        <Button key="submit" type="primary" onClick={handleOk}>
-          Create
-        </Button>,
+        <div className='flex gap-3 justify-center xsm:justify-end flex-wrap' key={0}>
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button key="submit" type="primary" onClick={handleOk}>
+            Create
+          </Button>
+        </div>
       ]}
     >
       <Form form={form} layout="vertical" name="create-class-form">

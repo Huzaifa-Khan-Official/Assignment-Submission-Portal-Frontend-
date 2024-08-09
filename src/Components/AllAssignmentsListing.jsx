@@ -7,7 +7,8 @@ import { NavLink } from "react-router-dom";
 import LoaderContext from '../Context/LoaderContext';
 
 export default function AllAssignmentsListing() {
-    const [assignments, setAssignments] = useState([]);
+    // const [assignments, setAssignments] = useState([]);
+    const [assignments, setAssignments] = useState();
     const [error, setError] = useState('');
     const { user } = useFetchProfile();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,7 +48,7 @@ export default function AllAssignmentsListing() {
                 }
             } else {
                 response = await api.post('/api/assignments/create', { ...formData, classId });
-                setAssignments([...assignments, response.data]);
+                fetchAssignments();
             }
             setError('');
             setIsModalOpen(false);
@@ -70,8 +71,8 @@ export default function AllAssignmentsListing() {
         setLoader(true);
         setDeletingId(assignmentId);
         try {
-            await api.delete(`/api/assignments/${assignmentId}`);
-            setAssignments(assignments.filter(assignment => assignment._id !== assignmentId));
+            const res = await api.delete(`/api/assignments/${assignmentId}`);
+            fetchAssignments();
             setError('');
             setLoader(false);
         } catch (error) {
@@ -113,7 +114,7 @@ export default function AllAssignmentsListing() {
                                         </tr>
                                     </thead>
                                     <tbody className="[&amp;_tr:last-child]:border-0">
-                                        {assignments.length > 0 ? (
+                                        {assignments?.length > 0 ? (
                                             assignments.map((assignment) => (
                                                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted" key={assignment._id}>
                                                     <td className="p-4 align-middle border-r-2">

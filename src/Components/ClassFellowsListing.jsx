@@ -12,9 +12,9 @@ function ClassFellowsListing({ data, classId }) {
                         data &&
                         data.map((data, i) => {
                             return (
-                                <>
-                                    <Link to={`/admin/student/${data._id}/${classId}`}>
-                                        <div className="flex items-start gap-4 border-b pb-3" key={i}>
+                                <div key={i}>
+                                    <Link to={`/trainer/class/${classId}/student/${data._id}/`}>
+                                        <div className="flex items-start gap-4 border-b pb-3">
                                             <span className="relative flex shrink-0 overflow-hidden rounded-full border-2 border-primary w-12 h-12 items-center justify-center">
                                                 {
                                                     data.profileImg ? <img src={data.profileImg} alt="" className='w-full h-full' /> : <UserOutlined />
@@ -30,7 +30,7 @@ function ClassFellowsListing({ data, classId }) {
                                             </div>
                                         </div>
                                     </Link>
-                                </>
+                                </div>
                             )
                         })
                     }

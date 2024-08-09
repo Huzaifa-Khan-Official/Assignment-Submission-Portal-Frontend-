@@ -103,7 +103,6 @@ export default function UpdateProfilePage() {
         }
     };
 
-    console.log("user?.profileImg ==>", user);
     return (
         <div className='max-w-[700px]'>
             <div className='flex m-5 text-2xl font-mono font-extrabold mx-8'>

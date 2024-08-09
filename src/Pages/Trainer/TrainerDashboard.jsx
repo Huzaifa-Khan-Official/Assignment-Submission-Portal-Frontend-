@@ -28,7 +28,6 @@ export default function TrainerDashboard() {
         setLoader(true);
         api.get("/api/classes")
             .then(res => {
-                console.log(res.data);
                 setClasses(res.data);
                 setLoader(false);
             })
@@ -49,12 +48,14 @@ export default function TrainerDashboard() {
     return (
         <div>
             <ClassModal isModalVisible={isModalVisible} closeModal={closeModal} getAllClasses={getAllClasses} />
-            <div className='flex m-5 text-2xl font-mono font-extrabold'>
+            <div className='flex m-5 text-2xl font-mono font-extrabold flex-wrap gap-2 items-center'>
                 <h1 className='flex-1'>Trainer Dashboard</h1>
-                <button onClick={showModal}>
-                    <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' title='Add Trainer' />
-                </button>
-                <BellFilled className='flex-2 ml-4 text-amber-400' />
+                <div>
+                    <button onClick={showModal}>
+                        <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' title='Add Trainer' />
+                    </button>
+                    <BellFilled className='flex-2 ml-1 text-amber-400' />
+                </div>
             </div>
             <div className='mx-6'>
                 <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Classes</h1>

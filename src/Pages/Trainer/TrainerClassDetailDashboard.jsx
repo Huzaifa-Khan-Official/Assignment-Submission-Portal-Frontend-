@@ -46,7 +46,6 @@ function TrainerClassDetailDashboard() {
         return <AllAssignmentsListing />;
       case 'People':
         return <AllClassfellowsPage />;
-        // return ("AllClassfellowsPage");
       default:
         return null;
     }
