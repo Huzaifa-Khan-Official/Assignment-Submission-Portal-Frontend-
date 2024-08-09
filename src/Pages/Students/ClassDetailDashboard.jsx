@@ -8,14 +8,16 @@ import StudentAllAssignmentPage from './StudentAllAssignmentPage';
 import AllClassfellowsPage from './AllClassfellowsPage';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import { toast } from 'react-toastify';
+import useFetchProfile from '../../utils/useFetchProfile';
 
 function ClassDetailDashboard() {
+    const { user, setUser } = useFetchProfile()
     const [selectedComponent, setSelectedComponent] = useState('Stream');
     const { classId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
     const [detail, setDetail] = useState();
     const navigate = useNavigate();
-
+    const studentId = localStorage.getItem('userId')
     useEffect(() => {
         getClassDetail();
     }, [])
@@ -95,6 +97,11 @@ function ClassDetailDashboard() {
                         type={selectedComponent === 'People' ? 'primary' : undefined}
                     >
                         People
+                    </Button>
+                    <Button
+                        onClick={() => navigate(`/trainer/class/${classId}/student/${studentId}/`)}
+                    >
+                        View Report
                     </Button>
                 </div>
                 <div>

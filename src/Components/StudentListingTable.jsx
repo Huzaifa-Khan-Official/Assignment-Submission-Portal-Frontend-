@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Tooltip, Button, message, Upload, Modal, Progress } from 'antd';
-import { FileOutlined, CheckCircleOutlined, ClockCircleOutlined, WarningOutlined, UploadOutlined } from '@ant-design/icons';
+import { Table, Tag, Tooltip, Button, message, Upload, Modal, Progress, Space, Select } from 'antd';
+import { FileOutlined, CheckCircleOutlined, ClockCircleOutlined, WarningOutlined, UploadOutlined, FilterOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api/api';
 import useFetchProfile from '../utils/useFetchProfile';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import app from '../config/firebaseConfig.js';
 
+const { Option } = Select;
 const storage = getStorage(app);
 
 const StudentListingTable = () => {
@@ -18,7 +19,9 @@ const StudentListingTable = () => {
     const [currentAssignment, setCurrentAssignment] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
     const { user } = useFetchProfile();
-    const { classId } = useParams()
+    const { classId } = useParams();
+    const [filteredInfo, setFilteredInfo] = useState({});
+    const [sortedInfo, setSortedInfo] = useState({});
 
     useEffect(() => {
         fetchAssignments();
@@ -38,11 +41,12 @@ const StudentListingTable = () => {
                 totalMarks: assignment.total_marks,
                 fileLink: assignment.fileLink,
                 submitted: assignment.submissions.some(sub => sub.student.toString() === user._id.toString()),
+                evaluated: assignment.submissions.some(sub => sub.student.toString() === user._id.toString() && sub.marks !== undefined),
             }));
             setAssignments(formattedData);
         } catch (error) {
             console.error('Error fetching assignments:', error);
-            // message.error('Failed to fetch assignments');
+            message.error('Failed to fetch assignments');
         } finally {
             setLoading(false);
         }
@@ -51,9 +55,14 @@ const StudentListingTable = () => {
     const getAssignmentStatus = (assignment, userId) => {
         const now = new Date();
         const dueDate = new Date(assignment.dueDate);
-        if (assignment.submissions.some(sub => sub.student.toString() === userId.toString())) return 'submitted';
+        if (assignment.submissions.some(sub => sub.student.toString() === userId.toString())) {
+            if (assignment.submissions.some(sub => sub.student.toString() === userId.toString() && sub.marks !== undefined)) {
+                return 'evaluated';
+            }
+            return 'submitted';
+        }
         if (now > dueDate) return 'expired';
-        return 'pending';
+        return 'todo';
     };
 
     const handleSubmit = (assignment) => {
@@ -110,56 +119,71 @@ const StudentListingTable = () => {
             setUploadProgress(0);
         }
     };
+
     const handleRowClick = (record) => {
-        // console.log(record.key)
         navigate(`/student/class/${classId}/${record.key}`);
     };
+
+    const handleChange = (pagination, filters, sorter) => {
+        setFilteredInfo(filters);
+        setSortedInfo(sorter);
+    };
+
+    const clearFilters = () => {
+        setFilteredInfo({});
+    };
+
+    const clearAll = () => {
+        setFilteredInfo({});
+        setSortedInfo({});
+    };
+
     const columns = [
-        // {
-        //     title: 'Number',
-        //     dataIndex: 'number',
-        //     key: 'number',
-        //     render: (text) => <span className="font-medium">{text}</span>,
-        // },
         {
             title: 'Title',
             dataIndex: 'title',
             key: 'title',
-            render: (text, record) => (
-                <Tooltip title={record.description}>
-                    <span className="cursor-help">{text}</span>
-                </Tooltip>
-            ),
+            sorter: (a, b) => a.title.localeCompare(b.title),
+            sortOrder: sortedInfo.columnKey === 'title' && sortedInfo.order,
+            ellipsis: true,
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            render: (text, record) => (
-                <Tooltip title={record.description}>
-                    <span className="cursor-help">{text}</span>
-                </Tooltip>
-            ),
+            ellipsis: true,
         },
         {
             title: 'Due Date',
             dataIndex: 'dueDate',
             key: 'dueDate',
-            render: (text) => <span>{text}</span>,
+            sorter: (a, b) => new Date(a.dueDate) - new Date(b.dueDate),
+            sortOrder: sortedInfo.columnKey === 'dueDate' && sortedInfo.order,
         },
         {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
+            filters: [
+                { text: 'Todo', value: 'todo' },
+                { text: 'Submitted', value: 'submitted' },
+                { text: 'Evaluated', value: 'evaluated' },
+                { text: 'Expired', value: 'expired' },
+            ],
+            filteredValue: filteredInfo.status || null,
+            onFilter: (value, record) => record.status.includes(value),
             render: (status) => {
                 let color = 'green';
                 let icon = <CheckCircleOutlined />;
                 if (status === 'expired') {
                     color = 'red';
                     icon = <WarningOutlined />;
-                } else if (status === 'pending') {
+                } else if (status === 'todo') {
                     color = 'orange';
                     icon = <ClockCircleOutlined />;
+                } else if (status === 'evaluated') {
+                    color = 'blue';
+                    icon = <CheckCircleOutlined />;
                 }
                 return (
                     <Tag color={color} icon={icon}>
@@ -172,13 +196,16 @@ const StudentListingTable = () => {
             title: 'Total Marks',
             dataIndex: 'totalMarks',
             key: 'totalMarks',
+            sorter: (a, b) => a.totalMarks - b.totalMarks,
+            sortOrder: sortedInfo.columnKey === 'totalMarks' && sortedInfo.order,
             render: (marks) => <span>{marks} points</span>,
         },
         {
             title: 'Action',
             key: 'action',
+            width: 200,
             render: (_, record) => (
-                <div className="space-x-2">
+                <Space size="small">
                     <Tooltip title="View Assignment">
                         <Button
                             type="primary"
@@ -188,6 +215,7 @@ const StudentListingTable = () => {
                                 window.open(record.fileLink, '_blank');
                             }}
                             disabled={!record.fileLink}
+                            size="small"
                         >
                             View
                         </Button>
@@ -201,26 +229,33 @@ const StudentListingTable = () => {
                                 handleSubmit(record);
                             }}
                             disabled={record.submitted || record.status === 'expired'}
+                            size="small"
                         >
                             Submit
                         </Button>
                     </Tooltip>
-                </div>
+                </Space>
             ),
         },
     ];
 
-
     return (
         <div className="p-4 sm:p-8">
-            <h2 className="text-2xl font-bold mb-4">Class Assignments</h2>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Class Assignments</h2>
+                <Space>
+                    <Button onClick={clearFilters}>Clear filters</Button>
+                    <Button onClick={clearAll}>Clear filters and sorters</Button>
+                </Space>
+            </div>
             <Table
                 className="shadow-lg rounded-lg overflow-hidden"
                 columns={columns}
                 dataSource={assignments}
                 loading={loading}
+                onChange={handleChange}
                 pagination={{
-                    pageSize: 5,
+                    pageSize: 10,
                     showSizeChanger: true,
                     showQuickJumper: true,
                 }}
