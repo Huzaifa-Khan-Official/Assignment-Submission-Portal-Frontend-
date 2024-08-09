@@ -54,7 +54,7 @@ export default function AllClassfellowsPage() {
             </div>
 
             <div className='mb-4'>
-                <ClassFellowsListing data={studentsData} />
+                <ClassFellowsListing data={studentsData} classId={classId} />
             </div>
         </div>
     )

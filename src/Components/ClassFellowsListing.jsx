@@ -1,7 +1,9 @@
 import { UserOutlined } from '@ant-design/icons'
 import React, { memo } from 'react'
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
-function ClassFellowsListing({ data }) {
+function ClassFellowsListing({ data, classId }) {
     return (
         <div>
             <div className="bg-white rounded-lg border bg-card text-card-foreground shadow-lg w-full max-w-3xl" data-v0-t="card">
@@ -10,21 +12,25 @@ function ClassFellowsListing({ data }) {
                         data &&
                         data.map((data, i) => {
                             return (
-                                <div className="flex items-start gap-4 border-b pb-3" key={i}>
-                                    <span className="relative flex shrink-0 overflow-hidden rounded-full border-2 border-primary w-12 h-12 items-center justify-center">
-                                        {
-                                            data.profileImg ? <img src={data.profileImg} alt="" className='w-full h-full' /> : <UserOutlined />
-                                        }
-                                    </span>
-                                    <div className="grid gap-1">
-                                        <div className="flex gap-2">
-                                            <h3 className="text-lg font-medium capitalize">{data.username}</h3>
+                                <>
+                                    <Link to={`/admin/student/${data._id}/${classId}`}>
+                                        <div className="flex items-start gap-4 border-b pb-3" key={i}>
+                                            <span className="relative flex shrink-0 overflow-hidden rounded-full border-2 border-primary w-12 h-12 items-center justify-center">
+                                                {
+                                                    data.profileImg ? <img src={data.profileImg} alt="" className='w-full h-full' /> : <UserOutlined />
+                                                }
+                                            </span>
+                                            <div className="grid gap-1">
+                                                <div className="flex gap-2">
+                                                    <h3 className="text-lg font-medium capitalize">{data.username}</h3>
+                                                </div>
+                                                <div>
+                                                    <p>{data.email}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p>{data.email}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </Link>
+                                </>
                             )
                         })
                     }
