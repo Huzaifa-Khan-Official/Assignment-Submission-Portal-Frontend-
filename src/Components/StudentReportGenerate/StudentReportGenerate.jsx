@@ -74,17 +74,21 @@ const StudentReportGenerate = () => {
                   />
                 </Col>
                 <Col xs={24} sm={18}>
-                  <Descriptions title="Student Information" column={1}>
-                    <Descriptions.Item label="Name">
-                      {studentInfo?.username || "N/A"}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Roll Number">
-                      {studentId.substring(0, 6)}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Class ID">
-                      {classId.substring(0, 6)}
-                    </Descriptions.Item>
-                  </Descriptions>
+                  <h3 className="text-lg font-bold">Student Information</h3>
+                  <div className="flex flex-col gap-3 mt-2 pt-3 border-t-2">
+                    <div className="flex gap-3 flex-col xsm:flex-row">
+                      <p className="text-gray-400">Name:</p>
+                      <p className="capitalize ">{studentInfo?.username || "N/A"}</p>
+                    </div>
+                    <div className="flex gap-3 flex-col xsm:flex-row">
+                      <p className="text-gray-400">Roll Number:</p>
+                      <p className="capitalize ">{rollNumber}</p>
+                    </div>
+                    <div className="flex gap-3 flex-col xsm:flex-row">
+                      <p className="text-gray-400">Class ID:</p>
+                      <p className="capitalize ">{classId.substring(0, 6)}</p>
+                    </div>
+                  </div>
                 </Col>
               </Row>
             </Card>
@@ -161,13 +165,21 @@ const StudentReportGenerate = () => {
                 />
               </Col>
               <Col xs={24} sm={18}>
-                <Descriptions title="Student Information" column={1}>
-                  <Descriptions.Item label="Name" className="flex flex-col">
-                    {studentInfo?.username || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Roll Number">{rollNumber}</Descriptions.Item>
-                  <Descriptions.Item label="Class ID">{classId.substring(0, 6)}</Descriptions.Item>
-                </Descriptions>
+                <h3 className="text-lg font-bold">Student Information</h3>
+                <div className="flex flex-col gap-3 mt-2 pt-3 border-t-2">
+                  <div className="flex gap-3 flex-col xsm:flex-row">
+                    <p className="text-gray-400">Name:</p>
+                    <p className="capitalize ">{studentInfo?.username || "N/A"}</p>
+                  </div>
+                  <div className="flex gap-3 flex-col xsm:flex-row">
+                    <p className="text-gray-400">Roll Number:</p>
+                    <p className="capitalize ">{rollNumber}</p>
+                  </div>
+                  <div className="flex gap-3 flex-col xsm:flex-row">
+                    <p className="text-gray-400">Class ID:</p>
+                    <p className="capitalize ">{classId.substring(0, 6)}</p>
+                  </div>
+                </div>
               </Col>
             </Row>
           </Card>
