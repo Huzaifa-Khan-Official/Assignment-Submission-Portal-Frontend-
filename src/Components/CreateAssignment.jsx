@@ -79,7 +79,7 @@ export default function CreateAssignment({ isModalOpen, closeModal, onSubmit, as
 
     return (
         <Modal
-            title={<h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            title={<h3 className="text-2xl font-semibold">
                 {assignmentToEdit ? 'Edit Assignment' : 'Create New Assignment'}
             </h3>}
             open={isModalOpen}

@@ -146,7 +146,7 @@ const router = createBrowserRouter([
   {
     path: "/trainer/class/:classId/student/:studentId",
     element: <>
-      <Sidebar title="Admin | Student Report">
+      <Sidebar title="Trainer | Student Report">
         <StudentReportGenerate />
       </Sidebar>
     </>

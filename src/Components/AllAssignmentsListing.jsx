@@ -7,7 +7,6 @@ import { NavLink } from "react-router-dom";
 import LoaderContext from '../Context/LoaderContext';
 
 export default function AllAssignmentsListing() {
-    // const [assignments, setAssignments] = useState([]);
     const [assignments, setAssignments] = useState();
     const [error, setError] = useState('');
     const { user } = useFetchProfile();
@@ -95,7 +94,7 @@ export default function AllAssignmentsListing() {
                                 <p className="text-sm text-muted-foreground">View and manage all assignments.</p>
                             </div>
                             <button
-                                className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 rounded-md px-3 bg-teal-500 hover:bg-teal-600 text-white"
+                                className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 rounded-md px-3 bg-teal-500 hover:bg-teal-600 text-white"
                                 onClick={() => setIsModalOpen(true)}
                             >
                                 Create Assignment
@@ -126,18 +125,18 @@ export default function AllAssignmentsListing() {
                                                     <td className="p-4 align-middle border-r-2 text-right flex items-center">
                                                         <Link
                                                             to={`/trainer/class/${classId}/${assignment._id}`}
-                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 bg-blue-500 hover:bg-blue-600 text-white mr-2"
+                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 bg-blue-500 hover:bg-blue-600 text-white mr-2"
                                                         >
                                                             View Submissions
                                                         </Link>
                                                         <button
-                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
+                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3"
                                                             onClick={() => handleEditAssignment(assignment)}
                                                         >
                                                             Edit
                                                         </button>
                                                         <button
-                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3 ml-2 bg-red-600 text-white"
+                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 rounded-md px-3 ml-2 bg-red-600 text-white"
                                                             onClick={() => handleDeleteAssignment(assignment._id)}
                                                         >
                                                             Delete

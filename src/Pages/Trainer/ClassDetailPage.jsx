@@ -49,20 +49,9 @@ const ClassDetailPage = () => {
             files: [
                 { name: 'Binary File', type: 'binary' },
                 { name: 'Unknown File', type: 'unknown' },
-                // More files...
             ]
         }
-        // Add more announcements here...
     ];
-
-    // const assignments = [
-    //     { name: 'Assignment 3', date: 'Feb 27' },
-    //     { name: 'Course Books/Materials', date: 'Feb 27' },
-    //     { name: 'Assignment 2', date: 'Feb 12' },
-    //     { name: 'Course Outline', date: 'Feb 6' },
-    //     { name: 'Assignment 01', date: 'Feb 5' }
-    //     // Add more assignments here...
-    // ];
 
     return (
         <div>
