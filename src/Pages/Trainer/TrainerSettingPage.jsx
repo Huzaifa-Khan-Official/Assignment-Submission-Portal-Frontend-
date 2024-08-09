@@ -1,103 +1,62 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BellFilled } from '@ant-design/icons'
 import { FaUserLock, FaBell } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
 import { ImSearch } from "react-icons/im";
-import { Menu } from 'antd';
+import { Button, Form, Input, Menu, Modal } from 'antd';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../../api/api';
 
 const items = [
-    {
-        key: 'sub1',
-        icon: <FaBell />,
-        label: 'Notifications',
-        children: [
-            {
-                key: '1-1',
-                label: 'Item 1',
-                type: 'group',
-                children: [
-                    {
-                        key: '1',
-                        label: 'Option 1',
-                    },
-                    {
-                        key: '2',
-                        label: 'Option 2',
-                    },
-                ],
-            },
-            {
-                key: '1-2',
-                label: 'Item 2',
-                type: 'group',
-                children: [
-                    {
-                        key: '3',
-                        label: 'Option 3',
-                    },
-                    {
-                        key: '4',
-                        label: 'Option 4',
-                    },
-                ],
-            },
-        ],
-    },
     {
         icon: <FaUserLock />,
         label: (<Link to="/trainer/profile">Update Profile</Link>),
     },
     {
-        key: 'sub5',
+        key: 'changePassword',
         label: 'Change password',
         icon: <FaUserLock />,
-        children: [
-            {
-                key: '9',
-                label: 'Option 9',
-            },
-            {
-                key: '10',
-                label: 'Option 10',
-            },
-            {
-                key: '11',
-                label: 'Option 11',
-            },
-            {
-                key: '12',
-                label: 'Option 12',
-            },
-        ],
-    },
-    {
-        key: 'sub4',
-        label: 'Help',
-        icon: <ImSearch />,
-        children: [
-            {
-                key: '13',
-                label: 'Option 13',
-            },
-            {
-                key: '14',
-                label: 'Option 14',
-            },
-            {
-                key: '15',
-                label: 'Option 15',
-            },
-            {
-                key: '16',
-                label: 'Option 16',
-            },
-        ],
     },
 ];
 
 
 export default function TrainerSettingPage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [form] = Form.useForm();
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = async () => {
+        setLoading(true);
+        try {
+            const values = await form.validateFields();
+            const response = await api.put("/api/users/profile", {
+                password: values.password,
+                oldPassword: values.oldPassword
+            })
+            toast.success('Password updated successfully!', { duration: 3000 });
+            setLoading(false);
+            setIsModalOpen(false);
+            form.resetFields();
+        } catch (error) {
+            setLoading(false);
+            toast.error(error.response.data.message, { duration: 3000 });
+        }
+    };
+    const handleCancel = () => {
+        form.resetFields();
+        setIsModalOpen(false);
+    };
+
+    const onClick = (e) => {
+        if (e.key === 'changePassword') {
+            showModal(true);
+        }
+    };
+
     return (
         <div>
             <div className='flex m-5 text-2xl font-mono font-extrabold'>
@@ -112,7 +71,72 @@ export default function TrainerSettingPage() {
                 className='my-7 mx-7 rounded-lg'
                 mode="vertical"
                 items={items}
+                onClick={onClick}
             />
+
+            <Modal
+                title="Change Password"
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={[
+                    <div className='flex gap-2 flex-wrap justify-center xsm:justify-end' key={0}>
+                        <Button key="Cancel" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                            Submit
+                        </Button>
+                    </div>
+                ]}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="change_password"
+                >
+                    <Form.Item
+                        name="oldPassword"
+                        label="Old Password"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please enter your old password!',
+                            },
+                        ]}
+                    >
+                        <Input.Password placeholder='Enter Old Password' />
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        rules={[{ required: true, message: 'Please input your updated password!' },
+                        { min: 6, message: 'Password must be at least 6 characters long' }
+                        ]}
+                        label="New Password"
+                    >
+                        <Input.Password placeholder="Enter New Password" className="w-full" />
+                    </Form.Item>
+                    <Form.Item
+                        name="confirm"
+                        dependencies={['password']}
+                        label="Confirm New Password"
+                        hasFeedback
+                        rules={[
+                            { required: true, message: 'Please confirm your password!' },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value || getFieldValue('password') === value) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('The two passwords do not match!'));
+                                },
+                            }),
+                        ]}
+                    >
+                        <Input.Password placeholder="Enter Confirm Password" className="w-full" />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     )
 }

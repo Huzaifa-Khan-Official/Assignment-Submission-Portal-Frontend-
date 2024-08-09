@@ -28,6 +28,7 @@ export default function TrainerDashboard() {
         setLoader(true);
         api.get("/api/classes")
             .then(res => {
+                console.log(res.data);
                 setClasses(res.data);
                 setLoader(false);
             })

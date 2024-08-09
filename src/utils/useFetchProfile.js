@@ -33,7 +33,7 @@ const useFetchProfile = () => {
     if (!user) {
       fetchProfile();
     }
-  }, [user, setUser, navigate, setLoader]);
+  }, [setUser]);
 
   return { user, setUser };
 };

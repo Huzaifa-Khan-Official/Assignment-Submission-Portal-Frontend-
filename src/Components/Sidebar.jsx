@@ -22,6 +22,8 @@ const Sidebar = ({ children, title }) => {
   const [isLgOrHigher, setIsLgOrHigher] = useState(window.innerWidth >= 1024);
   const navigate = useNavigate();
   const location = useLocation();
+  const [homeKey, setHomeKey] = useState({ key: '1', icon: <HomeOutlined />, label: <Link to="/">Home</Link> });
+  const [updatedKey, setUpdatedKey] = useState({ key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile" className="capitalize">Profile</Link>) });
 
 
   useEffect(() => {
@@ -35,23 +37,57 @@ const Sidebar = ({ children, title }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (user?.role) {
+      setHomeKey({
+        key: '1',
+        icon: <HomeOutlined />,
+        label:
+          user.role === 'admin' ? (
+            <Link to="/admin/dashboard">Home</Link>
+          ) : user.role === 'trainer' ? (
+            <Link to="/trainer/dashboard">Home</Link>
+          ) : (
+            <Link to="/">Home</Link>
+          ),
+      });
+
+      setUpdatedKey({
+        key: '0',
+        icon: <UserOutlined />,
+        label:
+          user.role === 'admin' ? (
+            <Link to="/admin/profile" className="capitalize">Profile</Link>
+          ) : user.role === 'trainer' ? (
+            <Link to="/trainer/profile" className="capitalize">Profile</Link>
+          ) : (
+            <Link to="/student/profile" className="capitalize">Profile</Link>
+          ),
+      });
+    }
+  }, [user]);
+
+
   const adminMenuItems = [
-    { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
-    { key: '1', icon: <HomeOutlined />, label: (<Link to="/admin/dashboard">Home</Link>), },
+    // { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
+    updatedKey,
+    homeKey,
     { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
     { key: '3', icon: <TeamOutlined />, label: (<Link to="/admin/students">Students</Link>) },
     { key: '4', icon: <SettingOutlined />, label: (<Link to="/admin/settings">Settings</Link>), },
   ];
 
   const trainerMenuItems = [
-    { key: '0', icon: <UserOutlined />, label: (<Link to="/trainer/profile">{user?.username}</Link>), className: "capitalize" },
-    { key: '1', icon: <HomeOutlined />, label: (<Link to="/trainer/dashboard">Home</Link>), },
-    { key: '5', icon: <SettingOutlined />, label: (<Link to="/trainer/settings">Settings</Link>), },
+    // { key: '0', icon: <UserOutlined />, label: (<Link to="/trainer/profile">{user?.username}</Link>), className: "capitalize" },
+    updatedKey,
+    homeKey,
+    { key: '2', icon: <SettingOutlined />, label: (<Link to="/trainer/settings">Settings</Link>), },
   ];
 
   const studentMenuItems = [
-    { key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile">{user?.username}</Link>), className: "capitalize" },
-    { key: '1', icon: <HomeOutlined />, label: (<Link to="/">Home</Link>), },
+    // { key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile">{user?.username}</Link>), className: "capitalize" },
+    updatedKey,
+    homeKey,
     { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
   ];
 
@@ -73,8 +109,7 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/trainer/profile")) return '0';
     if (location.pathname.includes("/trainer/dashboard")) return '1';
     if (location.pathname.includes("/trainer/class")) return '1';
-    if (location.pathname.includes("/trainer/settings")) return '5';
-    if (location.pathname.includes("/students")) return '4';
+    if (location.pathname.includes("/trainer/settings")) return '2';
   };
 
   const handleBreakpoint = (broken) => {

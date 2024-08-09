@@ -23,6 +23,12 @@ export default function UpdateProfilePage() {
         if (user?.profileImg) {
             setProfileImg(user.profileImg);
         }
+        if (user) {
+            form.setFieldsValue({
+                username: user.username,
+                email: user.email,
+            });
+        }
     }, [user]);
 
     const handleNotification = useCallback(() => {
@@ -41,7 +47,6 @@ export default function UpdateProfilePage() {
             return Upload.LIST_IGNORE; // Prevent the upload
         }
         return isJpgOrPng && isLt2M;
-        // return false; // Prevent automatic upload
     };
 
     const handleChange = (info) => {
@@ -98,6 +103,7 @@ export default function UpdateProfilePage() {
         }
     };
 
+    console.log("user?.profileImg ==>", user);
     return (
         <div className='max-w-[700px]'>
             <div className='flex m-5 text-2xl font-mono font-extrabold mx-8'>
