@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Modal, Form, Input, Select, Button, message, InputNumber } from 'antd';
+import { Modal, Form, Input, Select, Button, message, InputNumber, Tabs, Progress, Tooltip, Card } from 'antd';
+import { UserOutlined, FileOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import api from '../api/api';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 export default function AssignmentSubmissions() {
     const { classId, assignmentId } = useParams();
     const [submissions, setSubmissions] = useState([]);
+    const [students, setStudents] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [evaluationModal, setEvaluationModal] = useState(false);
@@ -17,17 +20,21 @@ export default function AssignmentSubmissions() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        fetchSubmissions();
-    }, [assignmentId]);
+        fetchData();
+    }, [assignmentId, classId]);
 
-    const fetchSubmissions = async () => {
+    const fetchData = async () => {
         try {
-            const response = await api.get(`/api/assignments/${assignmentId}/submissions`);
-            setSubmissions(response.data);
+            const [submissionsResponse, studentsResponse] = await Promise.all([
+                api.get(`/api/assignments/${assignmentId}/submissions`),
+                api.get(`/api/classes/students/${classId}`)
+            ]);
+            setSubmissions(submissionsResponse.data);
+            setStudents(studentsResponse.data);
             setError('');
         } catch (err) {
-            console.error('Error fetching submissions:', err);
-            setError(err.response?.data?.error || 'Failed to fetch submissions');
+            console.error('Error fetching data:', err);
+            setError(err.response?.data?.error || 'Failed to fetch data');
         } finally {
             setLoading(false);
         }
@@ -51,7 +58,7 @@ export default function AssignmentSubmissions() {
             });
             message.success('Evaluation submitted successfully');
             setEvaluationModal(false);
-            fetchSubmissions(); // Refresh the submissions list
+            fetchData();
         } catch (err) {
             console.error('Error submitting evaluation:', err);
             message.error(err.response?.data?.error || 'Failed to submit evaluation');
@@ -59,110 +66,191 @@ export default function AssignmentSubmissions() {
     };
 
     if (loading) {
-        return <div className="text-center p-4">Loading submissions...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
     }
 
     if (error) {
-        return <div className="text-red-500 text-center p-4">{error}</div>;
+        return <div className="text-red-500 text-center p-4 bg-red-100 rounded-lg m-4">{error}</div>;
     }
 
-    return (
-        <div className="p-6">
-            <h1 className="text-2xl flex gap-2 font-bold mb-4">
-                <div className='p-2 hover:bg-gray-300 bg-gray-200 rounded-full' title='Back to previous page' onClick={() => navigate(-1)}>
-                    <FaArrowLeft />
-                </div>
-                Assignment Submissions
-            </h1>
-            {submissions.length === 0 ? (
-                <p>No submissions yet.</p>
-            ) : (
-                <div className="grid gap-4">
-                    {submissions.map((submission) => (
-                        <div key={submission._id} className="border rounded-lg p-4 bg-white shadow">
-                            <div className="flex justify-between items-start mb-2">
-                                <div>
-                                    <h2 className="text-lg font-semibold">{submission.student.username}</h2>
-                                    <p className="text-sm text-gray-600">{submission.student.email}</p>
-                                </div>
-                                <span className="text-sm text-gray-500">
-                                    Submitted: {new Date(submission.submissionDate).toLocaleString()}
-                                </span>
-                            </div>
-                            <p className="mb-2">{submission.description}</p>
-                            {submission.fileLink && (
-                                <a
-                                    href={submission.fileLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 hover:underline mb-2 inline-block"
-                                >
-                                    View Submitted File
-                                </a>
-                            )}
-                            <div className="mt-4 flex justify-between items-center">
-                                <div>
-                                    <p className="text-sm">
-                                        Marks: {submission.marks !== undefined ? submission.marks : 'Not graded'}
-                                    </p>
-                                    {submission.rating && <p className="text-sm">Rating: {submission.rating}</p>}
-                                    {submission.remark && <p className="text-sm">Remark: {submission.remark}</p>}
-                                </div>
-                                <button
-                                    onClick={() => handleEvaluate(submission)}
-                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-                                >
-                                    Evaluate
-                                </button>
-                            </div>
+    const submittedStudentIds = submissions.map(sub => sub.student._id);
+    const notSubmittedStudents = students.filter(student => !submittedStudentIds.includes(student._id));
+
+    const renderStudentCard = (student, isSubmission = false, submission = null) => (
+        <Card
+            key={student._id}
+            className="mb-4 hover:shadow-lg transition-shadow duration-300"
+            actions={isSubmission ? [
+                <Tooltip title="Evaluate">
+                    <Button type="primary" onClick={() => handleEvaluate(submission)} icon={<CheckCircleOutlined />}>
+                        Evaluate
+                    </Button>
+                </Tooltip>
+            ] : [
+                <Tooltip title="Not submitted">
+                    <ClockCircleOutlined style={{ color: '#faad14' }} />
+                </Tooltip>
+            ]}
+        >
+            <Card.Meta
+                avatar={<UserOutlined className="text-2xl" />}
+                title={student.username}
+                description={student.email}
+            />
+            {isSubmission && (
+                <div className="mt-4">
+                    <p className="text-sm text-gray-500">
+                        Submitted: {new Date(submission.submissionDate).toLocaleString()}
+                    </p>
+                    <p className="mt-2">{submission.description}</p>
+                    {submission.fileLink && (
+                        <a
+                            href={submission.fileLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline mt-2 inline-flex items-center"
+                        >
+                            <FileOutlined className="mr-1" /> View Submitted File
+                        </a>
+                    )}
+                    {submission.marks !== undefined && (
+                        <div className="mt-4">
+
+                            Obtained marks: {submission.marks}
+                            {/* <Progress
+                                percent={submission.marks}
+                                status="active"
+                                strokeColor={{
+                                    '0%': '#108ee9',
+                                    '100%': '#87d068',
+                                }}
+                            /> */}
+                            <p className="text-sm mt-2">Rating: {submission.rating || 'Not rated'}</p>
+                            <p className="text-sm mt-1">Remark: {submission.remark || 'No remark'}</p>
                         </div>
-                    ))}
+                    )}
                 </div>
             )}
+        </Card>
+    );
 
-            <Modal
-                title="Evaluate Submission"
-                open={evaluationModal}
-                onCancel={() => setEvaluationModal(false)}
-                footer={null}
-            >
-                <Form form={form} onFinish={handleEvaluationSubmit} layout="vertical">
-                    <Form.Item
-                        name="marks"
-                        label="Marks"
-                        rules={[
-                            { required: true, message: 'Please input marks' },
-                            { type: 'number', min: 0, max: 100, message: 'Marks must be between 0 and 100' }
-                        ]}
+    const submissionRate = (submissions.length / students.length) * 100;
+
+    return (
+        <div className="p-6 bg-gray-100 min-h-screen">
+            <div className="max-w-6xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8 flex items-center gap-4">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-2 hover:bg-gray-300 bg-gray-200 rounded-full transition-colors duration-300"
+                        title='Back to previous page'
                     >
-                        <InputNumber min={0} />
-                    </Form.Item>
-                    <Form.Item
-                        name="rating"
-                        label="Rating"
-                        rules={[{ required: true, message: 'Please select a rating' }]}
-                    >
-                        <Select>
-                            <Option value="Excellent">Excellent</Option>
-                            <Option value="Good">Good</Option>
-                            <Option value="Fair">Fair</Option>
-                            <Option value="Poor">Poor</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        name="remark"
-                        label="Remark"
-                        rules={[{ required: true, message: 'Please input a remark' }]}
-                    >
-                        <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Submit Evaluation
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                        <FaArrowLeft />
+                    </button>
+                    Assignment Submissions
+                </h1>
+
+                <Card className="mb-8 bg-white shadow-md">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-xl font-semibold mb-4">Submission Overview</h2>
+                            <p>Total Students: {students.length}</p>
+                            <p>Submissions: {submissions.length}</p>
+                            <p>Remaining: {notSubmittedStudents.length}</p>
+                        </div>
+                        <div className="w-1/3">
+                            <Tooltip title={`${submissionRate.toFixed(1)}% submitted`}>
+                                <Progress
+                                    type="circle"
+                                    percent={Math.round(submissionRate)}
+                                    format={percent => `${percent}%`}
+                                    width={120}
+                                />
+                            </Tooltip>
+                        </div>
+                    </div>
+                </Card>
+
+                <Tabs defaultActiveKey="1" type="card" className="bg-white p-4 rounded-lg shadow-md">
+                    <TabPane tab={
+                        <span>
+                            <CheckCircleOutlined />
+                            Submitted ({submissions.length})
+                        </span>
+                    } key="1">
+                        {submissions.length === 0 ? (
+                            <p className="text-center text-gray-500 py-4">No submissions yet.</p>
+                        ) : (
+                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                {submissions.map((submission) => renderStudentCard(submission.student, true, submission))}
+                            </div>
+                        )}
+                    </TabPane>
+                    <TabPane tab={
+                        <span>
+                            <ClockCircleOutlined />
+                            Not Submitted ({notSubmittedStudents.length})
+                        </span>
+                    } key="2">
+                        {notSubmittedStudents.length === 0 ? (
+                            <p className="text-center text-gray-500 py-4">All students have submitted.</p>
+                        ) : (
+                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                {notSubmittedStudents.map((student) => renderStudentCard(student))}
+                            </div>
+                        )}
+                    </TabPane>
+                </Tabs>
+
+                <Modal
+                    title="Evaluate Submission"
+                    visible={evaluationModal}
+                    onCancel={() => setEvaluationModal(false)}
+                    footer={null}
+                    className="max-w-md"
+                >
+                    <Form form={form} onFinish={handleEvaluationSubmit} layout="vertical">
+                        <Form.Item
+                            name="marks"
+                            label="Marks"
+                            rules={[
+                                { required: true, message: 'Please input marks' },
+                                { type: 'number', min: 0, max: 100, message: 'Marks must be between 0 and 100' }
+                            ]}
+                        >
+                            <InputNumber min={0} max={100} className="w-full" />
+                        </Form.Item>
+                        <Form.Item
+                            name="rating"
+                            label="Rating"
+                            rules={[{ required: true, message: 'Please select a rating' }]}
+                        >
+                            <Select>
+                                <Option value="Excellent">Excellent</Option>
+                                <Option value="Good">Good</Option>
+                                <Option value="Fair">Fair</Option>
+                                <Option value="Poor">Poor</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="remark"
+                            label="Remark"
+                            rules={[{ required: true, message: 'Please input a remark' }]}
+                        >
+                            <Input.TextArea rows={4} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block>
+                                Submit Evaluation
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            </div>
         </div>
     );
 }
