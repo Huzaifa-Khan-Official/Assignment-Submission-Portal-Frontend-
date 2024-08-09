@@ -142,7 +142,7 @@ const StudentReportGenerate = () => {
   const rollNumber = studentId.substring(0, 6);
 
   return (
-    <div className="p-6">
+    <div className="p-6 pe-2">
       <Title level={2} className="mb-6">
         <ArrowLeftOutlined
           className="mr-4 cursor-pointer hover:text-blue-500"
@@ -162,7 +162,7 @@ const StudentReportGenerate = () => {
               </Col>
               <Col xs={24} sm={18}>
                 <Descriptions title="Student Information" column={1}>
-                  <Descriptions.Item label="Name">
+                  <Descriptions.Item label="Name" className="flex flex-col">
                     {studentInfo?.username || "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Roll Number">{rollNumber}</Descriptions.Item>
@@ -226,11 +226,13 @@ const StudentReportGenerate = () => {
                   <Card
                     key={assignment.assignmentId}
                     type="inner"
-                    title={assignment.assignmentTitle}
-                    extra={
-                      <Tag color={assignment.submitted ? "green" : "red"}>
-                        {assignment.submitted ? "Submitted" : "Not Submitted"}
-                      </Tag>
+                    title={
+                      <div className="flex justify-between flex-wrap gap-3">
+                        {assignment.assignmentTitle}
+                        <Tag color={assignment.submitted ? "green" : "red"}>
+                          {assignment.submitted ? "Submitted" : "Not Submitted"}
+                        </Tag>
+                      </div>
                     }
                     className="mb-4"
                   >
