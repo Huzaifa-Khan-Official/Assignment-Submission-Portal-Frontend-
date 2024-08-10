@@ -3,19 +3,23 @@ import { useNavigate, useParams } from 'react-router';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { LiaClipboardListSolid } from 'react-icons/lia';
-import { Button, Card, Tag, Spin, Alert, Progress } from 'antd';
+import { Button, Card, Tag, Spin, Alert, Progress, Modal, Upload } from 'antd';
 import { FaArrowLeft, FaPlus, FaDownload } from 'react-icons/fa';
-import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 import useFetchProfile from '../../utils/useFetchProfile';
+import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
 
 const { Meta } = Card;
 
 function StudentAssignmentDetailPage() {
     const { classId, assignmentId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [submitModalVisible, setSubmitModalVisible] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
     const [report, setReport] = useState(null);
     const [error, setError] = useState(null);
+    const [file, setFile] = useState(null);
+    const { user } = useFetchProfile();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,11 +31,10 @@ function StudentAssignmentDetailPage() {
         setError(null);
         try {
             const userId = localStorage.getItem('userId');
-            const studentId = localStorage.getItem('userId'); // Ensure this is set during login
             const response = await api.get(`/api/assignments/${assignmentId}/report/${userId}`);
             setReport(response.data);
         } catch (err) {
-            if (err.response.status == 404) {
+            if (err.response && err.response.status === 404) {
                 setReport(null);
                 return;
             }
@@ -42,34 +45,63 @@ function StudentAssignmentDetailPage() {
         }
     };
 
-    const showModal = () => setIsModalOpen(true);
-    const handleCancel = () => setIsModalOpen(false);
+    const showSubmitModal = () => setSubmitModalVisible(true);
+    const handleSubmitCancel = () => {
+        setSubmitModalVisible(false);
+        setUploadProgress(0);
+        setFile(null);
+    };
 
-    const handleSubmit = async (fileLink) => {
-        setLoader(true);
+    const handleSubmitOk = async () => {
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+
+        setSubmitting(true);
         try {
-            await api.post(`/api/assignments/${assignmentId}/submit`, { fileLink });
+            // Upload file to Firebase
+            const uploadedFileLink = await uploadFileToFirebase(
+                file,
+                `users/student/${user._id}/assignments/${file.name}`,
+                (progress) => {
+                    setUploadProgress(progress);
+                }
+            );
+
+            // Submit assignment data to your API
+            const assignmentData = {
+                student: user._id,
+                description: '', // Add description if needed
+                date: new Date(),
+                fileLink: uploadedFileLink
+            };
+
+            await api.post(`/api/assignments/${assignmentId}/submit`, assignmentData);
+
+            setSubmitModalVisible(false);
             fetchAssignmentReport(); // Refresh the report after submission
         } catch (err) {
             console.error('Error submitting assignment:', err);
             setError('Failed to submit assignment. Please try again.');
         } finally {
-            setLoader(false);
-            setIsModalOpen(false);
+            setSubmitting(false);
+            setUploadProgress(0);
+            setFile(null);
         }
     };
 
     const handleUnSubmit = async () => {
-        setLoader(true);
-        try {
-            await api.post(`/api/assignments/${assignmentId}/unsubmit`);
-            fetchAssignmentReport(); // Refresh the report after unsubmitting
-        } catch (err) {
-            console.error('Error unsubmitting assignment:', err);
-            setError('Failed to unsubmit assignment. Please try again.');
-        } finally {
-            setLoader(false);
-        }
+        // setLoader(true);
+        // try {
+        //     await api.post(`/api/assignments/${assignmentId}/unsubmit`);
+        //     fetchAssignmentReport(); // Refresh the report after unsubmitting
+        // } catch (err) {
+        //     console.error('Error unsubmitting assignment:', err);
+        //     setError('Failed to unsubmit assignment. Please try again.');
+        // } finally {
+        //     setLoader(false);
+        // }
     };
 
     const renderFilePreview = (fileLink) => {
@@ -90,13 +122,13 @@ function StudentAssignmentDetailPage() {
         }
     };
 
-    if (loader) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                {/* <Spin size="large" /> */}
-            </div>
-        );
-    }
+    // if (loader) {
+    //     return (
+    //         <div className="flex justify-center items-center h-screen">
+    //             <Spin size="large" />
+    //         </div>
+    //     );
+    // }
 
     if (error) {
         return (
@@ -178,8 +210,7 @@ function StudentAssignmentDetailPage() {
                                     </>
                                 )}
                             </div>
-                            {renderFilePreview(report.submittedFileLink
-                            )}
+                            {renderFilePreview(report.submittedFileLink)}
                             {report.rating && (
                                 <div className="mt-4">
                                     <h3 className="font-bold mb-2">Rating:</h3>
@@ -198,19 +229,44 @@ function StudentAssignmentDetailPage() {
                         </>
                     ) : (
                         <div>
-                            <Button className='w-full text-blue-600' onClick={showModal}>
+                            <Button className='w-full text-blue-600' onClick={showSubmitModal}>
                                 <FaPlus /> Add or create
                             </Button>
                         </div>
                     )}
                 </section>
             </div>
-            <AssignmentSubmitFormModal
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                handleCancel={handleCancel}
-                handleSubmit={handleSubmit}
-            />
+            <Modal
+                title="Submit Assignment"
+                visible={submitModalVisible}
+                onCancel={handleSubmitCancel}
+                footer={null}
+            >
+                <Upload
+                    beforeUpload={(file) => {
+                        setFile(file);
+                        return false;
+                    }}
+                    onRemove={() => setFile(null)}
+                    fileList={file ? [file] : []}
+                >
+                    <Button icon={<FaPlus />} loading={submitting} disabled={submitting}>
+                        {submitting ? 'Uploading...' : 'Select File to Submit'}
+                    </Button>
+                </Upload>
+                {uploadProgress > 0 && (
+                    <Progress percent={uploadProgress} status="active" />
+                )}
+                <Button
+                    type="primary"
+                    onClick={handleSubmitOk}
+                    disabled={!file || submitting}
+                    loading={submitting}
+                    style={{ marginTop: 16 }}
+                >
+                    Submit
+                </Button>
+            </Modal>
         </div>
     );
 }
