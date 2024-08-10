@@ -105,14 +105,14 @@ export default function UpdateProfilePage() {
 
     return (
         <div className='max-w-[700px]'>
-            <div className='flex m-5 text-2xl font-mono font-extrabold mx-8'>
+            <div className='flex m-5 text-2xl font-mono font-extrabold mx-8 flex-wrap gap-3'>
                 <h1 className='flex-1'>Update Profile</h1>
                 <BellFilled className='flex-2 text-amber-400 hover:text-amber-500 transition delay-100 cursor-pointer' onClick={handleNotification} />
             </div>
 
             <div className='bg-white mx-5 p-4 sm:p-7 rounded-lg shadow-lg shadow-slate-300'>
                 <div>
-                    <h1 className='text-lg font-bold uppercase break-all'>User Information</h1>
+                    <h1 className='text-lg font-bold uppercase break-words'>User Information</h1>
                 </div>
 
                 <Form form={form} onFinish={onFinish} initialValues={user} layout="vertical">

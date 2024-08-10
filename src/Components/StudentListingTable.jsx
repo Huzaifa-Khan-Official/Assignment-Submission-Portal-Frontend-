@@ -240,7 +240,7 @@ const StudentListingTable = () => {
     ];
 
     return (
-        <div className="p-4 sm:p-8">
+        <div className="px-2">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Class Assignments</h2>
                 <Space>

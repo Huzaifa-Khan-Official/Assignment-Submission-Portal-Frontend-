@@ -58,19 +58,16 @@ export default function StudentSettingPage() {
     };
 
     return (
-        <div>
-            <div className='flex m-5 ms-7 text-2xl font-mono font-extrabold'>
+        <div className='p-3 ps-5'>
+            <div className='flex mt-3 text-2xl font-mono font-extrabold'>
                 <h1 className='flex-1'>Settings</h1>
             </div>
 
             <Menu
-                onClick={onClick}
-                style={{
-                    width: 356,
-                }}
-                className='my-7 mx-7 rounded-lg'
+                className='my-7 mt-3 rounded-lg w-full max-w-sm'
                 mode="vertical"
                 items={items}
+                onClick={onClick}
             />
 
             <Modal

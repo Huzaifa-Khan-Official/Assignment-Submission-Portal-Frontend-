@@ -16,7 +16,7 @@ export default function StudentAllAssignmentPage() {
 
             <div className='m-2 p-1 bg-stone-200 rounded-md'>
 
-                <div className='flex m-8 '>
+                <div className='flex my-3 mx-2'>
                     <div className='flex-1'>
                         <ul className='flex gap-10 flex-1'>
                             <li className='text-lg font-bold uppercase'>{user?.username}</li>

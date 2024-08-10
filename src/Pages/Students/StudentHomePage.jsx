@@ -64,7 +64,6 @@ export default function StudentHomePage() {
         api.get("/api/classes/getClasses")
             .then(res => {
                 setClasses(res.data);
-                localStorage.setItem("classes", JSON.stringify(res.data));
             })
             .catch(err => {
                 console.log(err);
@@ -92,7 +91,7 @@ export default function StudentHomePage() {
                         placeholder='1a2b3cd'
                         containerStyle={{ flexWrap: "wrap", gap: "10px", justifyContent: "center" }}
                     />
-                    <div className='flex items-center gap-4'>
+                    <div className='flex items-center gap-4 flex-wrap justify-center'>
                         <Button disabled={otp.length !== 7} loading={loadings[1]} type='primary' onClick={() => joinClass(1)} className='p-5'>
                             Join Class
                         </Button>
@@ -102,12 +101,14 @@ export default function StudentHomePage() {
                     </div>
                 </div>
             </Modal>
-            <div className='flex m-5 text-2xl font-mono font-extrabold'>
+            <div className='flex m-5 text-2xl font-mono font-extrabold flex-wrap gap-3'>
                 <h1 className='flex-1'>Student Dashboard</h1>
-                <button onClick={showModal}>
-                    <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
-                </button>
-                <BellFilled className='flex-2 ml-4 text-amber-400' />
+                <div>
+                    <button onClick={showModal}>
+                        <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
+                    </button>
+                    <BellFilled className='flex-2 ml-4 text-amber-400' />
+                </div>
             </div>
             <div className='mx-6'>
                 <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Classes</h1>

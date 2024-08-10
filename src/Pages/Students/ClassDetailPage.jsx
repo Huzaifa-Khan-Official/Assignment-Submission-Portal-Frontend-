@@ -24,23 +24,23 @@ const ClassDetailPage = () => {
 
     return (
         <div className="flex flex-col w-full min-h-screen bg-muted/40">
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-1">
                 <div className="grid gap-6">
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <header className="flex items-center justify-between h-16 px-6 py-10 border-b bg-background">
-                            <div className="flex flex-col space-y-1.5 p-6">
+                        <header className="flex items-center justify-between px-2 border-b bg-background">
+                            <div className="flex flex-col space-y-1.5 p-3">
                                 <h1 className="text-xl font-bold">{classDetails?.name || 'Class Details'}</h1>
                                 <p className="text-sm text-muted-foreground">{classDetails?.description || 'Class description'}</p>
                             </div>
                         </header>
-                        <div className="p-6">
+                        <div className="p-2">
                             {error && <div className="text-red-500 mb-4">{error}</div>}
                             <div className="mb-6">
                                 {classDetails?.classImage && (
-                                    <img src={classDetails.classImage} alt={classDetails.name} className="mb-4" />
+                                    <img src={classDetails.classImage} alt={classDetails.name} className="mb-4 max-w-xl w-full" />
                                 )}
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div>
+                                <div className="grid grid-cols-1 gap-4 border-t-2 pt-2 ps-2">
+                                    <div className='break-words'>
                                         <h2 className="text-lg font-semibold">Teacher</h2>
                                         <p>{classDetails?.teacher?.username}</p>
                                         <p>{classDetails?.teacher?.email}</p>

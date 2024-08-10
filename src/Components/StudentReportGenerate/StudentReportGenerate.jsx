@@ -239,7 +239,7 @@ const StudentReportGenerate = () => {
                     key={assignment.assignmentId}
                     type="inner"
                     title={
-                      <div className="flex justify-between flex-wrap gap-3">
+                      <div className="flex justify-between flex-wrap gap-3 py-3">
                         {assignment.assignmentTitle}
                         <Tag color={assignment.submitted ? "green" : "red"}>
                           {assignment.submitted ? "Submitted" : "Not Submitted"}
