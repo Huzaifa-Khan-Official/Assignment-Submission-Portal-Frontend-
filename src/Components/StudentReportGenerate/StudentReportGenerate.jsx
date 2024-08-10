@@ -158,7 +158,7 @@ const StudentReportGenerate = () => {
         <Col span={24}>
           <Card>
             <Row gutter={[16, 16]} align="middle">
-              <Col xs={24} sm={6}>
+              <Col xs={24} sm={6} className="flex justify-center">
                 <Avatar
                   size={96}
                   src={studentInfo?.profileImg ? studentInfo.profileImg : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}
@@ -246,7 +246,7 @@ const StudentReportGenerate = () => {
                         </Tag>
                       </div>
                     }
-                    className="mb-4"
+                    className="mb-4 break-words"
                   >
                     <p>Total Marks: {assignment.totalMarks}</p>
                     {assignment.submitted && (
