@@ -20,6 +20,8 @@ const StudentReportGenerate = () => {
     const fetchData = async () => {
       try {
         const reportsResponse = await api.get(`/api/assignments/class/${classId}/student/${studentId}/reports`);
+        console.log("reportsResponse ==>", reportsResponse);
+
         const infoResponse = await api.get(`/api/users/student/${studentId}`);
         setStudentData(reportsResponse.data);
         setStudentInfo(infoResponse.data);
@@ -51,6 +53,14 @@ const StudentReportGenerate = () => {
 
   if (error) {
     return <Alert message="Error" description={error} type="error" showIcon />;
+  }
+
+  if (studentData.length == 0) {
+    return (
+      <div className="p-4">
+        <Alert message="No Reports" description="No student report data available." type="info" showIcon />
+      </div>
+    );
   }
 
   if (!studentData || studentData.length === 0) {
