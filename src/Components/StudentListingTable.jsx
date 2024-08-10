@@ -145,18 +145,19 @@ const StudentListingTable = () => {
             key: 'title',
             sorter: (a, b) => a.title.localeCompare(b.title),
             sortOrder: sortedInfo.columnKey === 'title' && sortedInfo.order,
-            ellipsis: true,
+            width: 130,
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            ellipsis: true,
+            width: 200,
         },
         {
             title: 'Due Date',
             dataIndex: 'dueDate',
             key: 'dueDate',
+            width: 130,
             sorter: (a, b) => new Date(a.dueDate) - new Date(b.dueDate),
             sortOrder: sortedInfo.columnKey === 'dueDate' && sortedInfo.order,
         },
@@ -164,6 +165,7 @@ const StudentListingTable = () => {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
+            width: 150,
             filters: [
                 { text: 'Todo', value: 'todo' },
                 { text: 'Submitted', value: 'submitted' },
@@ -196,6 +198,7 @@ const StudentListingTable = () => {
             title: 'Total Marks',
             dataIndex: 'totalMarks',
             key: 'totalMarks',
+            width: 100,
             sorter: (a, b) => a.totalMarks - b.totalMarks,
             sortOrder: sortedInfo.columnKey === 'totalMarks' && sortedInfo.order,
             render: (marks) => <span>{marks} points</span>,
@@ -241,15 +244,15 @@ const StudentListingTable = () => {
 
     return (
         <div className="px-2">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
                 <h2 className="text-2xl font-bold">Class Assignments</h2>
-                <Space>
+                <Space className='flex flex-wrap break-words'>
                     <Button onClick={clearFilters}>Clear filters</Button>
-                    <Button onClick={clearAll}>Clear filters and sorters</Button>
+                    <Button onClick={clearAll} style={{wordBreak: "break-word"}}>Clear filters and sorters</Button>
                 </Space>
             </div>
             <Table
-                className="shadow-lg rounded-lg overflow-hidden"
+                className='min-w-full bg-white shadow-lg rounded-lg overflow-x-auto px-3 mb-5 hover:cursor-pointer'
                 columns={columns}
                 dataSource={assignments}
                 loading={loading}

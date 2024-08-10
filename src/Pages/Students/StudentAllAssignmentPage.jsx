@@ -18,11 +18,9 @@ export default function StudentAllAssignmentPage() {
 
                 <div className='flex my-3 mx-2'>
                     <div className='flex-1'>
-                        <ul className='flex gap-10 flex-1'>
+                        <ul className='flex gap-4 items-center flex-wrap'>
                             <li className='text-lg font-bold uppercase'>{user?.username}</li>
                             <li className='text-base text-sky-500 font-semibold'>Roll No. {user?._id.slice(0, 6)}</li>
-                            {/* <li className='text-base text-sky-500 font-semibold'>class</li> */}
-                            {/* <li className='text-base text-sky-700 font-semibold'>View Overall Report</li> */}
                         </ul>
                     </div>
                 </div>
