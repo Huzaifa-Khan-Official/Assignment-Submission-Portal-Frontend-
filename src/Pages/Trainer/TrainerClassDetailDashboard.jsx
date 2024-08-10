@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import ClassDetailPage from './ClassDetailPage';
 import AllAssignmentsListing from '../../Components/AllAssignmentsListing';
 import AllClassfellowsPage from './AllClassfellowsPage';
+import UpdateClassModal from '../../Components/UpdateClassModal/UpdateClassModal';
 
 function TrainerClassDetailDashboard() {
   const [selectedComponent, setSelectedComponent] = useState('Stream');
@@ -15,6 +16,7 @@ function TrainerClassDetailDashboard() {
   const { loader, setLoader } = useContext(LoaderContext);
   const [detail, setDetail] = useState();
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     getClassDetail();
@@ -53,10 +55,18 @@ function TrainerClassDetailDashboard() {
 
   const items = [
     {
-      label: <button onClick={() => console.log("Class Settings Modal banana hai!")}>Settings</button>,
+      label: <button onClick={() => showModal()}>Settings</button>,
       key: '0',
     },
   ];
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <div className='p-4 ps-6'>
@@ -103,6 +113,7 @@ function TrainerClassDetailDashboard() {
       <div className="component-container">
         {renderComponent()}
       </div>
+      <UpdateClassModal isModalVisible={isModalVisible} closeModal={closeModal} getClassDetail={getClassDetail} detail={detail} />
     </div>
   )
 }
