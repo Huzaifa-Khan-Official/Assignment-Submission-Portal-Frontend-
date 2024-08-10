@@ -24,6 +24,9 @@ const Sidebar = ({ children, title }) => {
   const location = useLocation();
   const [homeKey, setHomeKey] = useState({ key: '1', icon: <HomeOutlined />, label: <Link to="/">Home</Link> });
   const [updatedKey, setUpdatedKey] = useState({ key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile" className="capitalize">Profile</Link>) });
+  const [settingsKey, setSettingsKey] = useState(
+    { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
+  )
 
 
   useEffect(() => {
@@ -64,35 +67,45 @@ const Sidebar = ({ children, title }) => {
             <Link to="/student/profile" className="capitalize">Profile</Link>
           ),
       });
+      setSettingsKey({
+        key: user.role === "admin" ? "4" : "2",
+        icon: <SettingOutlined />,
+        label:
+          user.role === "admin" ? (
+            <Link to="/admin/settings">Settings</Link>
+          ) : user.role === "trainer" ? (
+            <Link to="/trainer/settings">Settings</Link>
+          ) : (
+            <Link to="/settings">Settings</Link>
+          ),
+      });
     }
   }, [user]);
 
 
   const adminMenuItems = [
-    // { key: '0', icon: <UserOutlined />, label: user?.username, className: "capitalize" },
     updatedKey,
     homeKey,
     { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
     { key: '3', icon: <TeamOutlined />, label: (<Link to="/admin/students">Students</Link>) },
-    { key: '4', icon: <SettingOutlined />, label: (<Link to="/admin/settings">Settings</Link>), },
+    settingsKey
   ];
 
   const trainerMenuItems = [
-    // { key: '0', icon: <UserOutlined />, label: (<Link to="/trainer/profile">{user?.username}</Link>), className: "capitalize" },
     updatedKey,
     homeKey,
-    { key: '2', icon: <SettingOutlined />, label: (<Link to="/trainer/settings">Settings</Link>), },
+    settingsKey
   ];
 
   const studentMenuItems = [
-    // { key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile">{user?.username}</Link>), className: "capitalize" },
     updatedKey,
     homeKey,
-    { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
+    settingsKey
   ];
 
   const getMenuItemKey = () => {
     // admin routes
+    if (location.pathname.includes("/admin/profile")) return '0';
     if (location.pathname.includes("/admin/dashboard")) return '1';
     if (location.pathname.includes("/admin/teachers")) return '2';
     if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';

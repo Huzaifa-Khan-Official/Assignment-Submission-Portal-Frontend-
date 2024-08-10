@@ -30,6 +30,7 @@ import StudentAssignmentDetailPage from './Pages/Students/StudentAssignmentDetai
 import ClassDetailDashboard from './Pages/Students/ClassDetailDashboard.jsx';
 import TrainerClassDetailDashboard from './Pages/Trainer/TrainerClassDetailDashboard.jsx';
 import AssignmentSubmissions from './Components/AssignmentSubmissions.jsx';
+import AdminSettingPage from './Pages/Admin/AdminSettingPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -101,11 +102,18 @@ const router = createBrowserRouter([
     </>
   },
   {
+    path: "/admin/profile",
+    element: <>
+      <Sidebar title="Admin | Profile">
+        <UpdateProfilePage />
+      </Sidebar>
+    </>
+  },
+  {
     path: "/admin/settings",
     element: <>
       <Sidebar title="Admin | Settings">
-        <h1>Admin settings page</h1>
-        {/* <AllTeachers /> */}
+        <AdminSettingPage />
       </Sidebar>
     </>
   },

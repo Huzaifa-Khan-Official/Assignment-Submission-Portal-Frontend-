@@ -175,20 +175,20 @@ const AllTeachers = () => {
 
   return (
     <>
-      <Content className='bg-white' style={{ margin: '24px 16px 0' }}>
-        <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold'>
-          <h1 className='flex-1 text-2xl font-bold mb-4'>All Teachers</h1>
+      <Content className='bg-white pb-4 rounded-sm' style={{ margin: '24px 0' }}>
+        <div className='flex m-5 pt-5 text-2xl font-mono font-extrabold justify-between items-center flex-wrap gap-3'>
+          <h1 className='text-2xl font-bold break-words'>All Teachers</h1>
           <button onClick={showModal} title='Add Teacher'>
             <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
           </button>
         </div>
-        <div className='p-4 pt-0'>
+        <div className='px-3'>
           <Table
             columns={columns}
             dataSource={teachers}
             pagination={false}
             rowKey={(record) => record._id}
-            className='min-w-full bg-white shadow-md rounded-lg overflow-x-scroll sm:overflow-x-hidden'
+            className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto'
           />
         </div>
       </Content>
@@ -197,17 +197,19 @@ const AllTeachers = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={[
-          <Button key='back' onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button
-            key='submit'
-            type='primary'
-            form='teacherForm'
-            htmlType='submit'
-          >
-            {isEditing ? 'Update' : 'Add'}
-          </Button>,
+          <div className='flex justify-center xsm:justify-end gap-3 flex-wrap' key={0}>
+            <Button key='back' onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button
+              key='submit'
+              type='primary'
+              form='teacherForm'
+              htmlType='submit'
+            >
+              {isEditing ? 'Update' : 'Add'}
+            </Button>
+          </div>
         ]}
       >
         <Form

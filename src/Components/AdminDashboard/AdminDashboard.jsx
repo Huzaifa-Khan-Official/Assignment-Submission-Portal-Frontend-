@@ -19,8 +19,11 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="admin-dashboard">
-        <div className="button-group ml-8 mt-8">
+      <div className="admin-dashboard my-3 mx-5 me-3">
+        <h1 className='text-3xl font-bold break-words'>
+          Admin Dashboard
+        </h1>
+        <div className="button-group flex gap-3 flex-wrap mt-4">
           <Button
             onClick={() => setSelectedComponent('AllTeachers')}
             type={selectedComponent === 'AllTeachers' ? 'primary' : undefined}
@@ -30,7 +33,6 @@ const AdminDashboard = () => {
           <Button
             onClick={() => setSelectedComponent('AllStudents')}
             type={selectedComponent === 'AllStudents' ? 'primary' : undefined}
-            className='ml-4'
           >
             All Students
           </Button>
