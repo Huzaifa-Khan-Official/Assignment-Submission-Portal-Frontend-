@@ -13,6 +13,7 @@ export default function StudentHomePage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [otp, setOtp] = useState('');
     const [loadings, setLoadings] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [classes, setClasses] = useState([]);
     const navigate = useNavigate();
 
@@ -61,12 +62,15 @@ export default function StudentHomePage() {
     };
 
     const getAllClasses = () => {
+        setLoading(true);
         api.get("/api/classes/getClasses")
             .then(res => {
                 setClasses(res.data);
+                setLoading(false);
             })
             .catch(err => {
                 console.log(err);
+                setLoading(false);
             });
     };
 
@@ -113,36 +117,38 @@ export default function StudentHomePage() {
             <div className='mx-6'>
                 <h1 className='my-4 text-xl font-sans font-bold text-sky-500'>My Classes</h1>
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[20px] justify-items-center'>
-                    {classes.length === 0 ? (
-                        <div className='text-2xl'>You haven't enrolled in any class yet!</div>
-                    ) : classes.map((course, index) => (
-                        <div key={index}>
-                            <Card
-                                hoverable
-                                cover={
-                                    course.classImage ?
-                                        <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={course.classImage} /> :
-                                        <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
-                                }
-                                onClick={() => navigate(`student/class/${course._id}`)}
-                                className='hover:-translate-y-1 duration-200 transition'
-                            >
-                                <div className='flex relative bottom-12'>
-                                    <h1 className='flex-1 relative top-8 right-0 text-2xl font-semibold'>{course.name}</h1>
-                                    {
-                                        course.teacher?.profileImg ? (
-                                            <img className='w-12 h-12 rounded-full' src={course.teacher?.profileImg} alt="" />
-                                        ) : (
-                                            <img className='size-12 rounded-full' src={userIcon} alt="" />
-                                        )
-                                    }
+                    {
+                        loading ? <Card loading={loading} className='w-full'></Card> :
+                            classes.length === 0 ? (
+                                <div className='text-2xl'>You haven't enrolled in any class yet!</div>
+                            ) : classes.map((course, index) => (
+                                <div key={index}>
+                                    <Card
+                                        hoverable
+                                        cover={
+                                            course.classImage ?
+                                                <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={course.classImage} /> :
+                                                <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
+                                        }
+                                        onClick={() => navigate(`student/class/${course._id}`)}
+                                        className='hover:-translate-y-1 duration-200 transition h-full'
+                                    >
+                                        <div className='flex relative bottom-12'>
+                                            <h1 className='flex-1 relative top-8 right-0 text-2xl font-semibold'>{course.name}</h1>
+                                            {
+                                                course.teacher?.profileImg ? (
+                                                    <img className='w-12 h-12 rounded-full' src={course.teacher?.profileImg} alt="" />
+                                                ) : (
+                                                    <img className='size-12 rounded-full' src={userIcon} alt="" />
+                                                )
+                                            }
+                                        </div>
+                                        <div className='flex'>
+                                            <Meta title={course.teacher?.username} className='relative left-3' />
+                                        </div>
+                                    </Card>
                                 </div>
-                                <div className='flex'>
-                                    <Meta title={course.teacher?.username} className='relative left-3' />
-                                </div>
-                            </Card>
-                        </div>
-                    ))}
+                            ))}
                 </div>
             </div>
         </div>
