@@ -108,6 +108,7 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/admin/profile")) return '0';
     if (location.pathname.includes("/admin/dashboard")) return '1';
     if (location.pathname.includes("/admin/teachers")) return '2';
+    if (location.pathname.includes("/admin/trainer")) return '2';
     if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
     if (location.pathname.includes("/admin/students")) return '3';
     if (location.pathname.includes("/admin/student")) return '3';
@@ -191,26 +192,6 @@ const Sidebar = ({ children, title }) => {
           </div>
         </Sider>
         <Layout className={`site-layout lg:ml-[200px] ${collapsed && "lg:ml-0"}`}>
-          {/* <Header
-            className="site-layout-background bg-white"
-            style={{
-              paddingLeft: 20,
-            }}
-          >
-            {!isLgOrHigher && (
-              collapsed ? (
-                <MenuUnfoldOutlined
-                  className="trigger ml-[80px] text-2xl"
-                  onClick={() => setCollapsed(!collapsed)}
-                />
-              ) : (
-                <MenuFoldOutlined
-                  className="trigger m-5 ml-[200px] lg:ml-0 text-2xl"
-                  onClick={() => setCollapsed(!collapsed)}
-                />
-              )
-            )}
-          </Header> */}
           <div className={`bg-[#f5f5f5] pb-10 ${collapsed && "ml-[70px]"} overflow-hidden`}>
             <PageTitle title={title} />
             {children}

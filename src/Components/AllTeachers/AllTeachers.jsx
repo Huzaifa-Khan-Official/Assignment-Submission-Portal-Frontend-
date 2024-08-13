@@ -6,6 +6,7 @@ import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
 import { error } from 'highcharts';
+import { useNavigate } from 'react-router';
 
 const { Header, Content } = Layout;
 
@@ -16,6 +17,7 @@ const AllTeachers = () => {
   const [editedTeacher, setEditedTeacher] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
   const [initialized, setInitialized] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -151,7 +153,7 @@ const AllTeachers = () => {
           <Button
             type='primary'
             icon={<VscOpenPreview />}
-            onClick={() => viewTrainerDetail(record._id)}
+            onClick={() => navigate(`/admin/trainer/${record._id}`)}
             title='View Details'
           />
           <Button

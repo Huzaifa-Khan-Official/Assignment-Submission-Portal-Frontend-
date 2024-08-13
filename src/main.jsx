@@ -31,6 +31,7 @@ import ClassDetailDashboard from './Pages/Students/ClassDetailDashboard.jsx';
 import TrainerClassDetailDashboard from './Pages/Trainer/TrainerClassDetailDashboard.jsx';
 import AssignmentSubmissions from './Components/AssignmentSubmissions.jsx';
 import AdminSettingPage from './Pages/Admin/AdminSettingPage.jsx';
+import AdminTrainerDetailPage from './Pages/Admin/AdminTrainerDetailPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Admin | Teachers">
         <AllTeachers />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/trainer/:trainerId",
+    element: <>
+      <Sidebar title="Admin | Trainer">
+        <AdminTrainerDetailPage />
       </Sidebar>
     </>
   },
