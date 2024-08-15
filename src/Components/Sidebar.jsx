@@ -1,11 +1,8 @@
 import { useContext, useState, useEffect, memo } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, HomeOutlined, BookOutlined, TeamOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
-import { SiGoogleclassroom } from "react-icons/si";
+import { UserOutlined, HomeOutlined, TeamOutlined, SettingOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import { VscChecklist } from "react-icons/vsc";
 import smitlogo from '../assets/smitlogo.png';
-import User from "../Context/Context";
 import LoaderContext from "../Context/LoaderContext";
 import api from "../api/api";
 import { toast, ToastContainer } from "react-toastify";
@@ -154,6 +151,10 @@ const Sidebar = ({ children, title }) => {
         });
       });
   };
+
+  if (!user?.isVerified && location.pathname != "/account-verification") {
+    navigate("/account-verification");
+  }
 
   return (
     <div>

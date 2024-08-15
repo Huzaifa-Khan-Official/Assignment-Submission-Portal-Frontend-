@@ -225,6 +225,15 @@ const router = createBrowserRouter([
       </Sidebar>
     </>
   },
+  {
+    path: "/account-verification",
+    element: <>
+      <Sidebar title="Account Verification">
+        {/* <StudentReportGenerate /> */}
+        <h1>Account Verification page</h1>
+      </Sidebar>
+    </>
+  },
 
 ])
 
