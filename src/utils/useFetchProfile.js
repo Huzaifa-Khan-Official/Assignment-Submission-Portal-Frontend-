@@ -16,14 +16,11 @@ const useFetchProfile = () => {
         setLoader(true);
         const res = await api.get("/api/users/profile");
         localStorage.setItem("userId", res.data._id);
+        if (!res.data.isVerified) navigate("/account-verification")          
         setUser(res.data);
         setLoader(false);
       } catch (error) {
         setLoader(false);
-        console.error(
-          "Error fetching profile:",
-          error.response?.data || error.message
-        );
         localStorage.removeItem("token");
         setUser(null);
         navigate("/login");

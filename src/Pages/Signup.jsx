@@ -10,7 +10,7 @@ import PageTitle from "../Components/PageTitle";
 import Loader from "../Components/Loader";
 
 export default function Signup() {
-  const {user, setUser} = useContext(User);
+  const { user, setUser } = useContext(User);
   const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
 
@@ -35,14 +35,15 @@ export default function Signup() {
           onClose: () => {
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
-            if (res.data.role == "admin") {
-              navigate("/admin/dashboard");
-            } else if (res.data.role == "trainer") {
-              navigate("/trainer/dashboard");
-            }
-            else {
-              navigate("/");
-            }
+            navigate("/account-verification");
+            // if (res.data.role == "admin") {
+            //   navigate("/admin/dashboard");
+            // } else if (res.data.role == "trainer") {
+            //   navigate("/trainer/dashboard");
+            // }
+            // else {
+            //   navigate("/");
+            // }
           }
         })
       })

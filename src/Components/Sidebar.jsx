@@ -131,31 +131,25 @@ const Sidebar = ({ children, title }) => {
     }
   };
 
-  const logoutBtn = () => {
+  const logoutBtn = async () => {
     setLoader(true);
-    api.post("/api/users/logout")
-      .then(res => {
-        setLoader(false);
-        toast.success(res.data, {
-          onClose: () => {
-            localStorage.removeItem('token');
-            setUser(null);
-            navigate("/login");
-          }
-        });
-      })
-      .catch(err => {
-        setLoader(false);
-        toast.error(err.response?.data || err.message, {
-          autoClose: false
-        });
+    try {
+      const res = await api.post("/api/users/logout");
+      setLoader(false);
+      toast.success(res.data, {
+        onClose: () => {
+          localStorage.removeItem('token');
+          setUser(null);
+          navigate("/login");
+        }
       });
+    } catch (err) {
+      setLoader(false);
+      toast.error(err.response?.data || err.message, {
+        autoClose: false
+      });
+    }
   };
-
-  if (!user?.isVerified && location.pathname != "/account-verification") {
-    navigate("/account-verification");
-  }
-
   return (
     <div>
       <Layout className="min-h-screen">

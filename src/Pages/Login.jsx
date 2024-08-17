@@ -16,34 +16,55 @@ export default function Login() {
   const { loader, setLoader } = useContext(LoaderContext);
   const navigate = useNavigate();
 
-  const onFinish = (data) => {
+  useEffect(() => {
+    if (user && user.isVerified) {
+      if (user.role == "admin") {
+        navigate("/admin/dashboard");
+      } else if (user.role == "trainer") {
+        navigate("/trainer/dashboard");
+      }
+      else {
+        navigate("/");
+      }
+    }
+  }, [user]);
+
+  const onFinish = async (data) => {
     setLoader(true);
-    api.post("/api/users/auth", {
-      email: data.email,
-      password: data.password
-    })
-      .then(res => {
-        setLoader(false);
-        toast.success("Logged in successfully", {
+    try {
+      const res = await api.post("/api/users/auth", {
+        email: data.email,
+        password: data.password
+      })
+
+      setLoader(false);
+      toast.success("Logged in successfully", {
+        onClose: () => {
+          localStorage.setItem('token', res.data.token);
+          setUser(res.data);
+          if (res.data.role == "admin") {
+            navigate("/admin/dashboard");
+          } else if (res.data.role == "trainer") {
+            navigate("/trainer/dashboard");
+          }
+          else {
+            navigate("/");
+          }
+        }
+      })
+    } catch (err) {
+      setLoader(false);
+      if (err.response.data.message == "Please verify your email first!") {
+        toast.error(err.response.data.message, {
           onClose: () => {
-            localStorage.setItem('token', res.data.token);
-            setUser(res.data);
-            if (res.data.role == "admin") {
-              navigate("/admin/dashboard");
-            } else if (res.data.role == "trainer") {
-              navigate("/trainer/dashboard");
-            }
-            else {
-              navigate("/");
-            }
+            localStorage.setItem('token', err.response.data.token);
+            navigate("/account-verification")
           }
         })
-      })
-      .catch(err => {
-        setLoader(false);
-        toast.error(err.response.data ||"Something went wrong! Please try again.")
-        console.log("err =>", err);
-      })
+      } else {
+        toast.error(err.response.data || "Something went wrong! Please try again.")
+      }
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
