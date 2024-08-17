@@ -32,6 +32,7 @@ import TrainerClassDetailDashboard from './Pages/Trainer/TrainerClassDetailDashb
 import AssignmentSubmissions from './Components/AssignmentSubmissions.jsx';
 import AdminSettingPage from './Pages/Admin/AdminSettingPage.jsx';
 import AdminTrainerDetailPage from './Pages/Admin/AdminTrainerDetailPage.jsx';
+import AccountVerification from './Pages/AccountVerification.jsx';
 
 const router = createBrowserRouter([
   {
@@ -228,10 +229,10 @@ const router = createBrowserRouter([
   {
     path: "/account-verification",
     element: <>
-      <Sidebar title="Account Verification">
-        {/* <StudentReportGenerate /> */}
+      <AccountVerification />
+      {/* <Sidebar title="Account Verification">
         <h1>Account Verification page</h1>
-      </Sidebar>
+      </Sidebar> */}
     </>
   },
 
