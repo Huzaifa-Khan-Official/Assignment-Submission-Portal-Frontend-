@@ -29,8 +29,6 @@ function AccountVerification() {
     };
 
     console.log("user==>", user);
-    
-
     return (
         <div className='px-2 bg-blue-50'>
             <PageTitle title={"Account Verification"} />
