@@ -36,14 +36,6 @@ export default function Signup() {
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
             navigate("/account-verification");
-            // if (res.data.role == "admin") {
-            //   navigate("/admin/dashboard");
-            // } else if (res.data.role == "trainer") {
-            //   navigate("/trainer/dashboard");
-            // }
-            // else {
-            //   navigate("/");
-            // }
           }
         })
       })
@@ -68,6 +60,7 @@ export default function Signup() {
       <div className="w-full md:w-1/2 bg-primary-blue flex justify-center items-center">
         <div className="w-[80%]">
           <h1 className="text-4xl text-white font-bold text-center mb-7">Signup</h1>
+          <h3 className="mb-4 text-white"><span className="font-bold">Note: </span>Ensure the email is correct and active, as it will be used for account verification.</h3>
           <Form
             name="signup"
             onFinish={onFinish}

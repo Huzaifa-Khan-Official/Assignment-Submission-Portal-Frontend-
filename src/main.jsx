@@ -230,9 +230,6 @@ const router = createBrowserRouter([
     path: "/account-verification",
     element: <>
       <AccountVerification />
-      {/* <Sidebar title="Account Verification">
-        <h1>Account Verification page</h1>
-      </Sidebar> */}
     </>
   },
 

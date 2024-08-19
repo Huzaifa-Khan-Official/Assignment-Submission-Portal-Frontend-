@@ -98,11 +98,16 @@ function ClassDetailDashboard() {
                     >
                         People
                     </Button>
-                    <Button
-                        onClick={() => navigate(`/trainer/class/${classId}/student/${studentId}/`)}
-                    >
-                        View Report
-                    </Button>
+                    {
+                        studentId && classId && (
+                            <Button
+                                onClick={() => navigate(`/trainer/class/${classId}/student/${studentId}/`)}
+                            >
+                                View Report
+                            </Button>
+                        )
+                    }
+
                 </div>
                 <div>
                     <Dropdown
