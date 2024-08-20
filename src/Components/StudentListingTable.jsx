@@ -43,7 +43,7 @@ const StudentListingTable = () => {
                 submitted: assignment.submissions.some(sub => sub.student.toString() === user._id.toString()),
                 evaluated: assignment.submissions.some(sub => sub.student.toString() === user._id.toString() && sub.marks !== undefined),
             }));
-            setAssignments(formattedData);
+            setAssignments(formattedData.reverse());
         } catch (error) {
             console.error('Error fetching assignments:', error);
             message.error('Failed to fetch assignments');

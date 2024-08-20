@@ -21,7 +21,7 @@ export default function AllAssignmentsListing() {
         try {
             setLoader(true)
             const response = await api.get(`/api/assignments/class/${classId}`);
-            setAssignments(response.data);
+            setAssignments(response.data.reverse());
             setError('');
         } catch (error) {
             console.error('Error fetching assignments:', error);

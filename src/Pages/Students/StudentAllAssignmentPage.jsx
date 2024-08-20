@@ -29,8 +29,6 @@ export default function StudentAllAssignmentPage() {
                     <StudentListingTable />
                 </div>
             </div>
-            {/* <SubmitAssignment />
-            <AssignmentSubmitFormModal /> */}
         </div>
 
     )

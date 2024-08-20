@@ -21,7 +21,7 @@ const ClassDetailPage = () => {
         try {
             const res = await api.get(`/api/classes/trainer/class/${classId}`);
             const response = await api.get(`/api/assignments/class/${classId}`)
-            setAssignments(response.data)
+            setAssignments(response.data.reverse());
             setDetail(res.data);
             setLoader(false);
 

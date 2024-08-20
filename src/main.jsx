@@ -146,14 +146,6 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/trainer/:classId",
-    element: <>
-      <Sidebar title="Trainer | Assignments">
-        <AllAssignmentsListing />
-      </Sidebar>
-    </>
-  },
-  {
     path: "/trainer/class/:classId/:assignmentId",
     element: <>
       <Sidebar title="Trainer | Submissions">

@@ -91,30 +91,6 @@ export default function TrainerDashboard() {
                         ))
 
                     }
-                    {/* {
-                        classes.map((eachClass, index) => (
-                            <div key={index}>
-                                <Card
-                                    hoverable
-                                    cover={<img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={eachClass.classImage} />}
-                                    onClick={() => navigate(`/trainer/class/${eachClass._id}`)}
-                                >
-                                    <div className='flex relative bottom-12'>
-                                        <h1 className='flex-1 relative top-8 right-3 font-semibold'>{eachClass.name}</h1>
-                                        {eachClass.teacher?.profileImg ? (
-                                            <img className='w-12 h-12 rounded-full' src={eachClass.teacher?.profileImg} alt="" />
-                                        ) : (
-                                            <img className='size-12 rounded-full' src={userIcon} alt="" />
-                                        )
-                                        }
-                                    </div>
-                                    <div className='flex'>
-                                        <Meta title={eachClass.teacher?.username} className='relative left-3' />
-                                    </div>
-                                </Card>
-                            </div>
-                        ))
-                    } */}
                 </div>
             </div>
         </div>
