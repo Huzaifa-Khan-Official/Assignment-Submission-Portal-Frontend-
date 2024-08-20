@@ -136,7 +136,7 @@ export default function AssignmentSubmissions() {
         {
             label: (
                 <span>
-                    <CheckCircleOutlined />
+                    <CheckCircleOutlined className='pe-1'/>
                     Submitted ({submissions.length})
                 </span>
             ),
@@ -156,7 +156,7 @@ export default function AssignmentSubmissions() {
         {
             label: (
                 <span>
-                    <ClockCircleOutlined />
+                    <ClockCircleOutlined className='pe-1'/>
                     Not Submitted ({notSubmittedStudents.length})
                 </span>
             ),
