@@ -82,8 +82,8 @@ export default function AssignmentSubmissions() {
     const renderStudentCard = (student, isSubmission = false, submission = null) => (
         <Card
             key={student._id}
-            className="w-full mb-4 hover:shadow-lg transition-shadow duration-300 p-0"
-            styles={{ body: { padding: "20px 10px", width: "100%", display: "flex" } }}
+            className="w-full mb-4 hover:shadow-lg transition-shadow duration-300 p-0 h-fit"
+            styles={{ body: { padding: "20px 10px", width: "100%", display: "flex", flexWrap: "wrap", gap: "10px" } }}
             actions={isSubmission ? [
                 <Tooltip title="Evaluate">
                     <Button type="primary" onClick={() => handleEvaluate(submission)} icon={<CheckCircleOutlined />}>
@@ -99,8 +99,8 @@ export default function AssignmentSubmissions() {
             <Card.Meta
                 avatar={<UserOutlined className="text-2xl" />}
                 title={student.username}
-                description={<div className='break-words'>{student.email}</div>}
-                className='flex flex-wrap w-full items-center'
+                description={<div className='break-all'>{student.email}</div>}
+                className='flex items-center'
             />
             {isSubmission && (
                 <div className="mt-4">
@@ -136,7 +136,7 @@ export default function AssignmentSubmissions() {
         {
             label: (
                 <span>
-                    <CheckCircleOutlined className='pe-1'/>
+                    <CheckCircleOutlined className='pe-1' />
                     Submitted ({submissions.length})
                 </span>
             ),
@@ -156,7 +156,7 @@ export default function AssignmentSubmissions() {
         {
             label: (
                 <span>
-                    <ClockCircleOutlined className='pe-1'/>
+                    <ClockCircleOutlined className='pe-1' />
                     Not Submitted ({notSubmittedStudents.length})
                 </span>
             ),

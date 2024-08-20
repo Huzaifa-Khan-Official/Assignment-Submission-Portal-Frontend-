@@ -33,13 +33,13 @@ function StudentAssignmentDetailPage() {
         setError(null);
         try {
             const userId = localStorage.getItem('userId');
-            console.log("me chala");
-
             const response = await api.get(`/api/assignments/${assignmentId}/report/${userId}`);
             setLoading(false);
+            setLoader(false);
             setReport(response.data);
         } catch (err) {
             setLoading(false);
+            setLoader(false);
             if (err.response && err.response.status === 404) {
                 setReport(null);
                 return;
