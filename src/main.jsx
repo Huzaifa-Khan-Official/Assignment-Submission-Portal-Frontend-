@@ -33,6 +33,7 @@ import AssignmentSubmissions from './Components/AssignmentSubmissions.jsx';
 import AdminSettingPage from './Pages/Admin/AdminSettingPage.jsx';
 import AdminTrainerDetailPage from './Pages/Admin/AdminTrainerDetailPage.jsx';
 import AccountVerification from './Pages/AccountVerification.jsx';
+import TrainerClassDetailPage from './Pages/Admin/TrainerClassDetailPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
     element: <>
       <Sidebar title="Admin | Trainer">
         <AdminTrainerDetailPage />
+      </Sidebar>
+    </>
+  },
+  {
+    path: "/admin/trainer/:trainerId/:classId",
+    element: <>
+      <Sidebar title="Admin | Trainer | Class">
+        <TrainerClassDetailPage />
       </Sidebar>
     </>
   },
