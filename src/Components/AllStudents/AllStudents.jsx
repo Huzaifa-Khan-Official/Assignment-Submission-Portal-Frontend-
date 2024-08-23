@@ -15,6 +15,7 @@ const AllStudents = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -116,17 +117,16 @@ const AllStudents = () => {
       });
   };
 
-  const getAllStudents = () => {
-    setLoader(true);
-    api.get("/api/users/students")
-      .then(res => {
-        setStudents(res.data);
-        setLoader(false);
-      })
-      .catch(err => {
-        setLoader(false);
-        toast.error(err.response?.data || err.message);
-      });
+  const getAllStudents = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/api/users/students");
+      setLoading(false);
+      setStudents(res.data);
+    } catch (err) {
+      setLoading(false);
+      toast.error(err.response?.data || err.message);
+    }
   };
 
   const columns = [
@@ -207,6 +207,7 @@ const AllStudents = () => {
             pagination={false}
             rowKey={(record) => record._id}
             className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto'
+            loading={loading}
           />
         </div>
       </Content>

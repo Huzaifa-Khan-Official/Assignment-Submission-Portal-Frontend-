@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Row, Col, Card, Typography, Avatar, Statistic, Descriptions, Spin, Alert, Tag, } from "antd";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, } from "recharts";
 import { ArrowLeftOutlined } from "@ant-design/icons";

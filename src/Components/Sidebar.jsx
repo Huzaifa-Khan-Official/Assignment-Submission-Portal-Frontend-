@@ -22,7 +22,6 @@ const Sidebar = ({ children, title }) => {
   const [updatedKey, setUpdatedKey] = useState({ key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile" className="capitalize">Profile</Link>) });
   const [homeKey, setHomeKey] = useState({ key: '1', icon: <HomeOutlined />, label: <Link to="/">Home</Link> });
   const [settingsKey, setSettingsKey] = useState(
-    // { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
     { key: 'settings', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
   )
 
@@ -67,7 +66,6 @@ const Sidebar = ({ children, title }) => {
       });
 
       setSettingsKey({
-        // key: user.role === "admin" ? "4" : "2",
         key: "settings",
         icon: <SettingOutlined />,
         label:
