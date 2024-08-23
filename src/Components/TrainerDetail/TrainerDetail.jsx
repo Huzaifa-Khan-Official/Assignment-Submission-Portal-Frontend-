@@ -22,7 +22,6 @@ function TrainerDetail() {
             .then(res => {
                 setLoader(false);
                 setTrainer(res.data);
-                console.log(res.data.classes);
             })
             .catch(err => {
                 setLoader(false);

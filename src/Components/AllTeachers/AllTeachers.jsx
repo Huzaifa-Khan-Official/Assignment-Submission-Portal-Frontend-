@@ -5,7 +5,6 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
-import { error } from 'highcharts';
 import { useNavigate } from 'react-router';
 
 const { Header, Content } = Layout;
@@ -16,6 +15,7 @@ const AllTeachers = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTeacher, setEditedTeacher] = useState(null);
   const { loader, setLoader } = useContext(LoaderContext);
+  const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -116,20 +116,17 @@ const AllTeachers = () => {
       });
   };
 
-  const getAllTeachers = () => {
-    setLoader(true);
-    api.get("/api/users/trainers")
-      .then(res => {
-        if (res.data) {
-          setTeachers(res.data);
-          setLoader(false);
-        }
-      })
-      .catch(err => {
-        console.log("error ==>", err);
-        setLoader(false);
-        // toast.error(err.response?.data || err.message);
-      });
+  const getAllTeachers = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/api/users/trainers");
+      setTeachers(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error ==>", error);
+      setLoading(false);
+      // toast.error(error.response?.data || error.message);
+    }
   };
 
   const columns = [
@@ -191,6 +188,7 @@ const AllTeachers = () => {
             pagination={false}
             rowKey={(record) => record._id}
             className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto'
+            loading={loading}
           />
         </div>
       </Content>

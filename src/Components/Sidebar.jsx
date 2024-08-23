@@ -19,10 +19,11 @@ const Sidebar = ({ children, title }) => {
   const [isLgOrHigher, setIsLgOrHigher] = useState(window.innerWidth >= 1024);
   const navigate = useNavigate();
   const location = useLocation();
-  const [homeKey, setHomeKey] = useState({ key: '1', icon: <HomeOutlined />, label: <Link to="/">Home</Link> });
   const [updatedKey, setUpdatedKey] = useState({ key: '0', icon: <UserOutlined />, label: (<Link to="/student/profile" className="capitalize">Profile</Link>) });
+  const [homeKey, setHomeKey] = useState({ key: '1', icon: <HomeOutlined />, label: <Link to="/">Home</Link> });
   const [settingsKey, setSettingsKey] = useState(
-    { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
+    // { key: '2', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
+    { key: 'settings', icon: <SettingOutlined />, label: (<Link to="/settings">Settings</Link>), },
   )
 
 
@@ -39,6 +40,19 @@ const Sidebar = ({ children, title }) => {
 
   useEffect(() => {
     if (user?.role) {
+      setUpdatedKey({
+        key: '0',
+        icon: <UserOutlined />,
+        label:
+          user.role === 'admin' ? (
+            <Link to="/admin/profile" className="capitalize">Profile</Link>
+          ) : user.role === 'trainer' ? (
+            <Link to="/trainer/profile" className="capitalize">Profile</Link>
+          ) : (
+            <Link to="/student/profile" className="capitalize">Profile</Link>
+          ),
+      });
+
       setHomeKey({
         key: '1',
         icon: <HomeOutlined />,
@@ -52,20 +66,9 @@ const Sidebar = ({ children, title }) => {
           ),
       });
 
-      setUpdatedKey({
-        key: '0',
-        icon: <UserOutlined />,
-        label:
-          user.role === 'admin' ? (
-            <Link to="/admin/profile" className="capitalize">Profile</Link>
-          ) : user.role === 'trainer' ? (
-            <Link to="/trainer/profile" className="capitalize">Profile</Link>
-          ) : (
-            <Link to="/student/profile" className="capitalize">Profile</Link>
-          ),
-      });
       setSettingsKey({
-        key: user.role === "admin" ? "4" : "2",
+        // key: user.role === "admin" ? "4" : "2",
+        key: "settings",
         icon: <SettingOutlined />,
         label:
           user.role === "admin" ? (
@@ -81,22 +84,22 @@ const Sidebar = ({ children, title }) => {
 
 
   const adminMenuItems = [
-    updatedKey,
-    homeKey,
+    updatedKey, // key: '0'
+    homeKey, // key: '1'
     { key: '2', icon: <UserOutlined />, label: (<Link to="/admin/teachers">Teachers</Link>) },
     { key: '3', icon: <TeamOutlined />, label: (<Link to="/admin/students">Students</Link>) },
     settingsKey
   ];
 
   const trainerMenuItems = [
-    updatedKey,
-    homeKey,
+    updatedKey, // key: '0'
+    homeKey, // key: '1'
     settingsKey
   ];
 
   const studentMenuItems = [
-    updatedKey,
-    homeKey,
+    updatedKey, // key: '0'
+    homeKey, // key: '1'
     settingsKey
   ];
 
@@ -109,18 +112,18 @@ const Sidebar = ({ children, title }) => {
     if (location.pathname.includes("/admin/assignments/:teacherID")) return '2';
     if (location.pathname.includes("/admin/students")) return '3';
     if (location.pathname.includes("/admin/student")) return '3';
-    if (location.pathname.includes("/admin/settings")) return '4';
+    if (location.pathname.includes("/admin/settings")) return 'settings';
     // student routes
     if (location.pathname.includes("/student/profile")) return '0';
     if (location.pathname === "/") return '1';
     if (location.pathname.includes("/student/class")) return '1';
-    if (location.pathname.includes("/settings")) return '2';
+    if (location.pathname.includes("/settings")) return 'settings';
 
     // trainer routes
     if (location.pathname.includes("/trainer/profile")) return '0';
     if (location.pathname.includes("/trainer/dashboard")) return '1';
     if (location.pathname.includes("/trainer/class")) return '1';
-    if (location.pathname.includes("/trainer/settings")) return '2';
+    if (location.pathname.includes("/trainer/settings")) return 'settings';
   };
 
   const handleBreakpoint = (broken) => {
