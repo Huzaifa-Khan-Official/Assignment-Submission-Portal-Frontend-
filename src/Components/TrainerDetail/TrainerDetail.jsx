@@ -60,7 +60,7 @@ function TrainerDetail() {
                                         <Card key={cls._id} styles={{ body: { padding: "10px 15px" } }} className='hover:shadow-lg cursor-pointer hover:-translate-y-1'>
                                             <div className="flex justify-between items-center">
                                                 <h1 className='text-2xl font-bold'>{cls.name} <span className='font-light text-md'>({cls.join_code})</span></h1>
-                                                <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full h-fit' title='See Detail!' onClick={() => navigate(cls._id)} />
+                                                <ArrowRightOutlined className='hover:bg-gray-300 p-2 rounded-full h-fit' title='See Detail!' onClick={() => navigate(cls._id, { state: { trainerData: trainer, classData: cls } })} />
                                             </div>
                                             <div className='mt-1 text-lg'>
                                                 <p>{cls.description}</p>
