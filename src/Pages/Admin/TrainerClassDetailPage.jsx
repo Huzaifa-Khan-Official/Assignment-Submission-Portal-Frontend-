@@ -16,16 +16,11 @@ const { TabPane } = Tabs;
 
 // Mock data
 const classInfo = {
-    name: "Advanced Web Development",
-    code: "WEB301",
     schedule: "Mon, Wed, Fri 10:00 AM - 12:00 PM",
-    startDate: "2023-09-01",
     endDate: "2023-12-15",
 };
 
 const trainerInfo = {
-    // name: "Dr. Jane Smith",
-    // email: "jane.smith@example.com",
     courses: ["HTML/CSS", "JavaScript", "React"],
 };
 
@@ -96,6 +91,153 @@ export default function TrainerClassDetailPage() {
         },
     ];
 
+    const tabItems = [
+        {
+            label: "Overview",
+            key: '1',
+            children: (
+                <Row gutter={[16, 16]}>
+                    <Col xs={24} md={12}>
+                        <Card title="Class Progress">
+                            <Statistic title="Overall Progress" value={75} suffix="%" />
+                            <Progress percent={75} status="active" />
+                            <Statistic title="Assignments Completed" value={18} suffix="/ 24" style={{ marginTop: '16px' }} />
+                            <Progress percent={75} status="active" />
+                            <Statistic title="Average Attendance" value={92} suffix="%" style={{ marginTop: '16px' }} />
+                            <Progress percent={92} status="active" />
+                        </Card>
+                    </Col>
+                    <Col xs={24} md={12}>
+                        <Card title="Recent Activity">
+                            <List
+                                dataSource={[
+                                    { icon: <CalendarOutlined />, text: "New assignment posted: Project 3" },
+                                    { icon: <UserOutlined />, text: "2 new students enrolled" },
+                                    { icon: <FileTextOutlined />, text: "Grades posted for Quiz 2" },
+                                    { icon: <BellOutlined />, text: "Reminder: Project 2 due in 3 days" },
+                                ]}
+                                renderItem={(item) => (
+                                    <List.Item>
+                                        {item.icon} {item.text}
+                                    </List.Item>
+                                )}
+                            />
+                        </Card>
+                    </Col>
+                </Row>
+            ),
+        },
+        {
+            label: "Students",
+            key: "2",
+            children: (
+                <Card title={`Student Information (Total: ${studentInfo.totalStudents})`}>
+                    <Table dataSource={studentInfo.students} columns={studentColumns} />
+                    <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={attendanceData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="attendance" fill="#1890ff" />
+                        </BarChart>
+                    </ResponsiveContainer>
+
+                    <Title level={4} style={{ marginTop: '24px' }}>Performance Overview</Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={performanceData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="assignment" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="avgScore" fill="#52c41a" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Card>
+            )
+        },
+        {
+            label: "Assignments",
+            key: "3",
+            children: (
+                <Card title={`Assignments Information (Total: ${assignmentsInfo.length})`}>
+                    <List
+                        dataSource={assignmentsInfo}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    title={item.name}
+                                    description={`Due Date: ${item.dueDate}`}
+                                />
+                                <div>
+                                    <Badge status="processing" text={`${item.submitted}/${studentInfo.totalStudents} Submitted`} />
+                                    <br />
+                                    <Badge status="success" text={`${item.graded}/${item.submitted} Graded`} />
+                                </div>
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+            )
+        },
+        {
+            label: "Resources",
+            key: "4",
+            children: (
+                <Card title="Class Resources">
+                    <List
+                        dataSource={classResources}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    avatar={<BookOutlined />}
+                                    title={item.name}
+                                    description={item.type}
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+            )
+        },
+        {
+            label: "Reports",
+            key: "5",
+            children: (
+                <Card title="Class Progress & Reports">
+                    <Title level={4}>Overall Class Performance</Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={performanceData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="assignment" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="avgScore" fill='#722ed1' />
+                        </BarChart>
+                    </ResponsiveContainer>
+
+                    <Title level={4} style={{ marginTop: '24px' }}>Recent Activity Logs</Title>
+                    <List
+                        dataSource={[
+                            { icon: <CalendarOutlined />, text: "New assignment 'Project 3' added on 2023-10-15" },
+                            { icon: <UserOutlined />, text: "2 new students enrolled on 2023-10-12" },
+                            { icon: <FileTextOutlined />, text: "Mid-term grades posted on 2023-10-10" },
+                        ]}
+                        renderItem={(item) => (
+                            <List.Item>
+                                {item.icon} {item.text}
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+            )
+        }
+    ];
+
     return (
         <Layout>
             <Content style={{ padding: '24px' }}>
@@ -142,132 +284,7 @@ export default function TrainerClassDetailPage() {
                     </Col>
                 </Row>
 
-                <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginTop: '24px' }}>
-                    <TabPane tab="Overview" key="1">
-                        <Row gutter={[16, 16]}>
-                            <Col xs={24} md={12}>
-                                <Card title="Class Progress">
-                                    <Statistic title="Overall Progress" value={75} suffix="%" />
-                                    <Progress percent={75} status="active" />
-                                    <Statistic title="Assignments Completed" value={18} suffix="/ 24" style={{ marginTop: '16px' }} />
-                                    <Progress percent={75} status="active" />
-                                    <Statistic title="Average Attendance" value={92} suffix="%" style={{ marginTop: '16px' }} />
-                                    <Progress percent={92} status="active" />
-                                </Card>
-                            </Col>
-                            <Col xs={24} md={12}>
-                                <Card title="Recent Activity">
-                                    <List
-                                        dataSource={[
-                                            { icon: <CalendarOutlined />, text: "New assignment posted: Project 3" },
-                                            { icon: <UserOutlined />, text: "2 new students enrolled" },
-                                            { icon: <FileTextOutlined />, text: "Grades posted for Quiz 2" },
-                                            { icon: <BellOutlined />, text: "Reminder: Project 2 due in 3 days" },
-                                        ]}
-                                        renderItem={(item) => (
-                                            <List.Item>
-                                                {item.icon} {item.text}
-                                            </List.Item>
-                                        )}
-                                    />
-                                </Card>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tab="Students" key="2">
-                        <Card title={`Student Information (Total: ${studentInfo.totalStudents})`}>
-                            <Table dataSource={studentInfo.students} columns={studentColumns} />
-                            <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={attendanceData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="attendance" fill="#1890ff" />
-                                </BarChart>
-                            </ResponsiveContainer>
-
-                            <Title level={4} style={{ marginTop: '24px' }}>Performance Overview</Title>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={performanceData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="assignment" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="avgScore" fill="#52c41a" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </Card>
-                    </TabPane>
-                    <TabPane tab="Assignments" key="3">
-                        <Card title={`Assignments Information (Total: ${assignmentsInfo.length})`}>
-                            <List
-                                dataSource={assignmentsInfo}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            title={item.name}
-                                            description={`Due Date: ${item.dueDate}`}
-                                        />
-                                        <div>
-                                            <Badge status="processing" text={`${item.submitted}/${studentInfo.totalStudents} Submitted`} />
-                                            <br />
-                                            <Badge status="success" text={`${item.graded}/${item.submitted} Graded`} />
-                                        </div>
-                                    </List.Item>
-                                )}
-                            />
-                        </Card>
-                    </TabPane>
-                    <TabPane tab="Resources" key="4">
-                        <Card title="Class Resources">
-                            <List
-                                dataSource={classResources}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        <List.Item.Meta
-                                            avatar={<BookOutlined />}
-                                            title={item.name}
-                                            description={item.type}
-                                        />
-                                    </List.Item>
-                                )}
-                            />
-                        </Card>
-                    </TabPane>
-                    <TabPane tab="Reports" key="5">
-                        <Card title="Class Progress & Reports">
-                            <Title level={4}>Overall Class Performance</Title>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={performanceData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="assignment" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="avgScore" fill='#722ed1' />
-                                </BarChart>
-                            </ResponsiveContainer>
-
-                            <Title level={4} style={{ marginTop: '24px' }}>Recent Activity Logs</Title>
-                            <List
-                                dataSource={[
-                                    { icon: <CalendarOutlined />, text: "New assignment 'Project 3' added on 2023-10-15" },
-                                    { icon: <UserOutlined />, text: "2 new students enrolled on 2023-10-12" },
-                                    { icon: <FileTextOutlined />, text: "Mid-term grades posted on 2023-10-10" },
-                                ]}
-                                renderItem={(item) => (
-                                    <List.Item>
-                                        {item.icon} {item.text}
-                                    </List.Item>
-                                )}
-                            />
-                        </Card>
-                    </TabPane>
-                </Tabs>
+                <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginTop: '24px' }} defaultActiveKey="1" items={tabItems} />
             </Content>
         </Layout>
     );
