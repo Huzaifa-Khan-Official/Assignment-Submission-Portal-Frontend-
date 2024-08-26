@@ -24,13 +24,7 @@ const trainerInfo = {
     courses: ["HTML/CSS", "JavaScript", "React"],
 };
 
-const studentInfo = {
-    totalStudents: 25,
-    students: [
-        { name: "Alice Johnson", email: "alice@example.com", status: "Active" },
-        { name: "Bob Williams", email: "bob@example.com", status: "Inactive" },
-    ],
-};
+
 
 const attendanceData = [
     { date: '09/01', attendance: 92 },
@@ -90,6 +84,14 @@ export default function TrainerClassDetailPage() {
             ),
         },
     ];
+
+    const studentInfo = {
+        totalStudents: classData.students.length,
+        students: [
+            { name: "Alice Johnson", email: "alice@example.com", status: "Active" },
+            { name: "Bob Williams", email: "bob@example.com", status: "Inactive" },
+        ],
+    };
 
     const tabItems = [
         {
@@ -237,6 +239,8 @@ export default function TrainerClassDetailPage() {
             )
         }
     ];
+
+    console.log("classData ==>", classData);
 
     return (
         <Layout>
