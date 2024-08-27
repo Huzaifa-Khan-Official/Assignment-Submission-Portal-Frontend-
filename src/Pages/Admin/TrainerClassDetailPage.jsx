@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import {
     Layout, Typography, Card, Avatar, Tag, Tabs, Row, Col,
     Progress, List, Table, Badge, Statistic,
+    Modal,
 } from 'antd';
 import {
     UserOutlined, CalendarOutlined, BookOutlined,
-    FileTextOutlined, BellOutlined
+    FileTextOutlined, BellOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useLocation } from 'react-router';
@@ -55,9 +57,18 @@ const classResources = [
 
 export default function TrainerClassDetailPage() {
     const location = useLocation();
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const { trainerData, classData } = location.state;
 
     const [activeTab, setActiveTab] = useState("1");
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
     const studentColumns = [
         {
@@ -133,7 +144,12 @@ export default function TrainerClassDetailPage() {
             label: "Students",
             key: "2",
             children: (
-                <Card title={`Student Information (Total: ${studentInfo.totalStudents})`}>
+                // <Card title={`Student Information (Total: ${studentInfo.totalStudents})`}>
+                <Card title={<h1 className='flex justify-between items-center'>Student Information (Total: {studentInfo.totalStudents})
+                    <button onClick={showModal} title='Add Teacher'>
+                        <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
+                    </button>
+                </h1>}>
                     <Table dataSource={studentInfo.students} columns={studentColumns} />
                     <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
                     <ResponsiveContainer width="100%" height={300}>
@@ -290,6 +306,16 @@ export default function TrainerClassDetailPage() {
 
                 <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginTop: '24px' }} defaultActiveKey="1" items={tabItems} />
             </Content>
+
+            <Modal
+                title="Add Students"
+                open={isModalVisible}
+                onCancel={handleCancel}
+                footer={null}
+                className="max-w-md"
+            >
+                <h1>Students Listing</h1>
+            </Modal>
         </Layout>
     );
 }
