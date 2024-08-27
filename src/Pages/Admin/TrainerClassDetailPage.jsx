@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Layout, Typography, Card, Avatar, Tag, Tabs, Row, Col,
     Progress, List, Table, Badge, Statistic,
@@ -10,7 +10,8 @@ import {
     PlusOutlined
 } from '@ant-design/icons';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
+import api from '../../api/api';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -57,10 +58,25 @@ const classResources = [
 
 export default function TrainerClassDetailPage() {
     const location = useLocation();
+    const { classId } = useParams();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { trainerData, classData } = location.state;
-
     const [activeTab, setActiveTab] = useState("1");
+
+    useEffect(() => {
+        const getStudentsOfClass = async () => {
+            try {
+                const res = await api.get(`/api/users/students/class/${classId}`)
+                console.log("res ==>", res);
+
+            } catch (error) {
+                console.log("error ==>", error);
+            }
+        }
+
+        getStudentsOfClass();
+
+    }, [])
 
     const showModal = () => {
         setIsModalVisible(true);
