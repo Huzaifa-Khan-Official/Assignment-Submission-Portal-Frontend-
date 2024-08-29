@@ -19,7 +19,6 @@ const StudentReportGenerate = () => {
     const fetchData = async () => {
       try {
         const reportsResponse = await api.get(`/api/assignments/class/${classId}/student/${studentId}/reports`);
-
         const infoResponse = await api.get(`/api/users/student/${studentId}`);
         setStudentData(reportsResponse.data);
         setStudentInfo(infoResponse.data);

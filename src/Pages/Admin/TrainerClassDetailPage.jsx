@@ -60,22 +60,23 @@ export default function TrainerClassDetailPage() {
     const location = useLocation();
     const { classId } = useParams();
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [studentsData, setStudentsData] = useState(null);
     const { trainerData, classData } = location.state;
     const [activeTab, setActiveTab] = useState("1");
 
     useEffect(() => {
         const getStudentsOfClass = async () => {
             try {
-                const res = await api.get(`/api/users/students/class/${classId}`)
-                console.log("res ==>", res);
-
+                const res = await api.get(`/api/classes/admin/students/${classId}`)
+                console.log("res data ==>", res.data);
+                
+                setStudentsData(res.data);
             } catch (error) {
                 console.log("error ==>", error);
             }
         }
 
         getStudentsOfClass();
-
     }, [])
 
     const showModal = () => {
@@ -89,8 +90,8 @@ export default function TrainerClassDetailPage() {
     const studentColumns = [
         {
             title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'username',
+            key: 'username',
             render: (text, record) => (
                 <span>
                     <Avatar size="small" icon={<UserOutlined />} /> {text}
@@ -104,20 +105,16 @@ export default function TrainerClassDetailPage() {
         },
         {
             title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status) => (
-                <Tag color={status === 'Active' ? 'green' : 'red'}>{status}</Tag>
+            dataIndex: 'isVerified',
+            key: 'isVerified',
+            render: (isVerified) => (
+                <Tag color={isVerified ? 'green' : 'red'}>{isVerified ? "True" : "False"}</Tag>
             ),
         },
     ];
 
     const studentInfo = {
         totalStudents: classData.students.length,
-        students: [
-            { name: "Alice Johnson", email: "alice@example.com", status: "Active" },
-            { name: "Bob Williams", email: "bob@example.com", status: "Inactive" },
-        ],
     };
 
     const tabItems = [
@@ -160,13 +157,13 @@ export default function TrainerClassDetailPage() {
             label: "Students",
             key: "2",
             children: (
-                // <Card title={`Student Information (Total: ${studentInfo.totalStudents})`}>
                 <Card title={<h1 className='flex justify-between items-center'>Student Information (Total: {studentInfo.totalStudents})
                     <button onClick={showModal} title='Add Teacher'>
                         <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
                     </button>
                 </h1>}>
-                    <Table dataSource={studentInfo.students} columns={studentColumns} />
+
+                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' />
                     <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={attendanceData}>

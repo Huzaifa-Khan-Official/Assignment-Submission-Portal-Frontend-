@@ -121,6 +121,7 @@ const AllStudents = () => {
     setLoading(true);
     try {
       const res = await api.get("/api/users/students");
+      console.log(res.data);
       setLoading(false);
       setStudents(res.data);
     } catch (err) {
@@ -141,6 +142,12 @@ const AllStudents = () => {
       dataIndex: 'email',
       key: 'email',
       render: (text) => <a className="block w-max">{text}</a>,
+    },
+    {
+      title: "Is Verified",
+      dataIndex: "isVerified",
+      key: 'isVerified',
+      render: (text) => <span className={`w-full flex justify-center items-center p-1 rounded-lg text-white bg-${text ? 'green' : 'red'}-500 text-sm`}>{text ? 'Yes' : 'No'}</span>,
     },
     {
       title: 'No. of enrolled classes',
