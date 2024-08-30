@@ -69,7 +69,7 @@ export default function TrainerClassDetailPage() {
             try {
                 const res = await api.get(`/api/classes/admin/students/${classId}`)
                 console.log("res data ==>", res.data);
-                
+
                 setStudentsData(res.data);
             } catch (error) {
                 console.log("error ==>", error);
@@ -104,7 +104,7 @@ export default function TrainerClassDetailPage() {
             key: 'email',
         },
         {
-            title: 'Status',
+            title: 'Is Verified',
             dataIndex: 'isVerified',
             key: 'isVerified',
             render: (isVerified) => (
@@ -115,6 +115,10 @@ export default function TrainerClassDetailPage() {
 
     const studentInfo = {
         totalStudents: classData.students.length,
+    };
+
+    const paginationConfig = {
+        pageSize: 5,
     };
 
     const tabItems = [
@@ -163,7 +167,7 @@ export default function TrainerClassDetailPage() {
                     </button>
                 </h1>}>
 
-                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' />
+                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} />
                     <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={attendanceData}>
@@ -268,8 +272,6 @@ export default function TrainerClassDetailPage() {
             )
         }
     ];
-
-    console.log("classData ==>", classData);
 
     return (
         <Layout>
