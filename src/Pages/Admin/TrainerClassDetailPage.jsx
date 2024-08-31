@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Layout, Typography, Card, Avatar, Tag, Tabs, Row, Col,
     Progress, List, Table, Badge, Statistic,
@@ -12,6 +12,8 @@ import {
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useLocation, useParams } from 'react-router';
 import api from '../../api/api';
+import { toast } from 'react-toastify';
+import LoaderContext from '../../Context/LoaderContext';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -59,6 +61,8 @@ const classResources = [
 export default function TrainerClassDetailPage() {
     const location = useLocation();
     const { classId } = useParams();
+    const { setLoader } = useContext(LoaderContext);
+    const [loading, setLoading] = useState(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [unEnrolledStudents, setUnEnrolledStudents] = useState(null);
     const [unEnrolledStudentsError, setUnEnrolledStudentsError] = useState(null);
@@ -68,27 +72,30 @@ export default function TrainerClassDetailPage() {
     const [activeTab, setActiveTab] = useState("1");
 
     useEffect(() => {
-        const getStudentsOfClass = async () => {
-            try {
-                const res = await api.get(`/api/classes/admin/students/${classId}`)
-                setStudentsData(res.data);
-            } catch (error) {
-                console.log("error ==>", error.response.data.error);
-            }
-        }
-
         const getUnEnrolledStudents = async () => {
             try {
                 const res = await api.get("/api/users/students/unenrolled");
                 setUnEnrolledStudents(res.data);
             } catch (error) {
-                setUnEnrolledStudentsError(error.response.data.message || error.response.data.error);
+                setUnEnrolledStudentsError(error.response.data.message);
             }
         }
 
         getStudentsOfClass();
         getUnEnrolledStudents();
-    }, [])
+    }, []);
+
+    const getStudentsOfClass = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get(`/api/classes/admin/students/${classId}`)
+            setStudentsData(res.data);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.log("error ==>", error.response.data.error);
+        }
+    }
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -178,9 +185,7 @@ export default function TrainerClassDetailPage() {
                         <PlusOutlined className='hover:bg-gray-200 rounded-full p-2' />
                     </button>
                 </h1>}>
-
-                    rowKey={(record) => record._id}
-                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} rowKey={(record) => record._id} />
+                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} rowKey={(record) => record._id} loading={loading} />
                     <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={attendanceData}>
@@ -295,9 +300,23 @@ export default function TrainerClassDetailPage() {
     };
     const hasSelected = selectedRowKeys.length > 0;
 
-    const addUnEnrolledStudents = () => {
-        console.log('selectedRowKeys: ', selectedRowKeys);
+    const addUnEnrolledStudents = async () => {
+        setLoader(true);
         handleCancel();
+        try {
+            const data = {
+                studentIds: selectedRowKeys,
+                classId: classId
+            }
+            const res = await api.post(`/api/users/students`, data);
+            console.log("res ==>", res);
+            setLoader(false);
+            getStudentsOfClass();
+            toast.success(res.data.message);
+        } catch (error) {
+            setLoader(false);
+            console.log("error ==>", error || "Something went wrong!");
+        }
     };
 
     return (
@@ -354,7 +373,7 @@ export default function TrainerClassDetailPage() {
                 open={isModalVisible}
                 onCancel={handleCancel}
                 footer={<div>
-                    <button className='bg-blue-500 text-white p-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300' onClick={addUnEnrolledStudents}>
+                    <button className='bg-blue-500 text-white p-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300' onClick={addUnEnrolledStudents} disabled={unEnrolledStudentsError ? true : false}>
                         Add Students
                     </button>
                 </div>}
