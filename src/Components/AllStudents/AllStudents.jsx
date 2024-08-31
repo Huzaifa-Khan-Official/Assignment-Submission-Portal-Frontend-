@@ -121,7 +121,6 @@ const AllStudents = () => {
     setLoading(true);
     try {
       const res = await api.get("/api/users/students");
-      console.log(res.data);
       setLoading(false);
       setStudents(res.data);
     } catch (err) {

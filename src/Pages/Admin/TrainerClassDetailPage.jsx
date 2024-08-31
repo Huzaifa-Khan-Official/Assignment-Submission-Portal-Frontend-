@@ -60,6 +60,9 @@ export default function TrainerClassDetailPage() {
     const location = useLocation();
     const { classId } = useParams();
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [unEnrolledStudents, setUnEnrolledStudents] = useState(null);
+    const [unEnrolledStudentsError, setUnEnrolledStudentsError] = useState(null);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [studentsData, setStudentsData] = useState(null);
     const { trainerData, classData } = location.state;
     const [activeTab, setActiveTab] = useState("1");
@@ -68,15 +71,23 @@ export default function TrainerClassDetailPage() {
         const getStudentsOfClass = async () => {
             try {
                 const res = await api.get(`/api/classes/admin/students/${classId}`)
-                console.log("res data ==>", res.data);
-
                 setStudentsData(res.data);
             } catch (error) {
-                console.log("error ==>", error);
+                console.log("error ==>", error.response.data.error);
+            }
+        }
+
+        const getUnEnrolledStudents = async () => {
+            try {
+                const res = await api.get("/api/users/students/unenrolled");
+                setUnEnrolledStudents(res.data);
+            } catch (error) {
+                setUnEnrolledStudentsError(error.response.data.message || error.response.data.error);
             }
         }
 
         getStudentsOfClass();
+        getUnEnrolledStudents();
     }, [])
 
     const showModal = () => {
@@ -85,6 +96,7 @@ export default function TrainerClassDetailPage() {
 
     const handleCancel = () => {
         setIsModalVisible(false);
+        setSelectedRowKeys([]);
     };
 
     const studentColumns = [
@@ -103,14 +115,14 @@ export default function TrainerClassDetailPage() {
             dataIndex: 'email',
             key: 'email',
         },
-        {
-            title: 'Is Verified',
-            dataIndex: 'isVerified',
-            key: 'isVerified',
-            render: (isVerified) => (
-                <Tag color={isVerified ? 'green' : 'red'}>{isVerified ? "True" : "False"}</Tag>
-            ),
-        },
+        // {
+        //     title: 'Is Verified',
+        //     dataIndex: 'isVerified',
+        //     key: 'isVerified',
+        //     render: (isVerified) => (
+        //         <Tag color={isVerified ? 'green' : 'red'}>{isVerified ? "True" : "False"}</Tag>
+        //     ),
+        // },
     ];
 
     const studentInfo = {
@@ -118,7 +130,7 @@ export default function TrainerClassDetailPage() {
     };
 
     const paginationConfig = {
-        pageSize: 5,
+        pageSize: 10,
     };
 
     const tabItems = [
@@ -167,7 +179,8 @@ export default function TrainerClassDetailPage() {
                     </button>
                 </h1>}>
 
-                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} />
+                    rowKey={(record) => record._id}
+                    <Table dataSource={studentsData} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} rowKey={(record) => record._id} />
                     <Title level={4} style={{ marginTop: '24px' }}>Attendance Record</Title>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={attendanceData}>
@@ -273,6 +286,20 @@ export default function TrainerClassDetailPage() {
         }
     ];
 
+    const onSelectChange = (newSelectedRowKeys) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+
+    const addUnEnrolledStudents = () => {
+        console.log('selectedRowKeys: ', selectedRowKeys);
+        handleCancel();
+    };
+
     return (
         <Layout>
             <Content style={{ padding: '24px' }}>
@@ -326,10 +353,24 @@ export default function TrainerClassDetailPage() {
                 title="Add Students"
                 open={isModalVisible}
                 onCancel={handleCancel}
-                footer={null}
+                footer={<div>
+                    <button className='bg-blue-500 text-white p-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300' onClick={addUnEnrolledStudents}>
+                        Add Students
+                    </button>
+                </div>}
                 className="max-w-md"
             >
-                <h1>Students Listing</h1>
+                <div className='border-t-2 pt-3'>
+                    {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
+                    {
+                        unEnrolledStudentsError ?
+                            <Tag color="red">{unEnrolledStudentsError}</Tag>
+                            :
+                            <div>
+                                <Table dataSource={unEnrolledStudents} columns={studentColumns} className='min-w-full bg-white shadow-md rounded-lg overflow-x-auto' pagination={paginationConfig} rowKey={(record) => record._id} rowSelection={rowSelection} />
+                            </div>
+                    }
+                </div>
             </Modal>
         </Layout>
     );

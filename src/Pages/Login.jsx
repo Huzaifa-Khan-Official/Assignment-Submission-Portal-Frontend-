@@ -54,7 +54,7 @@ export default function Login() {
       })
     } catch (err) {
       setLoader(false);
-      if (err.response.data.message == "Please verify your email first!") {
+      if (err.response?.data.message == "Please verify your email first!") {
         toast.error(err.response.data.message, {
           onClose: () => {
             localStorage.setItem('token', err.response.data.token);
@@ -62,7 +62,7 @@ export default function Login() {
           }
         })
       } else {
-        toast.error(err.response.data || "Something went wrong! Please try again.")
+        toast.error(err.response?.data || "Something went wrong! Please try again.")
       }
     }
   };
