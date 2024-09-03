@@ -10,10 +10,11 @@ import {
     PlusOutlined
 } from '@ant-design/icons';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { useLocation, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import api from '../../api/api';
 import { toast } from 'react-toastify';
 import LoaderContext from '../../Context/LoaderContext';
+import { VscOpenPreview } from 'react-icons/vsc';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -70,6 +71,7 @@ export default function TrainerClassDetailPage() {
     const [studentsData, setStudentsData] = useState(null);
     const { trainerData, classData } = location.state;
     const [activeTab, setActiveTab] = useState("1");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getUnEnrolledStudents = async () => {
@@ -121,6 +123,17 @@ export default function TrainerClassDetailPage() {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <div className='flex gap-4'>
+                    <button className='myBtn' onClick={() => navigate(`/admin/student/${record._id}`)} title='View Details'>
+                        <VscOpenPreview />
+                    </button>
+                </div>
+            ),
         },
         // {
         //     title: 'Is Verified',
