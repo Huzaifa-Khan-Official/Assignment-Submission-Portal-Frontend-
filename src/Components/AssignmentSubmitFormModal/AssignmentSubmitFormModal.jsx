@@ -8,7 +8,7 @@ import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 
-const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, handleCancel, handleSubmit }) => {
+const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, handleCancel, handleSubmit, dropDownItem }) => {
     const { user, setUser } = useFetchProfile();
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState('');
@@ -35,7 +35,10 @@ const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, han
             };
             if (file) {
                 // store the file in firebase storage
-                const uploadedFileLink = await uploadFileToFirebase(file, `users/student/${user._id}/assignments/${file.name}`);
+                const uploadedFileLink = await uploadFileToFirebase(
+                    file,
+                    `users/student/${user._id}/assignments/${file.name}`
+                );
                 assignmentData.fileLink = uploadedFileLink;
                 handleSubmit(uploadedFileLink);
                 console.log(assignmentData);
@@ -69,41 +72,48 @@ const AssignmentSubmitFormModal = ({ showModal, setIsModalOpen, isModalOpen, han
                                 onChange={(e) => setDescription(e.target.value)}
                             />
                         </div>
-                        <div>
-                            <label>File Link:</label>
-                            <Input
-                                size="large"
-                                placeholder="Paste the file link here"
-                                className='my-2'
-                                value={fileLink}
-                                onChange={(e) => setFileLink(e.target.value)}
-                            />
-                        </div>
-                        <label>File Submission:</label>
-                        <div className='my-2 bg-stone-100 h-60 rounded-lg border-2 flex  justify-center items-center'>
-                            <div {...getRootProps({ className: 'bg-stone-200 rounded-md border-2 border-dashed border-sky-400 hover:cursor-pointer group p-5' })}>
-                                <input {...getInputProps()} />
-                                {
-                                    file ? (
-                                        <div className='flex justify-center items-center h-full'>
-                                            <h3>
-                                                {file.name} ({file.size} bytes)
-                                            </h3>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <div className='flex justify-center text-4xl'>
-                                                <BiSolidArrowToBottom className='transition ease-in-out delay-150 group-hover:scale-125 cursor-pointer' />
-                                            </div>
-                                            <div className='text-center text-xs'>
-                                                <h1>Choose a file or drag and drop files here to add them.</h1>
-                                            </div>
-                                        </div>
+                        {
+                            dropDownItem == "link" ? (
+                                <div>
+                                    <label>File Link:</label>
+                                    <Input
+                                        size="large"
+                                        placeholder="Paste the file link here"
+                                        className='my-2'
+                                        value={fileLink}
+                                        onChange={(e) => setFileLink(e.target.value)}
+                                    />
+                                </div>
+                            ) : (
+                                <>
+                                    <label>File Submission:</label>
+                                    <div className='my-2 bg-stone-100 h-60 rounded-lg border-2 flex  justify-center items-center'>
+                                        <div {...getRootProps({ className: 'bg-stone-200 rounded-md border-2 border-dashed border-sky-400 hover:cursor-pointer group p-5' })}>
+                                            <input {...getInputProps()} />
+                                            {
+                                                file ? (
+                                                    <div className='flex justify-center items-center h-full'>
+                                                        <h3>
+                                                            {file.name} ({file.size} bytes)
+                                                        </h3>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <div className='flex justify-center text-4xl'>
+                                                            <BiSolidArrowToBottom className='transition ease-in-out delay-150 group-hover:scale-125 cursor-pointer' />
+                                                        </div>
+                                                        <div className='text-center text-xs'>
+                                                            <h1>Choose a file or drag and drop files here to add them.</h1>
+                                                        </div>
+                                                    </div>
 
-                                    )
-                                }
-                            </div>
-                        </div>
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                </>
+                            )
+                        }
                     </div>
                 </div>
                 <div>
