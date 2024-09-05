@@ -3,14 +3,17 @@ import { useNavigate, useParams } from 'react-router';
 import LoaderContext from '../../Context/LoaderContext';
 import api from '../../api/api';
 import { LiaClipboardListSolid } from 'react-icons/lia';
-import { Button, Card, Tag, Spin, Alert, Progress, Modal, Upload } from 'antd';
+import { Button, Card, Tag, Spin, Alert, Progress, Modal, Upload, Dropdown, Space } from 'antd';
 import { FaArrowLeft, FaPlus, FaDownload } from 'react-icons/fa';
 import useFetchProfile from '../../utils/useFetchProfile';
 import uploadFileToFirebase from '../../utils/uploadFileToFirebase';
+import { MdAttachFile } from 'react-icons/md';
+import { IoLink } from 'react-icons/io5';
 
 const { Meta } = Card;
 
 function StudentAssignmentDetailPage() {
+    const { user } = useFetchProfile();
     const { classId, assignmentId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
     const [loading, setLoading] = useState(true);
@@ -20,7 +23,7 @@ function StudentAssignmentDetailPage() {
     const [report, setReport] = useState(null);
     const [error, setError] = useState(null);
     const [file, setFile] = useState(null);
-    const { user } = useFetchProfile();
+    const [dropDownItem, setDropDownItem] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -133,6 +136,27 @@ function StudentAssignmentDetailPage() {
         );
     }
 
+    const items = [
+        {
+            key: 'link',
+            label: (
+                <p>
+                    Link
+                </p>
+            ),
+            icon: <IoLink />,
+        },
+        {
+            key: 'file',
+            label: (<p>File</p>),
+            icon: <MdAttachFile />,
+        },
+    ];
+
+    const onClick = ({ key }) => {
+        setDropDownItem(key);
+    };
+
     return (
         <div className='p-4 ps-5'>
             {
@@ -233,9 +257,19 @@ function StudentAssignmentDetailPage() {
                                         </>
                                     ) : (
                                         <div>
-                                            <Button className='w-full text-blue-600' onClick={showSubmitModal}>
-                                                <FaPlus /> Add or create
-                                            </Button>
+                                            <Dropdown
+                                                menu={{
+                                                    items,
+                                                    onClick,
+                                                }}
+                                                trigger={['click']}
+                                            >
+                                                <Button className='w-full text-blue-600'>
+                                                    <Space>
+                                                        <FaPlus /> Add or create
+                                                    </Space>
+                                                </Button>
+                                            </Dropdown>
                                         </div>
                                     )}
                                 </section>
