@@ -11,10 +11,11 @@ import { MdAttachFile } from 'react-icons/md';
 import { IoLink } from 'react-icons/io5';
 import AssignmentSubmitFormModal from '../../Components/AssignmentSubmitFormModal/AssignmentSubmitFormModal';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
 
-function StudentAssignmentDetailPage() {
+function AssignmentDetailPage() {
     const { user } = useFetchProfile();
     const { classId, assignmentId } = useParams();
     const { loader, setLoader } = useContext(LoaderContext);
@@ -55,66 +56,6 @@ function StudentAssignmentDetailPage() {
     };
 
     const showSubmitModal = () => setSubmitModalVisible(true);
-    const handleSubmitCancel = () => {
-        setSubmitModalVisible(false);
-        setUploadProgress(0);
-        setFile(null);
-        setSubmissionText(null);
-    };
-
-    const handleSubmitOk = async () => {
-
-        setSubmitting(true);
-        try {
-            if (dropDownItem == "file") {
-                if (!file) {
-                    console.error('No file selected');
-                    return;
-                }
-                // Upload file to Firebase
-                const uploadedFileLink = await uploadFileToFirebase(
-                    file,
-                    `users/student/${user._id}/assignments/${file.name}`,
-                    (progress) => {
-                        setUploadProgress(progress);
-                    }
-                );
-
-                // Submit assignment data to your API
-                const assignmentData = {
-                    student: user._id,
-                    description: '', // Add description if needed
-                    date: new Date(),
-                    fileLink: uploadedFileLink
-                };
-
-                const res = await api.post(`/api/assignments/${assignmentId}/submit`, assignmentData);
-
-                toast.success(res.data.message);
-            } else {
-                const assignmentData = {
-                    student: user._id,
-                    description: submissionText,
-                    date: new Date(),
-                    fileLink: null
-                };
-
-                const res = await api.post(`/api/assignments/${assignmentId}/submit`, assignmentData);
-
-                toast.success(res.data.message);
-            }
-
-            setSubmitModalVisible(false);
-            fetchAssignmentReport(); // Refresh the report after submission
-        } catch (err) {
-            console.error('Error submitting assignment:', err);
-            setError('Failed to submit assignment. Please try again.');
-        } finally {
-            setSubmitting(false);
-            setUploadProgress(0);
-            setFile(null);
-        }
-    };
 
     const handleUnSubmit = async () => {
         // setLoader(true);
@@ -155,27 +96,6 @@ function StudentAssignmentDetailPage() {
         );
     }
 
-    const items = [
-        {
-            key: 'link',
-            label: (
-                <p>
-                    Link
-                </p>
-            ),
-            icon: <IoLink />,
-        },
-        {
-            key: 'file',
-            label: (<p>File</p>),
-            icon: <MdAttachFile />,
-        },
-    ];
-
-    const onClick = ({ key }) => {
-        setDropDownItem(key);
-        showSubmitModal()
-    };
     return (
         <div className='p-4 ps-5'>
             {
@@ -276,19 +196,12 @@ function StudentAssignmentDetailPage() {
                                         </>
                                     ) : (
                                         <div>
-                                            <Dropdown
-                                                menu={{
-                                                    items,
-                                                    onClick,
-                                                }}
-                                                trigger={['click']}
+                                            <Link
+                                                to={`/trainer/class/${classId}/${assignmentId}/submissions`}
+                                                className="myBtn"
                                             >
-                                                <Button className='w-full text-blue-600'>
-                                                    <Space>
-                                                        <FaPlus /> Add or create
-                                                    </Space>
-                                                </Button>
-                                            </Dropdown>
+                                                View Submissions
+                                            </Link>
                                         </div>
                                     )}
                                 </section>
@@ -296,64 +209,8 @@ function StudentAssignmentDetailPage() {
                         </div>
                     )
             }
-            <Modal
-                title="Submit Assignment"
-                open={submitModalVisible}
-                onCancel={handleSubmitCancel}
-                footer={null}
-            >
-                {
-                    dropDownItem == "file" ? (
-                        <>
-                            <Upload
-                                beforeUpload={(file) => {
-                                    setFile(file);
-                                    return false;
-                                }}
-                                onRemove={() => setFile(null)}
-                                fileList={file ? [file] : []}
-                            >
-                                <Button icon={<FaPlus />} loading={submitting} disabled={submitting}>
-                                    {submitting ? 'Uploading...' : 'Select File to Submit'}
-                                </Button>
-                            </Upload>
-                            {uploadProgress > 0 && (
-                                <Progress percent={uploadProgress} status="active" />
-                            )}
-                            <Button
-                                type="primary"
-                                onClick={handleSubmitOk}
-                                disabled={!file || submitting}
-                                loading={submitting}
-                                style={{ marginTop: 16 }}
-                            >
-                                Submit
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Input
-                                type="text"
-                                placeholder="Enter your submission here..."
-                                value={submissionText}
-                                onChange={(e) => setSubmissionText(e.target.value)}
-                                disabled={submitting}
-                            />
-                            <Button
-                                type="primary"
-                                onClick={handleSubmitOk}
-                                disabled={!submissionText || submitting}
-                                loading={submitting}
-                                style={{ marginTop: 16 }}
-                            >
-                                Submit
-                            </Button>
-                        </>
-                    )
-                }
-            </Modal >
         </div >
     );
 }
 
-export default StudentAssignmentDetailPage;
+export default AssignmentDetailPage;

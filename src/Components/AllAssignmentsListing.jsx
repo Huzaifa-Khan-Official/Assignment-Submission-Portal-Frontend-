@@ -122,10 +122,15 @@ export default function AllAssignmentsListing() {
                                                     </td>
                                                     <td className="p-4 align-middle border-r-2">{new Date(assignment.dueDate).toLocaleDateString()}</td>
                                                     <td className="p-4 align-middle border-r-2">{assignment.total_marks}</td>
-                                                    <td className="p-4 align-middle border-r-2 text-right flex items-center">
-                                                        <Link
+                                                    <td className="p-4 align-middle border-r-2 text-right flex items-center gap-2 flex-wrap">
+                                                        <Link className='border-dashed border-2 border-blue-500 px-3 py-2 rounded-md hover:bg-blue-500 hover:text-white duration-500 transition-colors'
                                                             to={`/trainer/class/${classId}/${assignment._id}`}
-                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 bg-blue-500 hover:bg-blue-600 text-white mr-2"
+                                                        >
+                                                            View Assignment
+                                                        </Link>
+                                                        <Link
+                                                            to={`/trainer/class/${classId}/${assignment._id}/submissions`}
+                                                            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 rounded-md px-3 bg-blue-500 hover:bg-blue-600 text-white hover:text-white"
                                                         >
                                                             View Submissions
                                                         </Link>
