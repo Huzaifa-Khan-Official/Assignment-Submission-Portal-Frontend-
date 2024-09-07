@@ -33,10 +33,6 @@ function StudentAssignmentDetailPage() {
         fetchAssignmentReport();
     }, [assignmentId]);
 
-    useEffect(() => {
-        getSubmittedAssignmentDetails();
-    }, []);
-
     const fetchAssignmentReport = async () => {
         setLoader(true);
         setLoading(true);
@@ -55,16 +51,6 @@ function StudentAssignmentDetailPage() {
                 return;
             }
             setError('Failed to load assignment details. Please try again later.');
-        }
-    };
-
-    const getSubmittedAssignmentDetails = async () => {
-        setLoader(true);
-        try {
-            const res = await api(`/api/assignments/student/class/${classId}/${assignmentId}`);
-            // console.log("res ==>", res);
-        } catch (error) {
-            console.log("erro ==>", error);
         }
     };
 
@@ -134,7 +120,6 @@ function StudentAssignmentDetailPage() {
         setLoader(true);
         try {
             const res = await api.delete(`/api/assignments/student/${assignmentId}`);
-            console.log("res ==>", res);
             toast.success(res.data.message);
             fetchAssignmentReport();
             setLoader(false);
@@ -152,12 +137,12 @@ function StudentAssignmentDetailPage() {
             return <iframe src={fileLink} className="w-full h-64 border rounded-md" title="PDF Preview" />;
         } else {
             return (
-                <>
-                    <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" />
-                    <a className="bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all text-gray-500" href={fileLink}>
+                <div className='mb-9'>
+                    {/* <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" /> */}
+                    <a className="bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all text-gray-500" href={fileLink} target='_blank'>
                         fileLink
                     </a>
-                </>
+                </div>
             );
         }
     };
