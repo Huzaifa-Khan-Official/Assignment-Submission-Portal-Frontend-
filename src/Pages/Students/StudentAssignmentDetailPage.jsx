@@ -33,6 +33,10 @@ function StudentAssignmentDetailPage() {
         fetchAssignmentReport();
     }, [assignmentId]);
 
+    useEffect(() => {
+        getSubmittedAssignmentDetails();
+    }, []);
+
     const fetchAssignmentReport = async () => {
         setLoader(true);
         setLoading(true);
@@ -51,6 +55,16 @@ function StudentAssignmentDetailPage() {
                 return;
             }
             setError('Failed to load assignment details. Please try again later.');
+        }
+    };
+
+    const getSubmittedAssignmentDetails = async () => {
+        setLoader(true);
+        try {
+            const res = await api(`/api/assignments/student/class/${classId}/${assignmentId}`);
+            // console.log("res ==>", res);
+        } catch (error) {
+            console.log("erro ==>", error);
         }
     };
 
@@ -94,9 +108,9 @@ function StudentAssignmentDetailPage() {
             } else {
                 const assignmentData = {
                     student: user._id,
-                    description: submissionText,
+                    description: "",
                     date: new Date(),
-                    fileLink: null
+                    fileLink: submissionText
                 };
 
                 const res = await api.post(`/api/assignments/${assignmentId}/submit`, assignmentData);
@@ -117,16 +131,17 @@ function StudentAssignmentDetailPage() {
     };
 
     const handleUnSubmit = async () => {
-        // setLoader(true);
-        // try {
-        //     await api.post(`/api/assignments/${assignmentId}/unsubmit`);
-        //     fetchAssignmentReport(); // Refresh the report after unsubmitting
-        // } catch (err) {
-        //     console.error('Error unsubmitting assignment:', err);
-        //     setError('Failed to unsubmit assignment. Please try again.');
-        // } finally {
-        //     setLoader(false);
-        // }
+        setLoader(true);
+        try {
+            const res = await api.delete(`/api/assignments/student/${assignmentId}`);
+            console.log("res ==>", res);
+            toast.success(res.data.message);
+            fetchAssignmentReport();
+            setLoader(false);
+        } catch (error) {
+            console.log("error ==>", error);
+            setLoader(false);
+        }
     };
 
     const renderFilePreview = (fileLink) => {
