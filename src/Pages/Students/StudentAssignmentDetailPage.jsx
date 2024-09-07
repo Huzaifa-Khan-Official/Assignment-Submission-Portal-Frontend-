@@ -105,7 +105,7 @@ function StudentAssignmentDetailPage() {
             }
 
             setSubmitModalVisible(false);
-            fetchAssignmentReport(); // Refresh the report after submission
+            fetchAssignmentReport();
         } catch (err) {
             console.error('Error submitting assignment:', err);
             setError('Failed to submit assignment. Please try again.');
