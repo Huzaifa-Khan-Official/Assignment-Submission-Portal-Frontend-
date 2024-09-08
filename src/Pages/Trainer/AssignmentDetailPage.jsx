@@ -18,16 +18,10 @@ const { Meta } = Card;
 function AssignmentDetailPage() {
     const { user } = useFetchProfile();
     const { classId, assignmentId } = useParams();
-    const { loader, setLoader } = useContext(LoaderContext);
+    const { setLoader } = useContext(LoaderContext);
     const [loading, setLoading] = useState(true);
-    const [submitModalVisible, setSubmitModalVisible] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [submitting, setSubmitting] = useState(false);
     const [report, setReport] = useState(null);
     const [error, setError] = useState(null);
-    const [file, setFile] = useState(null);
-    const [dropDownItem, setDropDownItem] = useState(null);
-    const [submissionText, setSubmissionText] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,39 +46,6 @@ function AssignmentDetailPage() {
                 return;
             }
             setError('Failed to load assignment details. Please try again later.');
-        }
-    };
-
-    const showSubmitModal = () => setSubmitModalVisible(true);
-
-    const handleUnSubmit = async () => {
-        // setLoader(true);
-        // try {
-        //     await api.post(`/api/assignments/${assignmentId}/unsubmit`);
-        //     fetchAssignmentReport(); // Refresh the report after unsubmitting
-        // } catch (err) {
-        //     console.error('Error unsubmitting assignment:', err);
-        //     setError('Failed to unsubmit assignment. Please try again.');
-        // } finally {
-        //     setLoader(false);
-        // }
-    };
-
-    const renderFilePreview = (fileLink) => {
-        if (!fileLink) return null;
-        if (fileLink.match(/\.(jpeg|jpg|gif|png)$/i)) {
-            return <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" />;
-        } else if (fileLink.match(/\.pdf$/i)) {
-            return <iframe src={fileLink} className="w-full h-64 border rounded-md" title="PDF Preview" />;
-        } else {
-            return (
-                <>
-                    <img src={fileLink} alt="Assignment file" className="w-full h-64 object-contain" />
-                    <a className="bg-gray-100 p-4 rounded-md shadow text-center py-3 px-2 font-bold break-all text-gray-500" href={fileLink}>
-                        fileLink
-                    </a>
-                </>
-            );
         }
     };
 
@@ -158,52 +119,7 @@ function AssignmentDetailPage() {
                                 </section>
 
                                 <section className="bg-white p-4 rounded-lg shadow h-max">
-                                    <h2 className="text-xl mb-4">Your Submission</h2>
-                                    {report.submissionDate ? (
-                                        <>
-                                            <div className="mb-4">
-                                                <p>Submitted on: {new Date(report.submissionDate).toLocaleString()}</p>
-                                                <p>Status: <Tag color={report.marks !== undefined ? "green" : "orange"}>
-                                                    {report.marks !== undefined ? "Evaluated" : "Submitted"}
-                                                </Tag></p>
-                                                <p>Total Marks: {report.totalMarks}</p>
-                                                {report.marks !== undefined && (
-                                                    <>
-                                                        <p>Obtained Marks: {report.marks}</p>
-                                                        <Progress
-                                                            percent={Math.round((report.marks / report.totalMarks) * 100)}
-                                                            status="active"
-                                                        />
-                                                    </>
-                                                )}
-                                            </div>
-                                            {renderFilePreview(report.submittedFileLink)}
-                                            {report.rating && (
-                                                <div className="mt-4">
-                                                    <h3 className="font-bold mb-2">Rating:</h3>
-                                                    <p>{report.rating}</p>
-                                                </div>
-                                            )}
-                                            {report.remark && (
-                                                <div className="mt-4">
-                                                    <h3 className="font-bold mb-2">Remark:</h3>
-                                                    <p>{report.remark}</p>
-                                                </div>
-                                            )}
-                                            <div className='mt-3'>
-                                                <Button className='w-full text-blue-600' onClick={handleUnSubmit}>Unsubmit</Button>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div>
-                                            <Link
-                                                to={`/trainer/class/${classId}/${assignmentId}/submissions`}
-                                                className="myBtn"
-                                            >
-                                                View Submissions
-                                            </Link>
-                                        </div>
-                                    )}
+                                    <Link to={`/trainer/class/${classId}/${assignmentId}/submissions`} className="text-xl mb-4">See Submissions</Link>
                                 </section>
                             </div>
                         </div>
