@@ -15,6 +15,7 @@ export default function StudentHomePage() {
     const [loadings, setLoadings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [classes, setClasses] = useState([]);
+    const [imageLoading, setImageLoading] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -66,12 +67,21 @@ export default function StudentHomePage() {
         api.get("/api/classes/getClasses")
             .then(res => {
                 setClasses(res.data);
+                setImageLoading(Array(res.data.length).fill(true));
                 setLoading(false);
             })
             .catch(err => {
                 console.log(err);
                 setLoading(false);
             });
+    };
+
+    const handleImageLoad = (index) => {
+        setImageLoading(prevState => {
+            const newState = [...prevState];
+            newState[index] = false;
+            return newState;
+        });
     };
 
     return (
@@ -126,9 +136,18 @@ export default function StudentHomePage() {
                                     <Card
                                         hoverable
                                         cover={
-                                            course.classImage ?
-                                                <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={course.classImage} /> :
-                                                <img alt="example" className='w-full' style={{ borderRadius: "10px" }} src={ClassPic} />
+                                            <div>
+                                                {imageLoading[index] && (
+                                                    <Card loading={imageLoading[index]} className='w-full'></Card>
+                                                )}
+                                                <img 
+                                                    alt="example"
+                                                    className='w-full'
+                                                    style={{ borderRadius: "10px", display: imageLoading[index] ? 'none' : 'block' }}
+                                                    src={course.classImage || ClassPic} 
+                                                    onLoad={() => handleImageLoad(index)}
+                                                />
+                                            </div>
                                         }
                                         onClick={() => navigate(`student/class/${course._id}`)}
                                         className='hover:-translate-y-1 duration-200 transition h-full'
