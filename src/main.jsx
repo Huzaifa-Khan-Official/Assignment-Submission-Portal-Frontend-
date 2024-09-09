@@ -223,7 +223,7 @@ const router = createBrowserRouter([
     </>
   },
   {
-    path: "/student/:classId/report",
+    path: "/student/:classId/:studentId/report",
     element: <>
       <Sidebar title="Student | Report">
         <StudentReportGenerate />

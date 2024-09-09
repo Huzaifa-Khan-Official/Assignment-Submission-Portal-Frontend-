@@ -101,7 +101,7 @@ function ClassDetailDashboard() {
                     {
                         studentId && classId && (
                             <Button
-                                onClick={() => navigate(`/trainer/class/${classId}/student/${studentId}/`)}
+                                onClick={() => navigate(`/student/${classId}/${studentId}/report`)}
                             >
                                 View Report
                             </Button>
